@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 เมนูเด่น: หมี่ไก่ฉีก 🥢</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================= */
+        /* === 1. BASE STYLES & TYPOGRAPHY === */
+        /* ======================================= */
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f1e9d9; /* พื้นหลังสีครีมอ่อนๆ */
+            color: #f1e9d9;
+            margin: 0;
+            padding: 20px 0 100px 0; /* เว้นพื้นที่ให้ Fixed Footer */
+        }
+        .container {
+            max-width: 550px; /* ลดความกว้างสูงสุดเพื่อให้เนื้อหาดูเป็นระเบียบ */
+            margin: auto; /* จัดให้อยู่กึ่งกลางหน้าจอ */
+            padding: 0 15px;
+        }
+        h1 {
+            color: #940109;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #940109;
+            padding-bottom: 10px;
+        }
+
+        /* ======================================= */
+        /* === 2. ITEM CARD STYLES (Clean & Centered) === */
+        /* ======================================= */
+        .item-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08); /* เงาเด่นชัดขึ้น */
+            text-align: center; /* จัดเนื้อหาใน Card ให้อยู่กึ่งกลาง */
+        }
+        .item-card h2 {
+            font-size: 1.5em;
+            color: #940109;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .item-card p {
+            margin: 5px 0 15px 0;
+            font-size: 1.1em;
+            color: #555;
+            font-weight: 500;
+        }
+        .item-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            object-fit: cover;
+            /* กำหนดความสูงสูงสุดเพื่อความสวยงาม */
+            max-height: 200px;
+        }
+
+        /* --- Counter Controls (เน้นความชัดเจน) --- */
+        .counter-row {
+            display: flex;
+            flex-direction: column; /* ให้ Label อยู่ด้านบน Counter */
+            align-items: center; /* จัดให้อยู่ตรงกลางตามแนวตั้ง */
+            padding: 15px 0;
+            border-top: 1px dashed #eee;
+            margin-top: 15px;
+        }
+        .counter-row label {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 10px;
+        }
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* ใช้ความกว้างเต็มที่ (สำหรับมือถือ) */
+            max-width: 250px; /* จำกัดความกว้างของปุ่ม/ตัวเลข */
+        }
+        .counter-btn {
+            background-color: #940109;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px; /* ขนาดใหญ่ขึ้น */
+            height: 40px; /* ขนาดใหญ่ขึ้น */
+            font-size: 1.8em; /* ขนาดตัวอักษรใหญ่ขึ้น */
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            flex-shrink: 0; /* ไม่ให้หดตัว */
+        }
+        .counter-btn:active {
+            transform: scale(0.95);
+        }
+        .item-count {
+            font-size: 1.8em; /* ขนาดตัวอักษรใหญ่ขึ้น */
+            font-weight: 700;
+            margin: 0 20px; /* ระยะห่างกว้างขึ้น */
+            width: 40px;
+            text-align: center;
+            color: #333;
+        }
+
+        /* ======================================= */
+        /* === 3. FOOTER & TOTAL DISPLAY === */
+        /* ======================================= */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333; /* พื้นหลังสีเข้ม */
+            border-top: 3px solid #4CAF50;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+            padding: 15px 0;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+        .summary-bar {
+            max-width: 550px;
+            margin: auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-display {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #f1e9d9; /* สีขาว/ครีม */
+        }
+        .next-button {
+            background-color: #4CAF50; /* ปุ่มสีเขียวเด่น */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+        .next-button:hover {
+            background-color: #388e3c;
+        }
+        .next-button svg {
+            fill: #fff;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ======================================= */
+        /* === 4. FLOATING BUTTON STYLES (NEW) === */
+        /* ======================================= */
+        .floating-action-button {
+            position: fixed;
+            right: 15px; /* ชิดขวา */
+            bottom: 100px; /* อยู่เหนือ Footer Fixed */
+            background-color: #940109; /* สีแดงเข้ม */
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 50px; /* รูปทรงแคปซูล */
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, background-color 0.2s;
+            z-index: 100; /* ให้อยู่ด้านบน */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            /* เพิ่มเส้นขอบเพื่อให้ดูเด่นขึ้น */
+            border: 2px solid #fff;
+        }
+
+        .floating-action-button:hover {
+            background-color: #7a0006; /* สีเข้มขึ้นเมื่อโฮเวอร์ */
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .summary-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .next-button {
+                width: 100%;
+                justify-content: center;
+            }
+            .total-display {
+                width: 100%;
+                text-align: center;
+                color: #fff;
+            }
+            /* ปรับตำแหน่งปุ่มลอยเมื่อหน้าจอเล็ก */
+            .floating-action-button {
+                bottom: 110px; /* ปรับให้สูงขึ้นเล็กน้อย */
+                right: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍜 เมนู: หมี่ไก่ฉีก</h1>
+        
+        <div class="item-card" data-id="N1">
+            <img src="images/22mhekai.png" alt="หมี่ไก่ฉีก">
+            <h2>หมี่ไก่ฉีก</h2>
+            <p>ราคา: 50 บาท / กล่อง</p>
+            
+            <div class="counter-row">
+                <label>จำนวนกล่องที่ต้องการ</label>
+                <div class="counter-controls">
+                    <button class="counter-btn" onclick="updateCount('main', -1)">-</button>
+                    <span class="item-count" id="count_main">1</span>
+                    <button class="counter-btn" onclick="updateCount('main', 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item-card" data-id="N2">
+            <img src="images/namprig.png" alt="น้ำพริกกากหมู (ซื้อเพิ่ม)" style="max-height: 150px; object-fit: contain;">
+            <h2>น้ำพริกกากหมู (ซื้อเพิ่ม)</h2>
+            <p>เพิ่มห่อละ 10 บาท</p>
+            
+            <div class="counter-row">
+                <label>จำนวนห่อที่ต้องการ</label>
+                <div class="counter-controls">
+                    <button class="counter-btn" onclick="updateCount('addon', -1)">-</button>
+                    <span class="item-count" id="count_addon">0</span>
+                    <button class="counter-btn" onclick="updateCount('addon', 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="floating-action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        เลือกเมนูอื่นเพิ่มเติม
+    </a>
+
+    <div class="footer-fixed">
+        <div class="summary-bar">
+            <div class="total-display">
+                ยอดรวม: <span id="grand-total">50</span> บาท
+            </div>
+            <button class="next-button" onclick="addToCartAndProceed()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                เพิ่มลงตะกร้า & สรุปยอด
+            </button>
+        </div>
+    </div>
+
+<script>
+    const PRICE_MAIN = 50;
+    const PRICE_ADDON = 10;
+    
+    // แก้ไข: กำหนดค่าเริ่มต้นของ mainCount เป็น 1 
+    let mainCount = 1;
+    let addonCount = 0;
+
+    // ------------------ 1. ฟังก์ชันอัปเดตจำนวนและคำนวณราคา ------------------
+    function updateCount(type, change) {
+        if (type === 'main') {
+            mainCount += change;
+            // ตรวจสอบให้ mainCount ไม่ต่ำกว่า 1
+            if (mainCount < 1) mainCount = 1;
+            document.getElementById('count_main').innerText = mainCount;
+        } else if (type === 'addon') {
+            addonCount += change;
+             // ตรวจสอบให้ addonCount ไม่ต่ำกว่า 0
+            if (addonCount < 0) addonCount = 0;
+            document.getElementById('count_addon').innerText = addonCount;
+        }
+
+        calculateTotal();
+    }
+
+    // ------------------ 2. ฟังก์ชันคำนวณราคารวมทั้งหมด ------------------
+    function calculateTotal() {
+        const total = (mainCount * PRICE_MAIN) + (addonCount * PRICE_ADDON);
+        document.getElementById('grand-total').innerText = total.toLocaleString();
+    }
+
+    // ------------------ 3. ฟังก์ชันบันทึกเข้าตะกร้าและไปหน้าสรุป (ใช้ sessionStorage) ------------------
+    function addToCartAndProceed() {
+        if (mainCount === 0) {
+            alert('กรุณาเลือกจำนวนหมี่ไก่ฉีกอย่างน้อย 1 กล่อง');
+            return;
+        }
+
+        // 1. เตรียมรายละเอียดของชุดนี้
+        const noodleDetails = [];
+        
+        // เพิ่มรายการหลัก (หมี่ไก่ฉีก)
+        if (mainCount > 0) {
+            noodleDetails.push({
+                id: 'N1',
+                // *** ปรับการแสดงผล: ลบ x{count} ออก เพื่อให้ summary.html จัดการรวมจำนวนได้ดีขึ้น ***
+                name: `หมี่ไก่ฉีก`, 
+                price: PRICE_MAIN,
+                count: mainCount,
+                type: 'Main'
+            });
+        }
+
+        // เพิ่มรายการเสริม (น้ำพริกกากหมู)
+        if (addonCount > 0) {
+            noodleDetails.push({
+                id: 'N2',
+                // *** ปรับการแสดงผล: ลบ x{count} ออก ***
+                name: `น้ำพริกกากหมู`, 
+                price: PRICE_ADDON,
+                count: addonCount,
+                type: 'Addon'
+            });
+        }
+        
+        // 2. ชุดใหม่สำหรับตะกร้า
+        const totalOrderPrice = (mainCount * PRICE_MAIN) + (addonCount * PRICE_ADDON);
+        
+        const newNoodleOrder = {
+            // ชื่อรวมสำหรับแสดงในตะกร้า 
+            name: `หมี่ไก่ฉีก ${mainCount} กล่อง${addonCount > 0 ? ` (+น้ำพริก ${addonCount} ห่อ)` : ''}`,
+            price: totalOrderPrice,
+            count: 1,
+            details: noodleDetails,
+            isSukiSet: false,
+            isNoodleSet: true
+        };
+
+        // 3. ดึงตะกร้าปัจจุบัน (ถ้ามี)
+        // *** แก้ไข: ใช้ sessionStorage แทน localStorage ***
+        let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+        
+        // 4. เพิ่มชุดใหม่ลงในตะกร้า
+        cartItems.push(newNoodleOrder);
+        
+        // 5. บันทึกตะกร้าใหม่กลับไป
+        // *** แก้ไข: ใช้ sessionStorage แทน localStorage ***
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        
+        alert('เพิ่มรายการ "หมี่ไก่ฉีก" เข้าตะกร้าแล้ว! ไปหน้าสรุปยอด...');
+
+        // 6. ไปยังหน้าสรุป
+        window.location.href = 'summary.html';
+    }
+
+    // 4. กำหนดค่าเริ่มต้นเมื่อโหลดหน้า
+    document.addEventListener('DOMContentLoaded', () => {
+        calculateTotal();
+    });
+</script>
+</body>
+</html>
