@@ -4,390 +4,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌶️ เลือกประเภทสุกี้/หม่าล่า</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* ======================================= */
-        /* === 1. BASE STYLES & TYPOGRAPHY === */
-        /* ======================================= */
+        :root {
+            --primary-red: #940109;
+            --bg-cream: #f1e9d9;
+            --card-white: #ffffff;
+        }
+
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #f1e9d9;
-            color: #940109;
+            background-color: var(--bg-cream);
+            color: #333;
             margin: 0;
             padding: 10px;
-            padding-bottom: 90px; /* เว้นพื้นที่ให้ Floating Button */
+            padding-bottom: 100px;
         }
+
         .container {
-            max-width: 960px;
+            max-width: 600px;
             margin: auto;
-            padding: 0 10px;
         }
+
         h1 {
             text-align: center;
-            font-size: 1.6em; 
-            margin-bottom: 8px;
+            color: var(--primary-red);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
         }
+
         p.subtitle {
             text-align: center;
-            color: #555;
+            color: #666;
             margin-bottom: 20px;
-            font-size: 0.9em; 
+            font-size: 0.9rem;
         }
 
-        /* ======================================= */
-        /* === 2. GRID LAYOUT (3 คอลัมน์ - Mobile Optimized) === */
-        /* ======================================= */
-        .soup-list {
+        .menu-grid {
             display: grid;
-            /* Default: 3 คอลัมน์สำหรับ Tablet ขึ้นไป */
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 10px;
-            padding: 0;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        @media (max-width: 768px) {
-            .soup-list {
-                /* Tablet: 3 คอลัมน์ */
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        @media (max-width: 500px) {
-            .soup-list {
-                /* Mobile: บังคับ 3 คอลัมน์ตามคำขอ */
-                grid-template-columns: repeat(3, 1fr);
-                gap: 5px; /* ลดระยะห่าง */
-            }
-            .container {
-                padding: 0 5px;
-            }
-        }
-
-        /* ======================================= */
-        /* === 3. CARD STYLES & SELECTION === */
-        /* ======================================= */
-        .hidden-radio {
-            display: none;
-        }
-        .soup-option {
-            background-color: #fff;
-            border: 2px solid #ccc; 
-            border-radius: 10px; 
-            padding: 5px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-            height: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        input[type="radio"]:checked + .soup-option {
-            border-color: #940109;
-            box-shadow: 0 4px 10px rgba(148,1,9,0.3);
-            transform: translateY(-2px);
-        }
-
-        /* --- ส่วน 1:1 Image Ratio --- */
-        .img-wrapper {
-            width: 100%;
-            padding-bottom: 100%;
-            position: relative;
+        /* แก้ไข: ปรับ border เริ่มต้นให้มองไม่เห็น */
+        .soup-card {
+            background: var(--card-white);
+            border-radius: 15px;
             overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 3px;
-        }
-        .soup-option img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .soup-title {
-            font-size: 0.85em; 
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 2px;
-            line-height: 1.2;
-            min-height: 2.4em; 
-        }
-        .price-tag {
-            color: #940109;
-            font-weight: 700;
-            font-size: 0.75em; 
-        }
-
-        /* ======================================= */
-        /* === 4. SPICY LEVEL CONTROL (ปรับ Layout) === */
-        /* ======================================= */
-        .spicy-level {
-            margin-top: 5px;
-            display: none;
-            flex-direction: column;
-            align-items: center; 
-            padding-top: 5px;
-            border-top: 1px dashed #ddd;
-            width: 100%;
-            font-size: 0.75em; 
-            color: #333;
-        }
-        .spicy-level-group {
             display: flex;
-            justify-content: space-around; 
-            width: 100%;
-            margin-top: 3px;
-        }
-        .spicy-level label {
-            margin: 0;
-            padding: 2px 0;
-            font-size: 0.75em; 
-            white-space: nowrap;
-            color: #333;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid transparent; 
+            transition: 0.2s;
             cursor: pointer;
-        }
-        .spicy-level input[type="radio"] {
-            transform: scale(0.8); 
-            margin-right: 1px;
         }
 
-        /* ======================================= */
-        /* === 5. FLOATING BUTTON === */
-        /* ======================================= */
-        .floating-confirm-button {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%); 
-            bottom: 10px; 
-            width: calc(100% - 30px); 
-            max-width: 400px; 
-            background-color: #940109; 
-            color: #f1e9d9;
-            border: none;
-            border-radius: 8px; 
-            padding: 12px; 
-            font-size: 1em; 
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: background-color 0.2s, transform 0.2s;
-            z-index: 1000;
+        .soup-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        /* แสดงกรอบแดงเฉพาะเมื่อมีการเลือก (Checked) */
+        .soup-card:has(input[name="soup"]:checked) {
+            border-color: var(--primary-red);
+            background-color: #fff9f9;
+        }
+
+        .item-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .item-info {
+            padding: 10px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--primary-red);
+            margin-bottom: 4px;
+            min-height: 2.4em;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .floating-confirm-button:hover {
-            background-color: #6a0006;
-            transform: translateX(-50%) scale(1.01);
+
+        .item-price {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #333;
         }
-        .floating-confirm-button svg {
-            margin-right: 6px; 
-            width: 18px; 
-            height: 18px;
+
+        .spicy-container {
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .spicy-option {
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .spicy-container input[type="radio"]:checked + .spicy-option {
+            background-color: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+        }
+
+        .footer-fixed {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .btn-confirm {
+            pointer-events: auto;
+            background-color: var(--primary-red);
+            color: white;
+            border: 2px solid #fff;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>🌶️ เลือกประเภทสุกี้/หม่าล่า</h1>
-        <p class="subtitle">กรุณาเลือกเมนูหลัก <strong>เพียงอย่างเดียว</strong> จากรายการด้านล่าง</p>
+        <h1>🌶️ เลือกประเภทเมนู</h1>
+        <p class="subtitle">เลือกน้ำซุปหรือรูปแบบที่ต้องการ</p>
 
-        <form id="sukiForm">
-            <div class="soup-list-wrapper">
-                <div class="soup-list">
-
-                    <div class="soup-option-container">
-                        <label for="soup1">
-                            <input type="radio" name="soup" id="soup1" value="ซุปหม่าล่าน้ำข้น" data-price="29" data-spicy="true" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/Snamkhon.jpg" alt="ซุปหม่าล่าน้ำข้น">
-                                </div>
-                                <strong class="soup-title">ซุปหม่าล่าน้ำข้น <span class="price-tag">(+29 บ.)</span></strong>
-                                <div class="spicy-level" id="spicy_soup1">
-                                    <div style="margin-bottom: 5px;">ระดับความเผ็ด:</div>
-                                    <div class="spicy-level-group">
-                                        <label><input type="radio" name="spicy_level_soup1" value="น้อย"> น้อย</label>
-                                        <label><input type="radio" name="spicy_level_soup1" value="กลาง" checked> กลาง</label>
-                                        <label><input type="radio" name="spicy_level_soup1" value="มาก"> มาก</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
+        <div class="menu-grid">
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s1" value="ซุปหม่าล่าน้ำข้น">
+                <img src="images/soup_mala_milk.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Milk'">
+                <div class="item-info">
+                    <div class="item-name">ซุปหม่าล่าน้ำข้น</div>
+                    <div class="item-price">+29฿</div>
+                    <div class="spicy-container">
+                        <input type="radio" name="spice_s1" id="s1_l1" value="เผ็ดน้อย" style="display:none">
+                        <label for="s1_l1" class="spicy-option">น้อย</label>
+                        <input type="radio" name="spice_s1" id="s1_l2" value="เผ็ดกลาง" style="display:none" checked>
+                        <label for="s1_l2" class="spicy-option">กลาง</label>
+                        <input type="radio" name="spice_s1" id="s1_l3" value="เผ็ดมาก" style="display:none">
+                        <label for="s1_l3" class="spicy-option">มาก</label>
                     </div>
-
-                    <div class="soup-option-container">
-                        <label for="soup2">
-                            <input type="radio" name="soup" id="soup2" value="ซุปหม่าล่าน้ำดำ" data-price="29" data-spicy="true" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/Smalanamdam.jpg" alt="ซุปหม่าล่าน้ำดำ">
-                                </div>
-                                <strong class="soup-title">ซุปหม่าล่าน้ำดำ <span class="price-tag">(+29 บ.)</span></strong>
-                                <div class="spicy-level" id="spicy_soup2">
-                                    <div style="margin-bottom: 5px;">ระดับความเผ็ด:</div>
-                                    <div class="spicy-level-group">
-                                        <label><input type="radio" name="spicy_level_soup2" value="น้อย"> น้อย</label>
-                                        <label><input type="radio" name="spicy_level_soup2" value="กลาง" checked> กลาง</label>
-                                        <label><input type="radio" name="spicy_level_soup2" value="มาก"> มาก</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="soup-option-container">
-                        <label for="soup3">
-                            <input type="radio" name="soup" id="soup3" value="ซุปหม่าล่าดั้งเดิม" data-price="19" data-spicy="true" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/Sdungdeam.jpg" alt="ซุปหม่าล่าดั้งเดิม">
-                                </div>
-                                <strong class="soup-title">ซุปหม่าล่าดั้งเดิม <span class="price-tag">(+19 บ.)</span></strong>
-                                <div class="spicy-level" id="spicy_soup3">
-                                    <div style="margin-bottom: 5px;">ระดับความเผ็ด:</div>
-                                    <div class="spicy-level-group">
-                                        <label><input type="radio" name="spicy_level_soup3" value="น้อย"> น้อย</label>
-                                        <label><input type="radio" name="spicy_level_soup3" value="กลาง" checked> กลาง</label>
-                                        <label><input type="radio" name="spicy_level_soup3" value="มาก"> มาก</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="soup-option-container">
-                        <label for="soup4">
-                            <input type="radio" name="soup" id="soup4" value="ซุปน้ำดำ" data-price="19" data-spicy="false" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/Snamdam.jpg" alt="ซุปน้ำดำ">
-                                </div>
-                                <strong class="soup-title">ซุปน้ำดำ <span class="price-tag">(+19 บ.)</span></strong>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="soup-option-container">
-                        <label for="soup5">
-                            <input type="radio" name="soup" id="soup5" value="ปิ้งย่างหม่าล่า" data-price="0" data-spicy="true" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/pingyang.png" alt="ปิ้งย่างหม่าล่า">
-                                </div>
-                                <strong class="soup-title">ปิ้งย่างหม่าล่า <span class="price-tag">(0 บ.)</span></strong>
-                                <div class="spicy-level" id="spicy_soup5">
-                                    <div style="margin-bottom: 5px;">ระดับความเผ็ด:</div>
-                                    <div class="spicy-level-group">
-                                        <label><input type="radio" name="spicy_level_soup5" value="น้อย"> น้อย</label>
-                                        <label><input type="radio" name="spicy_level_soup5" value="กลาง" checked> กลาง</label>
-                                        <label><input type="radio" name="spicy_level_soup5" value="มาก"> มาก</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="soup-option-container">
-                        <label for="soup6">
-                            <input type="radio" name="soup" id="soup6" value="สุกี้แห้ง" data-price="10" data-spicy="false" class="hidden-radio" onchange="toggleSpicyOptions()">
-                            <div class="soup-option">
-                                <div class="img-wrapper">
-                                    <img src="images/hang.png" alt="สุกี้แห้ง">
-                                </div>
-                                <strong class="soup-title">สุกี้แห้ง <span class="price-tag">(+10 บ.)</span></strong>
-                            </div>
-                        </label>
-                    </div>
-
                 </div>
-            </div>
-        </form>
+            </label>
+
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s2" value="ซุปหม่าล่าน้ำดำ">
+                <img src="images/soup_mala_black.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Black'">
+                <div class="item-info">
+                    <div class="item-name">ซุปหม่าล่าน้ำดำ</div>
+                    <div class="item-price">+29฿</div>
+                    <div class="spicy-container">
+                        <input type="radio" name="spice_s2" id="s2_l1" value="เผ็ดน้อย" style="display:none">
+                        <label for="s2_l1" class="spicy-option">น้อย</label>
+                        <input type="radio" name="spice_s2" id="s2_l2" value="เผ็ดกลาง" style="display:none" checked>
+                        <label for="s2_l2" class="spicy-option">กลาง</label>
+                        <input type="radio" name="spice_s2" id="s2_l3" value="เผ็ดมาก" style="display:none">
+                        <label for="s2_l3" class="spicy-option">มาก</label>
+                    </div>
+                </div>
+            </label>
+
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s3" value="ซุปหม่าล่าดั้งเดิม">
+                <img src="images/soup_mala_orig.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Original'">
+                <div class="item-info">
+                    <div class="item-name">ซุปหม่าล่าดั้งเดิม</div>
+                    <div class="item-price">+19฿</div>
+                    <div class="spicy-container">
+                        <input type="radio" name="spice_s3" id="s3_l1" value="เผ็ดน้อย" style="display:none">
+                        <label for="s3_l1" class="spicy-option">น้อย</label>
+                        <input type="radio" name="spice_s3" id="s3_l2" value="เผ็ดกลาง" style="display:none" checked>
+                        <label for="s3_l2" class="spicy-option">กลาง</label>
+                        <input type="radio" name="spice_s3" id="s3_l3" value="เผ็ดมาก" style="display:none">
+                        <label for="s3_l3" class="spicy-option">มาก</label>
+                    </div>
+                </div>
+            </label>
+
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s4" value="ซุปน้ำดำ">
+                <img src="images/soup_black.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Black+Soup'">
+                <div class="item-info">
+                    <div class="item-name">ซุปน้ำดำ</div>
+                    <div class="item-price">+19฿</div>
+                </div>
+            </label>
+
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s5" value="ปิ้งย่างหม่าล่า">
+                <img src="images/pingyang.png" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Grill+Mala'">
+                <div class="item-info">
+                    <div class="item-name">ปิ้งย่างหม่าล่า</div>
+                    <div class="item-price">0฿</div>
+                    <div class="spicy-container">
+                        <input type="radio" name="spice_s5" id="s5_l1" value="เผ็ดน้อย" style="display:none">
+                        <label for="s5_l1" class="spicy-option">น้อย</label>
+                        <input type="radio" name="spice_s5" id="s5_l2" value="เผ็ดกลาง" style="display:none" checked>
+                        <label for="s5_l2" class="spicy-option">กลาง</label>
+                        <input type="radio" name="spice_s5" id="s5_l3" value="เผ็ดมาก" style="display:none">
+                        <label for="s5_l3" class="spicy-option">มาก</label>
+                    </div>
+                </div>
+            </label>
+
+            <label class="soup-card">
+                <input type="radio" name="soup" id="s6" value="สุกี้แห้ง">
+                <img src="images/hang.png" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Suki+Dry'">
+                <div class="item-info">
+                    <div class="item-name">สุกี้แห้ง</div>
+                    <div class="item-price">+10฿</div>
+                </div>
+            </label>
+        </div>
     </div>
 
-    <button type="button" class="floating-confirm-button" onclick="goToToppings()">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-        ยืนยันการเลือก และไปหน้าท็อปปิ้ง
-    </button>
+    <div class="footer-fixed">
+        <button class="btn-confirm" onclick="goToToppings()">เลือกท็อปปิ้งต่อ ➡️</button>
+    </div>
 
     <script>
-    // ------------------ 1. ฟังก์ชันแสดง/ซ่อน ระดับความเผ็ด ------------------
-    function toggleSpicyOptions() {
-        const selected = document.querySelector('input[name="soup"]:checked');
-        
-        // ซ่อนกลุ่มควบคุมความเผ็ดทั้งหมด
-        document.querySelectorAll('.spicy-level').forEach(el => el.style.display = 'none');
+        function goToToppings() {
+            const selected = document.querySelector('input[name="soup"]:checked');
+            // หากยังไม่เลือกเมนู จะมีการแจ้งเตือน
+            if (!selected) return alert('กรุณาเลือกเมนู');
 
-        if (selected && selected.dataset.spicy === 'true') {
-            const spicyId = 'spicy_' + selected.id;
-            const spicyEl = document.getElementById(spicyId);
-            if (spicyEl) {
-                spicyEl.style.display = 'flex';
-                
-                // ตรวจสอบและตั้งค่า Radio ของความเผ็ดให้ถูกเลือก (เพื่อป้องกันการส่งค่าว่าง)
-                const spicyRadioName = `spicy_level_${selected.id}`;
-                if (!document.querySelector(`input[name="${spicyRadioName}"]:checked`)) {
-                    // ถ้ายังไม่มีการเลือก ให้เลือก 'กลาง' เป็นค่าเริ่มต้น
-                    const defaultSpice = document.querySelector(`input[name="${spicyRadioName}"][value="กลาง"]`);
-                    if (defaultSpice) defaultSpice.checked = true;
-                }
-            }
+            const soupId = selected.id;
+            const soupName = selected.value;
+            const price = parseInt(selected.parentElement.querySelector('.item-price').innerText.replace('+', ''));
+            
+            let spice = 'ปกติ';
+            const spiceSelected = document.querySelector(`input[name="spice_${soupId}"]:checked`);
+            if (spiceSelected) spice = spiceSelected.value;
+
+            const sukiDetails = { name: soupName, price: price, spice: spice };
+            sessionStorage.setItem('sukiMainItem', JSON.stringify(sukiDetails));
+            window.location.href = 'topping_suki.html';
         }
-    }
-
-    // ------------------ 2. ฟังก์ชันส่งข้อมูลไปยังหน้า Toppings (ใช้ SESSION STORAGE) ------------------
-    function goToToppings() {
-        const selected = document.querySelector('input[name="soup"]:checked');
-        
-        if (!selected) return alert('กรุณาเลือกประเภทสุกี้/หม่าล่าอย่างน้อย 1 รายการ');
-
-        const mainItem = selected.value;
-        const mainPrice = parseInt(selected.dataset.price);
-        let spiceLevel = 'มาตรฐาน';
-
-        // ดึงระดับความเผ็ด
-        if (selected.dataset.spicy === 'true') {
-            const spicyRadioName = `spicy_level_${selected.id}`;
-            const selectedSpice = document.querySelector(`input[name="${spicyRadioName}"]:checked`);
-            spiceLevel = selectedSpice ? selectedSpice.value : 'กลาง';
-        } else {
-             spiceLevel = 'มาตรฐาน';
-        }
-
-        // เตรียมข้อมูลหลัก
-        const sukiDetails = {
-            name: mainItem,
-            price: mainPrice,
-            spice: spiceLevel
-        };
-        
-        // บันทึกข้อมูลเมนูหลักลงใน Session Storage 
-        // **ข้อมูลจะหายทันทีที่ผู้ใช้ปิดแท็บ**
-        sessionStorage.setItem('sukiMainItem', JSON.stringify(sukiDetails));
-        
-        // นำทางไปยังหน้าเลือกท็อปปิ้ง
-        window.location.href = 'topping_suki.html';
-    }
-
-    // 3. กำหนดค่าเริ่มต้นเมื่อโหลดหน้า
-    document.addEventListener('DOMContentLoaded', () => {
-        let defaultSelected = document.querySelector('input[name="soup"]:checked');
-        if (!defaultSelected) {
-            // เลือกซุปแรกเป็นค่าเริ่มต้น
-            defaultSelected = document.getElementById('soup1');
-            if (defaultSelected) {
-                defaultSelected.checked = true;
-                // ตั้งค่าระดับความเผ็ดเริ่มต้นเป็น 'กลาง'
-                const defaultSpice = document.querySelector('input[name="spicy_level_soup1"][value="กลาง"]');
-                if (defaultSpice) defaultSpice.checked = true;
-            }
-        }
-        toggleSpicyOptions();
-    });
     </script>
 </body>
 </html>
