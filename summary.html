@@ -67,9 +67,9 @@
             <div class="form-group">
                 <label>การรับสินค้า</label>
                 <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="ทานที่ร้าน" checked><label for="r1">🍽️ ทานที่ร้าน</label>
-                    <input type="radio" id="r2" name="stype" value="กลับบ้าน"><label for="r2">🥡 กลับบ้าน</label>
-                    <input type="radio" id="r3" name="stype" value="เดลิเวอรี่"><label for="r3">🛵 ส่ง</label>
+                    <input type="radio" id="r1" name="stype" value="🪑ทานที่ร้าน" checked><label for="r1">🍽️ ทานที่ร้าน</label>
+                    <input type="radio" id="r2" name="stype" value="🏡กลับบ้าน"><label for="r2">🥡 กลับบ้าน</label>
+                    <input type="radio" id="r3" name="stype" value="🛵Delivery (กรุณาแจ้งที่อยู่ในแชท)"><label for="r3">🛵 ส่งเดลิเวอรี่</label>
                 </div>
             </div>
         </div>
@@ -138,22 +138,50 @@
             loadCart();
         }
 
-        function checkout() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            if(!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทร');
+function checkout() {
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+    
+    // ดึงค่าการรับสินค้าที่เลือก (แก้ไขจุดที่ทำให้กดปุ่มไม่ติด)
+    const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+    const serviceType = serviceTypeEl ? serviceTypeEl.value : "ไม่ได้ระบุ";
 
-            let txt = `📢 *รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)*
-\nชื่อ: ${name}\nโทร: ${phone}\nวิธีรับ: ${document.querySelector('input[name="stype"]:checked').value}\n\n`;
-            cartItems.forEach((item, i) => {
-                txt += `${i+1}. ${item.name} (${item.price} บ.)\n`;
-                if(item.details) item.details.forEach(d => txt += `   > ${d.name} x${d.count}\n`);
+    if(!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทร');
+
+    // ส่วนหัวของออเดอร์
+    let txt = `📢 *รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)🏮*\n`;
+    txt += `━━━━━━━━━━━━━━━━━━\n`;
+    txt += `👤 ชื่อผู้รับ: ${name}\n`;
+    txt += `📞 เบอร์โทร: ${phone}\n`;
+    txt += `📍 วิธีรับ: ${serviceType}\n`;
+    txt += `━━━━━━━━━━━━━━━━━━\n\n`;
+
+    // รายการอาหารแต่ละออเดอร์
+    cartItems.forEach((item, i) => {
+        txt += `${i + 1}. 🍜 *${item.name}*\n`;
+        txt += `   ราคา: ${item.price} บาท\n`;
+        
+        // รายละเอียดท็อปปิ้ง (ถ้ามี)
+        if(item.details && item.details.length > 0) {
+            item.details.forEach(d => {
+                txt += `   ➕ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
             });
-            txt += `\n🧺 ยอดรวม: ${document.getElementById('grand-total').innerText} บาท`;
-            
-            document.getElementById('order-text').value = txt;
-            document.getElementById('overlay').style.display = 'flex';
         }
+        
+        // --- ส่วนที่เพิ่ม: ขีดเส้นคั่นชัดเจนเมื่อมีออเดอร์ถัดไป ---
+        if (i < cartItems.length - 1) {
+            txt += `----------------------------------\n`;
+        }
+    });
+
+    // สรุปยอดรวมท้ายบิล
+    txt += `\n━━━━━━━━━━━━━━━━━━\n`;
+    txt += `💰 *ยอดรวมทั้งหมด: ${document.getElementById('grand-total').innerText} บาท*`;
+    txt += `\n━━━━━━━━━━━━━━━━━━`;
+    
+    document.getElementById('order-text').value = txt;
+    document.getElementById('overlay').style.display = 'flex';
+}
 
         function copyAndChat() {
             const el = document.getElementById('order-text');
