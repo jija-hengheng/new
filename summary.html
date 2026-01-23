@@ -164,7 +164,7 @@ function checkout() {
         // รายละเอียดท็อปปิ้ง (ถ้ามี)
         if(item.details && item.details.length > 0) {
             item.details.forEach(d => {
-                txt += `   ➕ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
+                txt += `   ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
             });
         }
         
@@ -176,7 +176,7 @@ function checkout() {
 
     // สรุปยอดรวมท้ายบิล
     txt += `\n━━━━━━━━━━━━\n`;
-    txt += `💰 *ยอดรวมทั้งหมด: ${document.getElementById('grand-total').innerText} บาท*`;
+    txt += `🪙 *ยอดรวมทั้งหมด: ${document.getElementById('grand-total').innerText} บาท*`;
     txt += `\n━━━━━━━━━━━━`;
     
     document.getElementById('order-text').value = txt;
@@ -196,4 +196,5 @@ function checkout() {
     </script>
 </body>
 </html>
+
 
