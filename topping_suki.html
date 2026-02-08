@@ -14,7 +14,7 @@
             background-color: #f1e9d9;
             color: #333;
             margin: 0;
-            padding: 10px; /* ลด padding ขอบจอลงเล็กน้อย */
+            padding: 10px;
             padding-bottom: 150px;
         } 
         .container {
@@ -25,7 +25,7 @@
         h1 {
             color: #940109;
             text-align: center;
-            font-size: 1.5em; /* ปรับขนาดหัวข้อให้พอดีกับมือถือ */
+            font-size: 1.5em;
             margin-bottom: 5px;
         }
         p.price-info {
@@ -37,7 +37,7 @@
         }
         
         /* ======================================= */
-        /* === 2. TOPPING STYLES (ปรับปรุงเป็น 3 คอลัมน์) === */
+        /* === 2. TOPPING STYLES === */
         /* ======================================= */
         .topping-category {
             margin-bottom: 25px;
@@ -53,16 +53,15 @@
         }
         .topping-grid {
             display: grid;
-            /* บังคับแบ่ง 3 คอลัมน์เท่ากันเสมอ */
             grid-template-columns: repeat(3, 1fr); 
-            gap: 8px; /* ลดช่องว่างระหว่างการ์ดเพื่อให้ประหยัดเนื้อที่ */
+            gap: 8px;
             padding: 0 5px;
         }
         .topping-card {
             background-color: #ffffff;
-            border: 2px solid #ccc; /* ลดความหนาเส้นขอบ */
+            border: 2px solid #ccc;
             border-radius: 10px;
-            padding: 8px 4px; /* ปรับพื้นที่ภายในให้เล็กลง */
+            padding: 8px 4px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -70,7 +69,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 140px; /* คุมความสูงให้เท่ากัน */
+            min-height: 140px;
         }
         .topping-card:hover {
             border-color: #940109;
@@ -82,7 +81,7 @@
         }
         
         .topping-card img {
-            width: 100%; /* ให้รูปกว้างเต็มการ์ดแต่ไม่เกิน 65px */
+            width: 100%;
             max-width: 65px;
             height: 65px;
             object-fit: cover;
@@ -90,7 +89,7 @@
             margin: 0 auto 5px auto;
         }
         .topping-name {
-            font-size: 0.75em; /* ปรับตัวอักษรชื่อท็อปปิ้งให้เล็กลงเพื่อไม่ให้ล้น */
+            font-size: 0.75em;
             font-weight: 700;
             color: #333;
             line-height: 1.1;
@@ -113,7 +112,21 @@
             font-weight: 700;
         }
         
-        /* ปรับปรุงปุ่มควบคุมจำนวนให้กดง่ายขึ้นบนมือถือ */
+        /* New Badge Style */
+        .badge-new {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ff0000;
+            color: white;
+            font-size: 0.6em;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
         .count-controls {
             display: flex;
             justify-content: center;
@@ -165,7 +178,7 @@
             max-width: 960px;
             margin: auto;
             display: flex;
-            justify-content: center; /* จัดปุ่มไว้ตรงกลางเพื่อกดง่าย */
+            justify-content: center;
             align-items: center;
             padding: 0 15px;
             pointer-events: none;
@@ -185,7 +198,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            width: 90%; /* ให้ปุ่มกว้างเกือบเต็มจอเพื่อให้กดง่าย */
+            width: 90%;
             justify-content: center;
         }
         
@@ -200,21 +213,17 @@
             border-radius: 15px;
             font-size: 0.85em;
             font-weight: 700;
-        
-    </style>
-        
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>เลือกท็อปปิ้ง🧺</h1>
-        <p class="price-info" id="main-item-info">
-            </p>
+        <p class="price-info" id="main-item-info"></p>
 
-        <div id="topping-sections">
-            </div>
-
+        <div id="topping-sections"></div>
     </div>
 
     <div class="footer-fixed">
@@ -228,14 +237,11 @@
 
 <script>
     // ========================================================
-    // === 1. TOPPING DATA (ข้อมูลท็อปปิ้งทั้งหมด) ===
+    // === 1. TOPPING DATA ===
     // ========================================================
     const TOPPING_DATA = [
-
-        // --- # 🧀 หมวดพิเศษ ---
         { id: 'T0.0', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
 
-        // --- # 🥩 หมวดเนื้อหมู - 10 บาททั้งหมด ---
         { id: 'T0', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
         { id: 'T1', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
         { id: 'T2', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
@@ -245,7 +251,6 @@
         { id: 'T6', category: 'หมวดเนื้อหมู', name: 'สามชั้นพันเห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
         { id: 'T6.5', category: 'หมวดเนื้อหมู', name: 'ไส้กรอกพันเบคอน', image: 'beconpun.png', price: 10 },
 
-        // --- # 🍢 หมวดลูกชิ้น – ไส้กรอก – ทะเล - 10 บาททั้งหมด ---
         { id: 'T7', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
         { id: 'T8', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
         { id: 'T9', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบชีส', image: 'nunggroobchhet.png', price: 10 },
@@ -260,7 +265,6 @@
         { id: 'T18', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
         { id: 'T19', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'สไบนาง', image: 'zbainag.png', price: 10 },
 
-        // --- # 🧀 หมวดเต้าหู้ - 10 บาททั้งหมด ---
         { id: 'T20', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
         { id: 'T21', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
         { id: 'T22', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
@@ -268,10 +272,10 @@
         { id: 'T24', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
         { id: 'T25', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
 
-        // --- # 🥬 หมวดผัก – เส้น - 10 บาททั้งหมด ---
         { id: 'T26', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 }, 
         { id: 'T27', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
         { id: 'T28', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
+        { id: 'T28.1', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันหนึบ', image: 'zenlek-mun.png', price: 10, isNew: true },
         { id: 'T29', category: 'หมวดผัก – เส้น', name: 'บะหมี่ผัก', image: 'bamheepuk.png', price: 10 },
         { id: 'T30', category: 'หมวดผัก – เส้น', name: 'ข้าวโพด', image: 'kaopod.png', price: 10 },
         { id: 'T31', category: 'หมวดผัก – เส้น', name: 'ผักกาด', image: 'pukgad.png', price: 10 },
@@ -282,12 +286,10 @@
         { id: 'T36', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
         { id: 'T37', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
 
-        // --- # 🍳 หมวดไข่ – เมนูพิเศษ - 10 บาททั้งหมด ---
         { id: 'T38', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },
         { id: 'T39', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
         { id: 'T40', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
 
-        // --- # 📦 หมวดเมนูพิเศษ – ยกแพ็ค - ราคาพิเศษ ---
         { id: 'T41', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ม้วน แพ็คละ 59 บาท', image: 'fong-pack.png', price: 59, note: 'แบบยกแพ็ค' },
         { id: 'T42', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
         { id: 'T43', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – เผือก', image: 'zen-p.png', price: 29 }, 
@@ -297,59 +299,37 @@
         { id: 'T47', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบเล็ก', image: 'zen-l.png', price: 29 },
         { id: 'T48', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นเล็กซันเยา', image: 'zunyao.png', price: 29 },
 
-        // --- # 🥣 หมวดน้ำจิ้ม 100 ml - ราคาพิเศษ ---
         { id: 'T49', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 12 },
         { id: 'T50', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
         { id: 'T51', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 },
-        { id: 'T51', category: 'หมวดน้ำจิ้ม 220 ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', image: 'mala_sauce.png', price: 69 },
-
+        { id: 'T52', category: 'หมวดน้ำจิ้ม 220 ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', image: 'mala_sauce.png', price: 69 },
     ];
     
     let selectedToppings = {}; 
     let mainItemDetails = {}; 
     let grandTotal = 0; 
-
-    // ========================================================
-    // === 2. CORE LOGIC FUNCTIONS ===
-    // ========================================================
-    
-    // **กำหนดค่าขั้นต่ำที่ต้องเลือก**
     const MIN_TOPPINGS_COUNT = 3; 
 
-    /**
-     * โหลดรายละเอียดเมนูหลัก (น้ำซุป/หม่าล่า) จาก **Session Storage**
-     */
     function loadSukiDetails() {
-        const storedDetails = sessionStorage.getItem('sukiMainItem'); // **แก้ไขที่นี่**
+        const storedDetails = sessionStorage.getItem('sukiMainItem');
         if (storedDetails) {
             mainItemDetails = JSON.parse(storedDetails);
             const infoElement = document.getElementById('main-item-info');
-            // แสดงข้อมูลเมนูหลักและราคา
             infoElement.innerHTML = `รายการหลัก: 
                 <strong>${mainItemDetails.name}</strong> 
                 (${mainItemDetails.price.toLocaleString()} บาท)
                 ${mainItemDetails.spice ? ` - เผ็ดระดับ: ${mainItemDetails.spice}` : ''}
             `;
-             // **เพิ่มข้อความบังคับขั้นต่ำ**
-             if (MIN_TOPPINGS_COUNT > 0) {
-             }
         } else {
-             // ถ้าไม่มีข้อมูล ให้กลับไปหน้าเลือกประเภทสุกี้/หม่าล่า
              document.getElementById('main-item-info').innerText = 'ไม่พบรายการหลัก กรุณาเลือกรายการใหม่';
-             setTimeout(() => {
-                 window.location.href = 'suki_type.html';
-             }, 1000);
+             setTimeout(() => { window.location.href = 'suki_type.html'; }, 1000);
         }
     }
 
-    /**
-     * สร้าง HTML ของรายการท็อปปิ้งทั้งหมดจาก TOPPING_DATA
-     */
     function renderToppings() {
         const container = document.getElementById('topping-sections');
         if (!container) return;
 
-        // 1. จัดกลุ่มท็อปปิ้งตาม Category
         const groupedToppings = TOPPING_DATA.reduce((acc, item) => {
             acc[item.category] = acc[item.category] || [];
             acc[item.category].push(item);
@@ -357,28 +337,23 @@
         }, {});
 
         let html = '';
-        
-        // 2. วนลูปสร้างส่วน HTML สำหรับแต่ละ Category
         for (const category in groupedToppings) {
             html += `<div class="topping-category">`;
             html += `<h2 class="category-title">${category}</h2>`;
             html += `<div class="topping-grid">`;
 
-            // 3. วนลูปสร้าง Card สำหรับแต่ละ Topping
             groupedToppings[category].forEach(item => {
-                const priceDisplay = item.price.toLocaleString();
                 html += `
                     <div class="topping-card" 
                         data-id="${item.id}"
-                        data-name="${item.name}"
-                        data-price="${item.price}"
                         onclick="updateToppingSelection('${item.id}')"
                         id="card-${item.id}"
                     >
+                        ${item.isNew ? `<span class="badge-new">New</span>` : ''}
                         <img src="images/${item.image}" alt="${item.name}">
                         <div class="topping-name">${item.name}</div>
                         ${item.note ? `<div class="topping-note">${item.note}</div>` : ''}
-                        <div class="topping-price">${priceDisplay} บาท</div>
+                        <div class="topping-price">${item.price.toLocaleString()} บาท</div>
                         
                         <div class="count-controls">
                             <button onclick="changeCount(event, '${item.id}', -1)">-</button>
@@ -388,206 +363,108 @@
                     </div>
                 `;
             });
-            html += `</div>`; // .topping-grid
-            html += `</div>`; // .topping-category
+            html += `</div></div>`;
         }
-
         container.innerHTML = html;
         updateTotalDisplay();
     }
 
-    /**
-     * จัดการการเลือก/ยกเลิกการเลือกท็อปปิ้ง
-     * @param {string} id - ID ของท็อปปิ้ง
-     */
     function updateToppingSelection(id) {
-        // หาข้อมูลท็อปปิ้งที่เลือกจาก Data
         const itemData = TOPPING_DATA.find(item => item.id === id);
         const cardElement = document.getElementById(`card-${id}`);
 
         if (!itemData || !cardElement) return;
 
         if (selectedToppings[id]) {
-            // 💡 ถ้าถูกเลือกอยู่แล้ว: ยกเลิกการเลือก (ลบออกจากรายการ)
             delete selectedToppings[id];
             cardElement.classList.remove('selected');
         } else {
-            // 💡 ถ้ายังไม่ถูกเลือก: เลือกรายการนี้ (เพิ่มเข้ารายการ)
-            selectedToppings[id] = { 
-                ...itemData, 
-                count: 1 // กำหนดจำนวนเริ่มต้นเป็น 1
-            };
+            selectedToppings[id] = { ...itemData, count: 1 };
             cardElement.classList.add('selected');
-            // อัปเดตการแสดงผลจำนวนเป็น 1 (กรณีคลิกเลือกครั้งแรก)
             const countDisplay = document.getElementById(`count-${id}`);
             if (countDisplay) countDisplay.innerText = 1;
         }
-
         updateTotalDisplay();
     }
 
-    /**
-     * เปลี่ยนจำนวนของท็อปปิ้งที่เลือกไว้
-     * @param {Event} event - Event object (ป้องกันการทำงานของ onclick หลัก)
-     * @param {string} id - ID ของท็อปปิ้ง
-     * @param {number} delta - จำนวนที่เปลี่ยนแปลง (+1 หรือ -1)
-     */
     function changeCount(event, id, delta) {
-        event.stopPropagation(); // สำคัญ: หยุดการทำงานของ onclick หลักของ Card
-
+        event.stopPropagation();
         if (!selectedToppings[id]) return;
 
         let newCount = selectedToppings[id].count + delta;
-        
         if (newCount <= 0) {
-            // ถ้าลดจนเหลือ 0 ให้ยกเลิกการเลือกท็อปปิ้งนี้
             updateToppingSelection(id);
         } else {
-            // อัปเดตจำนวนและแสดงผล
             selectedToppings[id].count = newCount;
             document.getElementById(`count-${id}`).innerText = newCount;
             updateTotalDisplay();
         }
     }
 
-    /**
-     * คำนวณยอดรวมทั้งหมด (รายการหลัก + ท็อปปิ้ง) และอัปเดตการแสดงผลบนปุ่มลอย
-     */
     function updateTotalDisplay() {
-        let toppingTotal = Object.values(selectedToppings).reduce((total, item) => {
-            return total + (item.price * item.count);
-        }, 0);
+        let toppingTotal = Object.values(selectedToppings).reduce((total, item) => total + (item.price * item.count), 0);
+        let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
 
-        // 1. คำนวณจำนวนท็อปปิ้งทั้งหมด (รวมจำนวนไม้)
-        let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => {
-            return count + item.count;
-        }, 0);
-
-        // 2. รวมยอดรายการหลัก
         const mainPrice = mainItemDetails.price || 0;
         grandTotal = mainPrice + toppingTotal;
 
-        // 3. อัปเดตการแสดงผลบนปุ่มลอย
         const totalDisplayElement = document.getElementById('grand-total-display');
         const nextButton = document.getElementById('next-btn');
 
-        if (totalDisplayElement) {
-            totalDisplayElement.innerText = `${grandTotal.toLocaleString()} บาท`;
-        }
+        if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} บาท`;
         
-        // 4. ตรวจสอบการเลือกขั้นต่ำ และจัดการสถานะปุ่ม
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             nextButton.classList.add('disabled');
-            // ปรับข้อความปุ่มให้แจ้งเตือนการเลือกขั้นต่ำ
-            nextButton.innerHTML = `
-                📌 เลือกท็อปปิ้งเพิ่มอีก ${MIN_TOPPINGS_COUNT - totalToppingCount} ไม้
-                <span class="total-amount" id="grand-total-display">${grandTotal.toLocaleString()} บาท</span>
-            `;
-            
+            nextButton.innerHTML = `📌 เลือกท็อปปิ้งเพิ่มอีก ${MIN_TOPPINGS_COUNT - totalToppingCount} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         } else {
             nextButton.classList.remove('disabled');
-            // ปรับข้อความปุ่มกลับเป็นปกติ
-            nextButton.innerHTML = `
-                ✅ เพิ่มลงในตะกร้า 
-                <span class="total-amount" id="grand-total-display">${grandTotal.toLocaleString()} บาท</span>
-            `;
+            nextButton.innerHTML = `✅ เพิ่มลงในตะกร้า <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         }
-
     }
 
-    /**
-     * คำนวณราคารวมทั้งหมด บันทึกรายการลงตะกร้า และนำทางไปหน้าสรุป
-     */
     function calculateAndSave() {
-        // 1. ตรวจสอบรายการหลัก
-        if (!mainItemDetails || !mainItemDetails.name || mainItemDetails.price === undefined) {
-            alert('ไม่พบรายการหลัก กรุณาลองเลือกเมนูหลักใหม่อีกครั้ง');
-            window.location.href = 'suki_type.html';
-            return;
-        }
-
-        // 2. ตรวจสอบจำนวนท็อปปิ้งขั้นต่ำ (New Validation)
-        let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => {
-            return count + item.count;
-        }, 0);
-        
+        let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
-            alert(`⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${MIN_TOPPINGS_COUNT} ไม้ (ตอนนี้เลือกไปแล้ว ${totalToppingCount} ไม้)`);
+            alert(`⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${MIN_TOPPINGS_COUNT} ไม้`);
             return;
         }
-        
-        // 3. ดำเนินการบันทึกรายการ (โค้ดเดิม)
-        let orderItems = [];
-        let currentGrandTotal = mainItemDetails.price || 0; 
 
-        // A. รายการหลัก (น้ำซุป/หม่าล่า)
-        const mainItemForOrder = {
-            id: 'M1',
-            name: mainItemDetails.name,
-            price: mainItemDetails.price,
-            count: 1,
-            type: 'Main'
-        };
-        orderItems.push(mainItemForOrder);
-        
-        // B. ระดับความเผ็ด (ถ้ามี)
+        let orderItems = [];
+        orderItems.push({ id: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
         if (mainItemDetails.spice) {
-             orderItems.push({
-                 id: 'S1',
-                 name: `ระดับเผ็ด: ${mainItemDetails.spice}`,
-                 price: 0,
-                 count: 1,
-                 type: 'Spice'
-             });
+             orderItems.push({ id: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
         }
 
-        // C. รายการท็อปปิ้ง
         Object.values(selectedToppings).forEach(topping => {
-            let toppingName = topping.name;
-            if (topping.note) {
-                 toppingName += ` (${topping.note})`;  
-            }
-
             orderItems.push({
                 id: topping.id,
-                name: toppingName,
+                name: topping.name + (topping.note ? ` (${topping.note})` : ''),
                 price: topping.price,
                 count: topping.count,
                 type: 'Topping'
             });
-            currentGrandTotal += topping.price * topping.count;
         });
 
-        // 4. สร้าง Object สรุปคำสั่งซื้อ (Order Set)
         const finalOrderSet = {
-            name: mainItemForOrder.name + (totalToppingCount > 0 ? ` (+${totalToppingCount} ไม้)` : ''), 
-            price: currentGrandTotal,
+            name: mainItemDetails.name + (totalToppingCount > 0 ? ` (+${totalToppingCount} รายการ)` : ''), 
+            price: grandTotal,
             count: 1, 
             details: orderItems,
-            isSukiSet: true,
-            isNoodleSet: false
+            isSukiSet: true
         };
 
-        // 5. จัดการตะกร้า (**Session Storage**)
-        let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]'); // **แก้ไขที่นี่**
+        let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
         cartItems.push(finalOrderSet);
-        sessionStorage.setItem('cartItems', JSON.stringify(cartItems)); // **แก้ไขที่นี่**
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        sessionStorage.removeItem('sukiMainItem');
 
-        // 6. ล้างข้อมูลเมนูหลักที่ใช้ชั่วคราว (**Session Storage**)
-        sessionStorage.removeItem('sukiMainItem'); // **แก้ไขที่นี่**
-
-        // 7. นำทางไปหน้าสรุป
         window.location.href = 'summary.html';
     }
 
-    // ========================================================
-    // === 3. INITIALIZATION ===
-    // ========================================================
     document.addEventListener('DOMContentLoaded', () => {
         loadSukiDetails();
         renderToppings();
     });
 </script>
 </body>
-
 </html>
