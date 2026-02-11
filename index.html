@@ -10,6 +10,7 @@
             --primary-red: #940109;
             --bg-cream: #f1e9d9;
             --card-white: #ffffff;
+            --accent-gold: #d4af37;
         }
 
         body {
@@ -27,7 +28,7 @@
 
         .logo-container {
             text-align: center;
-            padding: 20px 0;
+            padding: 20px 0 10px 0;
         }
 
         .logo-image {
@@ -35,11 +36,101 @@
             height: auto;
         }
 
-        /* ปรับ Layout เป็นแถวละ 2 รายการ */
+        /* --- ส่วนที่ปรับปรุงใหม่: Modern Gen Z Business Hours --- */
+        .hours-banner {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 20px 15px;
+            margin: 10px 5px 25px 5px;
+            border: 2px solid var(--primary-red);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(148, 1, 9, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hours-title {
+            display: inline-block;
+            background: var(--primary-red);
+            color: white;
+            padding: 4px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(148, 1, 9, 0.3);
+        }
+
+        .hours-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .hour-item {
+            flex: 1;
+        }
+
+        .day-label {
+            font-size: 0.85rem;
+            color: #555;
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+
+        .time-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            display: block;
+        }
+
+        .divider-vertical {
+            width: 1.5px;
+            height: 35px;
+            background: linear-gradient(to bottom, transparent, var(--primary-red), transparent);
+            opacity: 0.3;
+        }
+
+        .hours-notice {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(148, 1, 9, 0.2);
+            font-style: italic;
+        }
+
+        .hours-notice strong {
+            color: var(--primary-red);
+        }
+        /* ------------------------------------------ */
+
+        .nav-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            background: var(--primary-red);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* แบ่ง 2 คอลัมน์เท่ากัน */
-            gap: 12px; /* ระยะห่างระหว่างการ์ด */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             padding: 5px;
         }
 
@@ -56,12 +147,12 @@
         }
 
         .menu-card:active {
-            transform: scale(0.95); /* เอฟเฟกต์เมื่อกดบนมือถือ */
+            transform: scale(0.95);
         }
 
         .card-top-content {
             width: 100%;
-            aspect-ratio: 1 / 1; /* บังคับให้เป็นสี่เหลี่ยมจัตุรัส */
+            aspect-ratio: 1 / 1;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -105,25 +196,9 @@
             text-align: center;
             line-height: 1.3;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* จำกัดข้อความไม่เกิน 2 บรรทัด */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-        }
-
-        .nav-buttons {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .nav-button {
-            display: inline-block;
-            background: var(--primary-red);
-            color: white;
-            padding: 8px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -132,6 +207,24 @@
         
         <div class="logo-container">
             <img src="images/2.png" alt="จิจะเฮงเฮง" class="logo-image">
+        </div>
+
+        <div class="hours-banner">
+            <div class="hours-title">🕰️ เปิดทุกวัน • เปลี่ยนเวลาทำการ 🕰️</div>
+            <div class="hours-grid">
+                <div class="hour-item">
+                    <span class="day-label">จันทร์ - ศุกร์</span>
+                    <span class="time-label">12:00 - 22:00</span>
+                </div>
+                <div class="divider-vertical"></div>
+                <div class="hour-item">
+                    <span class="day-label">เสาร์ - อาทิตย์</span>
+                    <span class="time-label">16:00 - 20:30</span>
+                </div>
+            </div>
+            <div class="hours-notice">
+                📢 หากร้านหยุด จะโพสต์แจ้งที่ <strong>หน้าเพจ</strong> ก่อนเวลาเปิดนะคะ
+            </div>
         </div>
 
         <div class="nav-buttons">
@@ -145,7 +238,7 @@
                 </div>
                 <div class="menu-title-strip">อาหารจานเดี่ยว</div>
                 <div class="card-details">
-                    <p class="menu-details-text">เมนูจานเดียวยอดนิยม!</p>
+                    <p class="menu-details-text">เมนูอาหารจานเดียวยอดนิยม!</p>
                 </div>
             </div>
 
@@ -191,5 +284,4 @@
         </div>
     </div>
 </body>
-
 </html>
