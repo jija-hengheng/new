@@ -3,221 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mala Sides Menu - รายการสินค้าหม่าล่า</title>
+    <title>Mala Sides Menu - 3 Column Modern Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'JS Chanok';
-            src: local('JS Chanok'), local('Was Piaere Gold NP');
+        :root {
+            --primary-red: #940109;
+            --dark-red: #6e0006;
+            --gold: #d4af37;
+            --light-bg: #fdfaf5;
+            --card-bg: #ffffff;
+            --text-dark: #2d2d2d;
         }
 
         body {
-            font-family: 'JS Chanok', 'Was Piaere Gold NP', 'Kanit', serif;
-            background-color: #f1e9d9; /* สีพื้นหลังครีมนวล */
-            color: #333;
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             margin: 0;
-            padding: 10px;
+            padding: 0;
+            background-image: radial-gradient(#94010908 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            border-bottom: 4px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Noto Serif Thai', serif;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-weight: 300;
+            opacity: 0.8;
+            font-size: 0.85rem;
         }
 
         .container {
-            max-width: 100%;
+            max-width: 800px;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 15px;
+            padding: 10px 10px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin: 25px 0 15px;
+        }
+
+        .category-header h2 {
+            font-size: 1.1rem;
+            color: var(--primary-red);
+            margin: 0 10px;
+            white-space: nowrap;
+        }
+
+        .category-header::before, .category-header::after {
+            content: "";
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            flex-grow: 1;
+        }
+
+        /* ปรับเป็น 3 คอลัมน์ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .card {
+            background: var(--card-bg);
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(148, 1, 9, 0.05);
         }
 
-        h1 {
+        .image-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info {
+            padding: 8px 5px;
             text-align: center;
-            color: #940109; /* สีแดงเข้มหลัก */
-            border-bottom: 2px solid #940109;
-            padding-bottom: 10px;
-            margin-top: 10px;
-            font-size: 1.5em;
-        }
-
-        .category-title {
-            background-color: #940109;
-            color: #f1e9d9; /* ตัวอักษรสีครีมบนพื้นแดง */
-            padding: 8px 12px;
-            border-radius: 5px;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            font-weight: bold;
-            font-size: 1em;
-            text-align: left;
-        }
-
-        .item-list {
-            list-style: none;
-            padding: 0;
-            display: grid; 
-            /* บังคับให้เป็น 4 คอลัมน์ */
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px; 
-        }
-
-        .item {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 8px 4px;
-            text-align: center;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        .item-image {
-            width: 100%; 
-            aspect-ratio: 1 / 1; /* บังคับให้ภาพเป็นจัตุรัสเพื่อความเท่ากัน */
-            object-fit: cover; 
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        .item-name {
-            font-weight: 500;
+        .name {
+            font-size: 0.75rem;
+            font-weight: 400;
             color: #444;
-            font-size: 0.75em; /* ปรับขนาดตัวอักษรให้เล็กลงเพื่อให้พอดี 4 คอลัมน์ */
+            margin-bottom: 6px;
             line-height: 1.2;
-            margin-bottom: 4px;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* จำกัดชื่อสินค้าไม่เกิน 2 บรรทัด */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             height: 2.4em;
         }
 
-        .price {
-            font-weight: bold;
-            color: #940109;
-            font-size: 0.9em;
+        .price-tag {
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: block;
         }
 
-        /* ปรับแต่งสำหรับหน้าจอเล็กมาก */
-        @media (max-width: 350px) {
-            .item-name {
-                font-size: 0.65em;
-            }
-            .price {
-                font-size: 0.8em;
-            }
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #aaa;
+            font-size: 0.75rem;
+        }
+
+        /* ปรับขนาดตัวหนังสือสำหรับมือถือเล็ก */
+        @media (max-width: 360px) {
+            .name { font-size: 0.7rem; }
+            .price-tag { font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<header>
     <h1>Mala Sides Menu</h1>
+    <p>ต้นตำรับความอร่อย วัตถุดิบพรีเมียม</p>
+</header>
 
-    <div class="category-title">กลุ่มเส้นหนึบ</div>
-    <ul class="item-list">
-        <li class="item">
-            <img src="images/zenred-pack.png" alt="เส้นมันหนึบหน้ากากแดง" class="item-image">
-            <div class="item-name">เส้นมันหนึบหน้ากากแดง</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-p.png" alt="เส้นหนึบ – เผือก" class="item-image">
-            <div class="item-name">เส้นหนึบ เผือก</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-u.png" alt="เส้นหนึบ – ปวยเล้ง" class="item-image">
-            <div class="item-name">เส้นหนึบ ปวยเล้ง</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-m.png" alt="เส้นหนึบ – มันม่วง" class="item-image">
-            <div class="item-name">เส้นหนึบ มันม่วง</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-f.png" alt="เส้นหนึบ – ฟักทอง" class="item-image">
-            <div class="item-name">เส้นหนึบ ฟักทอง</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-l.png" alt="เส้นหนึบ – เล็ก" class="item-image">
-            <div class="item-name">เส้นหนึบ เล็ก</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zunyao.png" alt="เส้นหนึบ – ซันเย่า" class="item-image">
-            <div class="item-name">เส้นหนึบ ซันเย่า</div>
-            <div class="price">29฿</div>
-        </li>
-    </ul>
+<div class="container">
+    
+    <div class="category-header">
+        <h2>กลุ่มเส้นหนึบ</h2>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="image-container"><img src="images/zenred-pack.png" alt="เส้นมันหนึบหน้ากากแดง"></div>
+            <div class="info">
+                <div class="name">เส้นมันหนึบหน้ากากแดง</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-p.png" alt="เส้นหนึบ เผือก"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ เผือก</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-u.png" alt="เส้นหนึบ ปวยเล้ง"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ ปวยเล้ง</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-m.png" alt="เส้นหนึบ มันม่วง"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ มันม่วง</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-f.png" alt="เส้นหนึบ ฟักทอง"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ ฟักทอง</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-l.png" alt="เส้นหนึบ เล็ก"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ เล็ก</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zunyao.png" alt="เส้นหนึบ ซันเย่า"></div>
+            <div class="info">
+                <div class="name">เส้นหนึบ ซันเย่า</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+    </div>
 
-    <div class="category-title">ซุปและพริกหม่าล่า</div>
-    <ul class="item-list">
-        <li class="item">
-            <img src="images/mala_soup_50.jpg" alt="ซุปหม่าล่า 50 กรัม" class="item-image">
-            <div class="item-name">ซุปหม่าล่า 50ก.</div>
-            <div class="price">25฿</div>
-        </li>
-        <li class="item">
-            <img src="images/mala_soup_150.jpg" alt="ซุปหม่าล่า 150 กรัม" class="item-image">
-            <div class="item-name">ซุปหม่าล่า 150ก.</div>
-            <div class="price">69฿</div>
-        </li>
-        <li class="item">
-            <img src="images/mala_soup_220.jpg" alt="ซุปหม่าล่า 220 กรัม" class="item-image">
-            <div class="item-name">ซุปหม่าล่า 220ก.</div>
-            <div class="price">89฿</div>
-        </li>
-        <li class="item">
-            <img src="images/mala_chili.jpg" alt="พริกหม่าล่า 1+1" class="item-image">
-            <div class="item-name">พริกหม่าล่า 1+1</div>
-            <div class="price">25฿</div>
-        </li>
-        <li class="item">
-            <img src="images/mala_chili_extra.jpg" alt="พริกหม่าล่าเผ็ดมาก 1+2" class="item-image">
-            <div class="item-name">พริกเผ็ดมาก 1+2</div>
-            <div class="price">25฿</div>
-        </li>
-    </ul>
+    <div class="category-header">
+        <h2>ซุปและพริกหม่าล่า</h2>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="image-container"><img src="images/mala_soup_50.jpg" alt="ซุปหม่าล่า 50ก."></div>
+            <div class="info">
+                <div class="name">ซุปหม่าล่า 50ก.</div>
+                <div class="price-tag">25฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/mala_soup_150.jpg" alt="ซุปหม่าล่า 150ก."></div>
+            <div class="info">
+                <div class="name">ซุปหม่าล่า 150ก.</div>
+                <div class="price-tag">69฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/mala_soup_220.jpg" alt="ซุปหม่าล่า 220ก."></div>
+            <div class="info">
+                <div class="name">ซุปหม่าล่า 220ก.</div>
+                <div class="price-tag">89฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/mala_chili.jpg" alt="พริกหม่าล่า 1+1"></div>
+            <div class="info">
+                <div class="name">พริกหม่าล่า 1+1</div>
+                <div class="price-tag">25฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/mala_chili_extra.jpg" alt="พริกเผ็ดมาก 1+2"></div>
+            <div class="info">
+                <div class="name">พริกเผ็ดมาก 1+2</div>
+                <div class="price-tag">25฿</div>
+            </div>
+        </div>
+    </div>
 
-    <div class="category-title">เครื่องเคียงและฟองเต้าหู้</div>
-    <ul class="item-list">
-        <li class="item">
-            <img src="images/fong-pack.png" alt="ฟองเต้าหู้ม้วน – ยกแพ็ค" class="item-image">
-            <div class="item-name">เต้าหู้ม้วน (แพ็ค)</div>
-            <div class="price">59฿</div>
-        </li>
-        <li class="item">
-            <img src="images/seaweed_tofu.jpg" alt="ฟองเต้าหู้สาหร่าย – ยกแพ็ค" class="item-image">
-            <div class="item-name">เต้าหู้สาหร่าย</div>
-            <div class="price">99฿</div>
-        </li>
-        <li class="item">
-            <img src="images/6.jpg" alt="เส้นฟองเต้าหู้ใหญ่ – ยกแพ็ค" class="item-image">
-            <div class="item-name">เต้าหู้ใหญ่ (แพ็ค)</div>
-            <div class="price">69฿</div>
-        </li>
-        <li class="item">
-            <img src="images/zen-fong69.jpg" alt="เส้นฟองเต้าหู้เล็ก – ยกแพ็ค" class="item-image">
-            <div class="item-name">เต้าหู้เล็ก (แพ็ค)</div>
-            <div class="price">69฿</div>
-        </li>
-        <li class="item">
-            <img src="images/fong-29.jpg" alt="ฟองเต้าหู้ดูดซุป 60 กรัม" class="item-image">
-            <div class="item-name">เต้าหู้ดูดซุป 60ก.</div>
-            <div class="price">29฿</div>
-        </li>
-        <li class="item">
-            <img src="images/wakame1.jpg" alt="วากาเมะ 100 กรัม" class="item-image">
-            <div class="item-name">วากาเมะ 100ก.</div>
-            <div class="price">59฿</div>
-        </li>
-        <li class="item">
-            <img src="images/mala_sauce.png" alt="น้ำจิ้มขวดงาคั่วหม่าล่า 220ml" class="item-image">
-            <div class="item-name">น้ำจิ้มงาคั่ว 220ml</div>
-            <div class="price">69฿</div>
-        </li>
-    </ul>
+    <div class="category-header">
+        <h2>เครื่องเคียงและฟองเต้าหู้</h2>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="image-container"><img src="images/fong-pack.png" alt="เต้าหู้ม้วน"></div>
+            <div class="info">
+                <div class="name">เต้าหู้ม้วน (แพ็ค)</div>
+                <div class="price-tag">59฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/seaweed_tofu.jpg" alt="เต้าหู้สาหร่าย"></div>
+            <div class="info">
+                <div class="name">เต้าหู้สาหร่าย</div>
+                <div class="price-tag">99฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/6.jpg" alt="เต้าหู้ใหญ่"></div>
+            <div class="info">
+                <div class="name">เต้าหู้ใหญ่ (แพ็ค)</div>
+                <div class="price-tag">69฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/zen-fong69.jpg" alt="เต้าหู้เล็ก"></div>
+            <div class="info">
+                <div class="name">เต้าหู้เล็ก (แพ็ค)</div>
+                <div class="price-tag">69฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/fong-29.jpg" alt="เต้าหู้ดูดซุป"></div>
+            <div class="info">
+                <div class="name">เต้าหู้ดูดซุป 60ก.</div>
+                <div class="price-tag">29฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/fong(2).png" alt="เส้นสาหร่าย"></div>
+            <div class="info">
+                <div class="name">เส้นสาหร่าย</div>
+                <div class="price-tag">69฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/wakame1.jpg" alt="วากาเมะ"></div>
+            <div class="info">
+                <div class="name">วากาเมะ 100ก.</div>
+                <div class="price-tag">59฿</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="image-container"><img src="images/mala_sauce.png" alt="น้ำจิ้มงาคั่ว"></div>
+            <div class="info">
+                <div class="name">น้ำจิ้มงาคั่ว 220ml</div>
+                <div class="price-tag">69฿</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    &copy; 2026 Mala Sides Menu. High Quality Selection.
 </div>
 
 </body>
