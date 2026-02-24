@@ -70,7 +70,7 @@
             { id: 101, name: 'น้ำจิ้มงาคั่วหม่าล่า (ขวด)', price: 69, img: 'images/mala_sauce.png' },
             { id: 102, name: 'น้ำจิ้มสุกี้กวางตุ้ง', price: 12, img: 'images/N-suki.png' },
             { id: 103, name: 'น้ำจิ้มงาคั่วหม่าล่า', price: 29, img: 'images/N-mala.png' },
-            { id: 104, name: 'น้ำจิ้มงาคั่วหอม(ขาว)', price: 29, img: 'images/N-vha.png' }
+            { id: 104, name: 'น้ำจิ้มงาคั่วหอม(ขาว)', price: 25, img: 'images/N-vha.png' }
         ];
 
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
@@ -86,9 +86,9 @@
                         <div class="opt-title">เลือกซุป:</div>
                         <div class="soup-wrap">
                             <div class="soup-btn active" onclick="selectSoup(${item.id}, 'น้ำซุปดำ', 0, this)">น้ำซุปดำ (+0)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าดั้งเดิม', 0, this)">หม่าล่าเดิม (+0)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้น', 10, this)">หม่าล่าข้น (+10)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', 10, this)">ข้นน้ำดำ (+10)</div>
+                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าดั้งเดิม', 0, this)">หม่าล่าดั้งเดิม (+0)</div>
+                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้น', 10, this)">หม่าล่าน้ำข้น (+10)</div>
+                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', 10, this)">หม่าล่าน้ำดำ (+10)</div>
                         </div>
 
                         <div id="spicy-section-${item.id}" style="display:none;">
@@ -173,4 +173,5 @@
         document.getElementById('cart-count').innerText = cart.length;
     </script>
 </body>
+
 </html>
