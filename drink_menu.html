@@ -3,367 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🥤 เมนูเครื่องดื่ม</title>
+    <title>เมนูเครื่องดื่ม - จิจะ เฮงเฮง</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* ======================================= */
-        /* === BASE STYLES & TYPOGRAPHY === */
-        /* ======================================= */
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f1e9d9; /* สีพื้นหลังหลัก: ครีมอ่อน */
-            color: #333;
-            margin: 0;
-            padding: 20px 0 100px 0; 
-        }
-        .container {
-            max-width: 650px;
-            margin: auto;
-            padding: 0 15px;
-        }
-        h1 {
-            color: #940109; /* สีหลัก: แดงอมน้ำตาลเข้ม */
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #940109;
-            padding-bottom: 10px;
-        }
+        :root { --primary-red: #940109; --bg-cream: #f1e9d9; }
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-cream); color: #333; margin: 0; padding: 15px; padding-bottom: 100px; }
+        
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { color: var(--primary-red); margin-bottom: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .header p { font-size: 0.9rem; color: #666; margin-top: 0; }
 
-        /* ======================================= */
-        /* === DRINK GRID LAYOUT (2 columns) === */
-        /* ======================================= */
-        .drink-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px;
-        }
+        /* Grid รายการอาหาร */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: auto; }
+        .menu-item { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; position: relative; border: 1px solid rgba(148, 1, 9, 0.1); }
+        .menu-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #fff; padding: 5px; box-sizing: border-box; }
+        
+        .menu-info { padding: 10px; text-align: center; flex-grow: 1; }
+        .menu-name { font-weight: 700; font-size: 0.95rem; height: 2.4em; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; color: #444; }
+        .menu-price { color: var(--primary-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+        
+        /* ตัวควบคุมจำนวน */
+        .qty-control { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+        .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: #fdfdfd; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; color: var(--primary-red); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn-qty:active { background: #eee; }
+        .qty-val { font-weight: 700; min-width: 20px; font-size: 1.1rem; }
 
-        /* ======================================= */
-        /* === DRINK CARD STYLES === */
-        /* ======================================= */
-        .drink-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s;
-            /* ความสูงขั้นต่ำเพื่อรองรับภาพที่ใหญ่ขึ้น */
-            min-height: 280px; 
-        }
-        .drink-card:hover {
-            transform: translateY(-2px);
-        }
-        .drink-card img {
-            /* ใช้ความกว้างเต็มที่ของกรอบ */
-            max-width: 100%; 
-            height: auto;
-            margin: 0 auto 15px auto;
-            object-fit: contain;
-            /* ขนาดภาพที่ปรับใหญ่ขึ้น */
-            max-height: 150px; 
-        }
-        .drink-name {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .drink-price {
-            color: #940109; 
-            font-size: 1.1em;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
+        .add-btn { width: 100%; padding: 12px; background: var(--primary-red); color: white; border: none; font-weight: 700; border-radius: 0 0 15px 15px; cursor: pointer; transition: 0.3s; }
+        .add-btn:hover { background: #b3020b; }
 
-        /* --- Counter Controls --- */
-        .counter-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
+        /* 🔴 ปุ่มสรุปยอดวงกลม สีแดง ฝั่งขวา (Floating Action Button) */
+        .floating-cart { 
+            position: fixed; bottom: 30px; right: 20px; 
+            width: 70px; height: 70px; 
+            background: var(--primary-red); color: white; 
+            border-radius: 50%; border: 4px solid #fff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            text-decoration: none; z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .counter-btn {
-            background-color: #940109; 
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            /* **แก้ไข:** ลดขนาดปุ่ม */
-            width: 30px; 
-            height: 30px;
-            /* **แก้ไข:** ลดขนาดตัวเลข */
-            font-size: 1.3em; 
-            line-height: 1;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            flex-shrink: 0;
-            padding: 0;
-        }
-        .counter-btn:hover {
-            background-color: #7a0006; 
-        }
-        .item-count {
-            /* **แก้ไข:** ลดขนาดตัวเลข */
-            font-size: 1.3em; 
-            font-weight: 700;
-            margin: 0 15px;
-            width: 30px;
-            text-align: center;
-            color: #333;
-        }
-
-        /* ======================================= */
-        /* === FOOTER & TOTAL DISPLAY === */
-        /* ======================================= */
-        .footer-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #333; 
-            border-top: 3px solid #940109; 
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
-            padding: 15px 0;
-            box-sizing: border-box;
-            z-index: 100;
-        }
-        .summary-bar {
-            max-width: 650px;
-            margin: auto;
-            padding: 0 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .total-display {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #FFEB3B; 
-        }
-        .total-label {
-            color: #f1e9d9; 
-            font-size: 0.9em;
-            margin-right: 5px;
-        }
-        .next-button {
-            background-color: #4CAF50; 
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-        }
-        .next-button:hover {
-            background-color: #388e3c;
-        }
-        .next-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Responsive Footer Adjustment */
-        @media (max-width: 600px) {
-            .summary-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .next-button {
-                width: 100%;
-                justify-content: center;
-            }
-            .total-display {
-                width: 100%;
-                text-align: center;
-            }
+        .floating-cart:hover { transform: scale(1.1); }
+        .cart-icon { font-size: 1.6rem; margin-bottom: -2px; }
+        .badge { 
+            position: absolute; top: -2px; right: -2px; 
+            background: #ffc107; color: #000; 
+            font-size: 0.85rem; font-weight: 800; 
+            width: 24px; height: 24px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🥤 เมนูเครื่องดื่ม</h1>
-        
-        <div class="drink-grid">
-            
-            <div class="drink-card" data-id="D1" data-name="โค้ก 325 ml พร้อมน้ำแข็ง" data-price="25">
-                <img src="images/coke.png" alt="โค้ก 325 ml">
-                <div class="drink-name">โค้ก 325 ml + น้ำแข็ง</div>
-                <div class="drink-price">25 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D1', -1)">-</button>
-                    <span class="item-count" id="count_D1">0</span>
-                    <button class="counter-btn" onclick="updateCount('D1', 1)">+</button>
-                </div>
-            </div>
 
-            <div class="drink-card" data-id="D2" data-name="น้ำดื่ม 550 ml" data-price="10">
-                <img src="images/water.png" alt="น้ำดื่ม">
-                <div class="drink-name">น้ำดื่ม 550 ml</div>
-                <div class="drink-price">10 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D2', -1)">-</button>
-                    <span class="item-count" id="count_D2">0</span>
-                    <button class="counter-btn" onclick="updateCount('D2', 1)">+</button>
-                </div>
-            </div>
-
-            <div class="drink-card" data-id="D3" data-name="ชาเขียว" data-price="39">
-                <img src="images/greentea.png" alt="ชาเขียว">
-                <div class="drink-name">ชาเขียว</div>
-                <div class="drink-price">39 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D3', -1)">-</button>
-                    <span class="item-count" id="count_D3">0</span>
-                    <button class="counter-btn" onclick="updateCount('D3', 1)">+</button>
-                </div>
-            </div>
-
-            <div class="drink-card" data-id="D4" data-name="ชาไทย" data-price="39">
-                <img src="images/thaitea.png" alt="ชาไทย">
-                <div class="drink-name">ชาไทย</div>
-                <div class="drink-price">39 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D4', -1)">-</button>
-                    <span class="item-count" id="count_D4">0</span>
-                    <button class="counter-btn" onclick="updateCount('D4', 1)">+</button>
-                </div>
-            </div>
-
-            <div class="drink-card" data-id="D5" data-name="โกโก้" data-price="39">
-                <img src="images/cocoa.png" alt="โกโก้">
-                <div class="drink-name">โกโก้</div>
-                <div class="drink-price">39 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D5', -1)">-</button>
-                    <span class="item-count" id="count_D5">0</span>
-                    <button class="counter-btn" onclick="updateCount('D5', 1)">+</button>
-                </div>
-            </div>
-
-            <div class="drink-card" data-id="D6" data-name="เก๊กฮวย" data-price="39">
-                <img src="images/chrysanthemum.png" alt="เก๊กฮวย">
-                <div class="drink-name">เก๊กฮวย</div>
-                <div class="drink-price">39 บ.</div>
-                <div class="counter-controls">
-                    <button class="counter-btn" onclick="updateCount('D6', -1)">-</button>
-                    <span class="item-count" id="count_D6">0</span>
-                    <button class="counter-btn" onclick="updateCount('D6', 1)">+</button>
-                </div>
-            </div>
-
-        </div>
+    <div class="header">
+        <h1>🏮 เครื่องดื่ม</h1>
+        <p>สดชื่น พร้อมแก้วฟรีน้ำแข็งทุกเมนู</p>
     </div>
 
-    <div class="footer-fixed">
-        <div class="summary-bar">
-            <div class="total-display">
-                <span class="total-label">รวมเครื่องดื่ม:</span> <span id="grand-total">0</span> บาท
-            </div>
-            <button class="next-button" id="next-button" onclick="addToCartAndProceed()" disabled>
-                เพิ่มลงตะกร้า & สรุปยอด
-            </button>
+    <div class="menu-grid" id="menu-container">
         </div>
-    </div>
 
-<script>
-    // ข้อมูลสินค้า (ดึงมาจาก data-attributes บน HTML)
-    const DRINKS = Array.from(document.querySelectorAll('.drink-card')).map(card => ({
-        id: card.getAttribute('data-id'),
-        name: card.getAttribute('data-name'),
-        price: parseInt(card.getAttribute('data-price')),
-        count: 0 // จำนวนเริ่มต้นเป็น 0
-    }));
+    <a href="summary.html" class="floating-cart" id="btn-summary">
+        <span class="badge" id="cart-count">0</span>
+        <span class="cart-icon">🛒</span>
+        <span style="font-size: 0.65rem; font-weight: 700;">สั่งเลย</span>
+    </a>
 
-    // ------------------ 1. ฟังก์ชันอัปเดตจำนวนและคำนวณราคา ------------------
-    function updateCount(id, change) {
-        const drink = DRINKS.find(d => d.id === id);
-        
-        if (drink) {
-            let newCount = drink.count + change;
-            
-            // ตรวจสอบไม่ให้จำนวนต่ำกว่า 0
-            if (newCount < 0) newCount = 0;
-            
-            drink.count = newCount;
-            
-            // อัปเดต UI
-            document.getElementById(`count_${id}`).innerText = newCount;
+    <script>
+        // รายการเมนูอ้างอิงรูปจากโฟลเดอร์ images/ เป็นไฟล์ .png ทั้งหมด
+        const drinks = [
+            { name: 'โค้ก + แก้วน้ำแข็ง', price: 25, img: 'images/coke.png' },
+            { name: 'น้ำฟักเขียว + แก้วน้ำแข็ง', price: 25, img: 'images/fuk.png' },
+            { name: 'น้ำเก๊กฮวย + แก้วน้ำแข็ง', price: 25, img: 'images/gek.png' },
+            { name: 'น้ำจับเลี้ยง + แก้วน้ำแข็ง', price: 25, img: 'images/jup.png' },
+            { name: 'น้ำลำไย + แก้วน้ำแข็ง', price: 25, img: 'images/lum.png' },
+            { name: 'น้ำดื่มขวด', price: 10, img: 'images/water.png' } // อย่าลืมเตรียมไฟล์ water.png ในโฟลเดอร์ images นะครับ
+        ];
+
+        let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = drinks.map((item, idx) => `
+                <div class="menu-item">
+                    <img src="${item.img}" class="menu-img" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+                    <div class="menu-info">
+                        <div class="menu-name">${item.name}</div>
+                        <div class="menu-price">${item.price} บ.</div>
+                        <div class="qty-control">
+                            <button class="btn-qty" onclick="changeQty('qty-${idx}', -1)">-</button>
+                            <span class="qty-val" id="qty-${idx}">1</span>
+                            <button class="btn-qty" onclick="changeQty('qty-${idx}', 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, 'qty-${idx}')">เพิ่มลงตะกร้า</button>
+                </div>
+            `).join('');
+            updateCartCount();
         }
 
-        calculateTotal();
-    }
-
-    // ------------------ 2. ฟังก์ชันคำนวณราคารวมทั้งหมด ------------------
-    function calculateTotal() {
-        const total = DRINKS.reduce((sum, drink) => sum + (drink.count * drink.price), 0);
-        document.getElementById('grand-total').innerText = total.toLocaleString();
-
-        const nextButton = document.getElementById('next-button');
-        if (total > 0) {
-            nextButton.innerText = `เพิ่มลงตะกร้า & สรุปยอด (${total.toLocaleString()} บ.)`;
-            nextButton.disabled = false;
-        } else {
-            nextButton.innerText = `เพิ่มลงตะกร้า & สรุปยอด`;
-            nextButton.disabled = true;
+        function changeQty(id, delta) {
+            const el = document.getElementById(id);
+            let val = parseInt(el.innerText) + delta;
+            if (val < 1) val = 1; 
+            el.innerText = val;
         }
-    }
 
-    // ------------------ 3. ฟังก์ชันบันทึกเข้าตะกร้าและไปหน้าสรุป (ใช้ sessionStorage) ------------------
-    function addToCartAndProceed() {
-        const selectedDrinks = DRINKS.filter(d => d.count > 0);
+        function addToCart(name, price, qtyId) {
+            const quantity = parseInt(document.getElementById(qtyId).innerText);
+            
+            for (let i = 0; i < quantity; i++) {
+                cart.push({
+                    name: name,
+                    price: price,
+                    details: []
+                });
+            }
 
-        // 1. เตรียมรายการเครื่องดื่มสำหรับตะกร้า
-        const drinkOrderDetails = selectedDrinks.map(drink => ({
-            id: drink.id,
-            name: `${drink.name} x ${drink.count}`,
-            price: drink.price,
-            count: drink.count,
-            type: 'Drink'
-        }));
-        
-        // 2. สร้างชุดรายการเครื่องดื่มรวมเป็น 1 รายการในตะกร้า
-        const totalOrderPrice = drinkOrderDetails.reduce((sum, item) => sum + (item.price * item.count), 0);
+            sessionStorage.setItem('cartItems', JSON.stringify(cart));
+            updateCartCount();
+            
+            // เอฟเฟกต์เด้งที่ปุ่มสรุปยอดเวลาเพิ่มของ
+            const btn = document.getElementById('btn-summary');
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => { btn.style.transform = 'scale(1)'; }, 200);
 
-        const newDrinkOrder = {
-            // ชื่อรวมสำหรับแสดงในตะกร้า
-            name: `🥤 เครื่องดื่มรวม (${selectedDrinks.length} รายการ)`,
-            price: totalOrderPrice,
-            count: 1, // นับเป็น 1 ชุด
-            details: drinkOrderDetails,
-            isSukiSet: false,
-            isNoodleSet: false,
-            isDrinkSet: true
-        };
+            document.getElementById(qtyId).innerText = "1";
+        }
 
-        // 3. ดึงตะกร้าปัจจุบันจาก sessionStorage
-        let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-        
-        // 4. เพิ่มชุดเครื่องดื่มใหม่ลงในตะกร้า
-        cartItems.push(newDrinkOrder);
-        
-        // 5. บันทึกตะกร้าใหม่กลับไปที่ sessionStorage
-        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-        
-        alert('เพิ่มรายการ "เครื่องดื่ม" เข้าตะกร้าแล้ว! ไปหน้าสรุปยอด...');
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
 
-        // 6. ไปยังหน้าสรุป
-        window.location.href = 'summary.html';
-    }
-
-    // 4. กำหนดค่าเริ่มต้นเมื่อโหลดหน้า
-    document.addEventListener('DOMContentLoaded', () => {
-        calculateTotal();
-    });
-</script>
+        renderMenu();
+    </script>
 </body>
 </html>
