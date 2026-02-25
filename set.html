@@ -3,46 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>จิจะ เฮงเฮง - สั่งเลย</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <title>จิจะ เฮงเฮง - เลือกเมนู</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-red: #940109; --bg-cream: #f1e9d9; --success: #4CAF50; }
-        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-cream); margin: 0; padding: 10px; padding-bottom: 120px; }
-        h2 { color: var(--primary-red); text-align: center; margin: 15px 0; border-bottom: 2px solid var(--primary-red); width: 100%; padding-bottom: 5px; font-size: 1.2rem; }
-        
-        /* Grid 2 คอลัมน์ สำหรับเมนูหลัก */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 600px; margin: auto; }
-        
-        /* Grid 4 คอลัมน์ สำหรับน้ำจิ้ม */
-        .sauce-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 600px; margin: auto; }
-        
-        .menu-card { background: white; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; }
-        .menu-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background-color: #eee; }
-        
-        .content { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; }
-        .name { font-weight: 700; font-size: 0.85rem; line-height: 1.2; min-height: 2.4em; margin-bottom: 4px; color: #333; }
-        .price { color: var(--primary-red); font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+        :root {
+            --primary-red: #940109;
+            --dark-red: #720106;
+            --bg-cream: #f8f3e9;
+            --success-green: #28a745;
+            --text-main: #333;
+        }
 
-        /* ปรับสไตล์ Card น้ำจิ้มให้เล็กพิเศษ */
-        .sauce-card .content { padding: 4px; }
-        .sauce-card .name { font-size: 0.65rem; min-height: 3em; margin-bottom: 2px; }
-        .sauce-card .price { font-size: 0.8rem; margin-bottom: 4px; }
-        .sauce-card .add-btn { padding: 5px; font-size: 0.65rem; border-radius: 4px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: var(--bg-cream); 
+            margin: 0; 
+            padding: 15px; 
+            color: var(--text-main);
+            padding-bottom: 100px;
+        }
 
-        /* ส่วนเลือกน้ำซุป */
-        .opt-title { font-size: 0.75rem; font-weight: 700; color: #666; margin-top: 5px; margin-bottom: 4px; }
-        .soup-wrap { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-        .soup-btn { font-size: 0.65rem; padding: 6px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; text-align: center; }
-        .soup-btn.active { background: #fff5f5; border-color: var(--primary-red); color: var(--primary-red); font-weight: 700; }
+        h2 { 
+            color: var(--primary-red); 
+            text-align: center; 
+            font-size: 1.4rem; 
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-        /* ส่วนเลือกความเผ็ด */
-        .spicy-wrap { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-top: 5px; margin-bottom: 10px; }
-        .sp-btn { font-size: 0.6rem; padding: 4px 0; border: 1px solid #eee; border-radius: 4px; text-align: center; cursor: pointer; background: #fafafa; }
-        .sp-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+        h2::before, h2::after { content: ""; height: 2px; width: 30px; background: var(--primary-red); }
 
-        .add-btn { width: 100%; padding: 10px; background: var(--success); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; margin-top: auto; }
+        /* Grid Layout */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            max-width: 600px; 
+            margin: 0 auto 30px; 
+        }
+
+        /* Card Style */
+        .menu-card { 
+            background: white; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+            transition: transform 0.2s;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:active { transform: scale(0.97); }
+
+        .menu-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+
+        .card-info { padding: 12px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .name { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; height: 2.4em; overflow: hidden; }
+        .price { color: var(--primary-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+
+        .select-btn { 
+            background: var(--primary-red); color: white; border: none; 
+            padding: 8px; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer;
+        }
+
+        /* Sauce Style (Smaller) */
+        .sauce-grid { grid-template-columns: repeat(4, 1fr); }
+        .sauce-card .name { font-size: 0.7rem; height: 3em; }
+        .sauce-card .price { font-size: 0.85rem; }
+        .sauce-card .select-btn { background: #2196F3; font-size: 0.75rem; padding: 5px; }
+
+        /* Modal / Popup */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; align-items: center;
+            justify-content: center; z-index: 2000; backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white; width: 90%; max-width: 400px; border-radius: 20px;
+            padding: 20px; position: relative; animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         
-        .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: var(--primary-red); color: white; padding: 12px 20px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 1000; }
+        .opt-group { margin-bottom: 15px; }
+        .opt-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #666; }
+
+        .soup-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-item {
+            padding: 10px 15px; border: 1.5px solid #eee; border-radius: 10px;
+            cursor: pointer; font-size: 0.9rem; display: flex; justify-content: space-between;
+        }
+        .option-item.active { border-color: var(--primary-red); background: #fff5f5; color: var(--primary-red); font-weight: 600; }
+
+        .spicy-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .spicy-item { 
+            padding: 8px; border: 1.5px solid #eee; border-radius: 10px; text-align: center; font-size: 0.85rem;
+        }
+        .spicy-item.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+
+        .confirm-btn {
+            width: 100%; padding: 12px; background: var(--success-green); color: white;
+            border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; margin-top: 10px;
+        }
+
+        /* Cart Bar */
+        .cart-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: var(--primary-red); color: white;
+            padding: 15px 25px; border-radius: 50px; display: flex; justify-content: space-between;
+            text-decoration: none; box-shadow: 0 10px 25px rgba(148,1,9,0.4); z-index: 1000;
+        }
+
+        /* Toast Alert */
+        .toast {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 12px 25px;
+            border-radius: 30px; z-index: 3000; display: none;
+        }
     </style>
 </head>
 <body>
@@ -50,17 +135,43 @@
     <h2>🏮 เลือกเมนูชุดเซต</h2>
     <div class="menu-grid" id="main-menu"></div>
 
-    <h2>🍅 เพิ่มน้ำจิ้ม (แถวละ 4)</h2>
-    <div class="sauce-grid" id="sauce-menu"></div>
+    <h2>🍅 เพิ่มน้ำจิ้ม</h2>
+    <div class="menu-grid sauce-grid" id="sauce-menu"></div>
+
+    <div class="modal-overlay" id="soup-modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modal-item-name">ชื่อเมนู</div>
+            
+            <div class="opt-group">
+                <div class="opt-title">1. เลือกน้ำซุป</div>
+                <div class="soup-list" id="soup-options">
+                    </div>
+            </div>
+
+            <div class="opt-group" id="spicy-group" style="display:none;">
+                <div class="opt-title">2. ระดับความเผ็ด</div>
+                <div class="spicy-list">
+                    <div class="spicy-item active" onclick="setSpicy('น้อย', this)">น้อย</div>
+                    <div class="spicy-item" onclick="setSpicy('กลาง', this)">กลาง</div>
+                    <div class="spicy-item" onclick="setSpicy('มาก', this)">มาก</div>
+                </div>
+            </div>
+
+            <button class="confirm-btn" onclick="confirmSelection()">ยืนยันเพิ่มลงตะกร้า</button>
+            <button style="width:100%; background:none; border:none; color:#999; margin-top:10px;" onclick="closeModal()">ยกเลิก</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">เพิ่มลงตะกร้าแล้ว!</div>
 
     <a href="summary.html" class="cart-bar">
-        <span style="font-weight:700;">🛒 ดูรายการที่เลือก</span>
+        <span style="font-weight:600;">🛒 ตะกร้าของฉัน</span>
         <span><span id="cart-count">0</span> รายการ ></span>
     </a>
 
     <script>
         const mainItems = [
-            { id: 1, name: 'ชุดอิ่มจู สุดคุ้ม', price: 69, img: 'images/11.png' },
+            { id: 1, name: 'ชุดอิ่มจุ สุดคุ้ม', price: 69, img: 'images/11.png' },
             { id: 2, name: 'ชุดสายหมู', price: 79, img: 'images/9.png' },
             { id: 3, name: 'ชุดติดเทรน', price: 99, img: 'images/10.png' },
             { id: 4, name: 'ชุดรวมหัวปาร์ตี้', price: 199, img: 'images/12.png' }
@@ -73,34 +184,26 @@
             { id: 104, name: 'น้ำจิ้มงาคั่วหอม(ขาว)', price: 25, img: 'images/N-vha.png' }
         ];
 
+        const soupOptions = [
+            { name: 'น้ำซุปดำ', extra: 0 },
+            { name: 'น้ำซุปหม่าล่าดั้งเดิม', extra: 0 },
+            { name: 'น้ำซุปหม่าล่าน้ำข้น', extra: 10 },
+            { name: 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', extra: 10 }
+        ];
+
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+        let currentItem = null;
+        let selectedSoup = soupOptions[0];
+        let selectedSpicy = 'น้อย';
 
         function renderMain() {
             document.getElementById('main-menu').innerHTML = mainItems.map(item => `
-                <div class="menu-card" id="card-${item.id}">
-                    <img src="${item.img}">
-                    <div class="content">
+                <div class="menu-card" onclick="openSoupModal(${item.id})">
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="card-info">
                         <div class="name">${item.name}</div>
                         <div class="price">${item.price}.-</div>
-                        
-                        <div class="opt-title">เลือกซุป:</div>
-                        <div class="soup-wrap">
-                            <div class="soup-btn active" onclick="selectSoup(${item.id}, 'น้ำซุปดำ', 0, this)">น้ำซุปดำ (+0)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าดั้งเดิม', 0, this)">หม่าล่าดั้งเดิม (+0)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้น', 10, this)">หม่าล่าน้ำข้น (+10)</div>
-                            <div class="soup-btn" onclick="selectSoup(${item.id}, 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', 10, this)">หม่าล่าน้ำดำ (+10)</div>
-                        </div>
-
-                        <div id="spicy-section-${item.id}" style="display:none;">
-                            <div class="opt-title">ระดับความเผ็ด:</div>
-                            <div class="spicy-wrap">
-                                <div class="sp-btn active" onclick="selectSpicy(this)">น้อย</div>
-                                <div class="sp-btn" onclick="selectSpicy(this)">กลาง</div>
-                                <div class="sp-btn" onclick="selectSpicy(this)">มาก</div>
-                            </div>
-                        </div>
-
-                        <button class="add-btn" onclick="addMainToCart(${item.id})">เพิ่มลงตะกร้า</button>
+                        <button class="select-btn">เลือก</button>
                     </div>
                 </div>
             `).join('');
@@ -108,70 +211,95 @@
 
         function renderSauce() {
             document.getElementById('sauce-menu').innerHTML = sauceItems.map(item => `
-                <div class="menu-card sauce-card">
+                <div class="menu-card sauce-card" onclick="addSauceToCart(${item.id})">
                     <img src="${item.img}">
-                    <div class="content">
+                    <div class="card-info">
                         <div class="name">${item.name}</div>
                         <div class="price">${item.price}.-</div>
-                        <button class="add-btn" style="background:#2196F3" onclick="addSauceToCart(${item.id})">เพิ่ม</button>
+                        <button class="select-btn">เพิ่ม</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function selectSoup(menuId, soupName, extra, el) {
-            const parent = el.parentElement;
-            parent.querySelectorAll('.soup-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            el.dataset.extra = extra;
-
-            const spicySection = document.getElementById(`spicy-section-${menuId}`);
-            // แสดงความเผ็ดถ้าชื่อซุปมีคำว่า "หม่าล่า"
-            spicySection.style.display = soupName.includes('หม่าล่า') ? 'block' : 'none';
-        }
-
-        function selectSpicy(el) {
-            const parent = el.parentElement;
-            parent.querySelectorAll('.sp-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        function addMainToCart(id) {
-            const menu = mainItems.find(m => m.id === id);
-            const activeSoupBtn = document.querySelector(`#card-${id} .soup-btn.active`);
-            const soupName = activeSoupBtn.innerText.split(' (+')[0];
-            const extra = parseInt(activeSoupBtn.dataset.extra || 0);
+        // Modal Logic
+        function openSoupModal(id) {
+            currentItem = mainItems.find(m => m.id === id);
+            document.getElementById('modal-item-name').innerText = currentItem.name;
             
-            let finalName = `${menu.name} (${soupName})`;
-            if(soupName.includes('หม่าล่า')) {
-                const sp = document.querySelector(`#spicy-section-${id} .sp-btn.active`).innerText;
-                finalName += ` [เผ็ด${sp}]`;
-            }
+            // Reset options
+            selectedSoup = soupOptions[0];
+            selectedSpicy = 'น้อย';
+            
+            const soupContainer = document.getElementById('soup-options');
+            soupContainer.innerHTML = soupOptions.map((s, idx) => `
+                <div class="option-item ${idx === 0 ? 'active' : ''}" onclick="setSoup(${idx}, this)">
+                    <span>${s.name}</span>
+                    <span>${s.extra > 0 ? '+'+s.extra+'.-' : 'ฟรี'}</span>
+                </div>
+            `).join('');
 
-            saveToCart(finalName, menu.price + extra);
+            checkSpicyVisibility();
+            document.getElementById('soup-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('soup-modal').style.display = 'none';
+        }
+
+        function setSoup(index, el) {
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            selectedSoup = soupOptions[index];
+            checkSpicyVisibility();
+        }
+
+        function checkSpicyVisibility() {
+            const spicyGroup = document.getElementById('spicy-group');
+            spicyGroup.style.display = selectedSoup.name.includes('หม่าล่า') ? 'block' : 'none';
+        }
+
+        function setSpicy(val, el) {
+            document.querySelectorAll('.spicy-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            selectedSpicy = val;
+        }
+
+        function confirmSelection() {
+            let finalName = `${currentItem.name} (${selectedSoup.name})`;
+            if(selectedSoup.name.includes('หม่าล่า')) {
+                finalName += ` [เผ็ด${selectedSpicy}]`;
+            }
+            saveToCart(finalName, currentItem.price + selectedSoup.extra);
+            closeModal();
         }
 
         function addSauceToCart(id) {
             const sauce = sauceItems.find(s => s.id === id);
-            saveToCart(`${sauce.name}`, sauce.price);
+            saveToCart(sauce.name, sauce.price);
         }
 
         function saveToCart(name, price) {
             cart.push({ name, price, details: [] });
             sessionStorage.setItem('cartItems', JSON.stringify(cart));
-            document.getElementById('cart-count').innerText = cart.length;
-            
-            const alertBox = document.createElement('div');
-            alertBox.innerText = "เพิ่มแล้ว";
-            alertBox.style = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:2000; font-size:12px;";
-            document.body.appendChild(alertBox);
-            setTimeout(() => alertBox.remove(), 500);
+            updateCartUI();
+            showToast();
         }
 
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 1000);
+        }
+
+        // Initialize
         renderMain();
         renderSauce();
-        document.getElementById('cart-count').innerText = cart.length;
+        updateCartUI();
     </script>
 </body>
-
 </html>
