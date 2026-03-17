@@ -196,7 +196,8 @@
             let txt = '========================\n';
             txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
             txt += '========================\n';
-            txt += `👤 ชื่อ: ${name} | 📞 โทร: ${phone}\n`;
+            txt += `👤 ชื่อ: ${name}\n`;
+            txt += `📞 โทร: ${phone}\n`;
             txt += `📍 วิธีรับ: ${serviceType}\n`;
             txt += `━━━━━━━━━━━━\n`;
 
@@ -233,7 +234,7 @@
             el.setSelectionRange(0, 99999);
             document.execCommand('copy');
             
-            alert('คัดลอกแล้ว!โปรดวางในแชท JIJA-HengHeng...');
+            alert('คัดลอกแล้ว! โปรดวางในแชท JIJA-HengHeng...');
             sessionStorage.removeItem('cartItems');
             window.location.href = 'https://m.me/727234960462724';
         }
