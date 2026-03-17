@@ -192,9 +192,11 @@
             if(serviceType.includes('Delivery') && totalFood < 80) {
                 deliveryFee = 10;
             }
-            
-            let txt = `📢*รายการสั่งซื้อใหม่(จิจะ เฮงเฮง)🏮*\n`;
-            txt += `━━━━━━━━━━━━\n`;
+
+            let text = '========================\n';
+            text += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
+            text += '========================\n\n';
+
             txt += `👤 ชื่อผู้รับ: ${name}\n`;
             txt += `📞 เบอร์โทร: ${phone}\n`;
             txt += `📍 วิธีรับ: ${serviceType}\n`;
@@ -224,10 +226,7 @@
             txt += `\n━━━━━━━━━━━━\n`;
             txt += `🧺💰*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*`;
             txt += `\n━━━━━━━━━━━━`;
-            text += '=======Thank you🙏=======\n';
-
-        return text;
-    }          
+            
             document.getElementById('order-text').value = txt;
             document.getElementById('overlay').style.display = 'flex';
         }
