@@ -11,26 +11,27 @@
         .container { max-width: 600px; margin: auto; }
         h1 { color: var(--primary-red); text-align: center; border-bottom: 3px solid var(--primary-red); padding-bottom: 10px; }
         
-        .screenshot-instruction { border: 3px solid var(--primary-red); background-color: #ffe0b2; color: var(--primary-red); padding: 15px; margin-bottom: 20px; border-radius: 10px; text-align: center; font-weight: 700; }
+        .screenshot-instruction { border: 3px solid var(--primary-red); background-color: #ffe0b2; color: var(--primary-red); padding: 15px; margin-bottom: 20px; border-radius: 10px; text-align: left; font-weight: 400; font-size: 0.9rem; line-height: 1.5; }
 
         .customer-form-box { background: #fff; border: 2px solid var(--primary-red); border-radius: 10px; padding: 20px; margin-bottom: 25px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 5px; }
         .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         
+        .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
         .radio-group input[type="radio"] { display: none; }
-        .radio-group label { margin-right: 10px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; display: inline-block; cursor: pointer; }
-        .radio-group input[type="radio"]:checked + label { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+        .radio-group label { padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: 0.3s; flex-grow: 1; text-align: center; background: #fff; }
+        .radio-group input[type="radio"]:checked + label { background: var(--primary-red); color: white; border-color: var(--primary-red); font-weight: bold; }
 
-        /* รายการสินค้า */
+        #delivery-status { margin-bottom: 15px; font-weight: bold; text-align: center; border-radius: 8px; }
+
         .cart-item { background: #fff; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .item-header { display: flex; justify-content: space-between; font-weight: 700; color: var(--primary-red); border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
         .details-box { background: #f9f9f9; padding: 8px; border-radius: 5px; margin-top: 8px; font-size: 0.9rem; }
         .details-box ul { list-style: none; padding: 0; margin: 0; }
         .details-box li { display: flex; justify-content: space-between; border-bottom: 1px dotted #eee; padding: 2px 0; }
-        .remove-btn { background: #f44336; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+        .remove-btn { background: #f44336; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; }
 
-        /* ฟุตเตอร์ปุ่มลอยสี่เหลี่ยม 3 บล็อก */
         .footer-fixed { position: fixed; bottom: 15px; left: 0; width: 100%; z-index: 100; pointer-events: none; }
         .summary-bar { max-width: 500px; margin: auto; padding: 0 15px; display: flex; gap: 10px; pointer-events: auto; }
         .summary-bar button, .total-block { 
@@ -44,15 +45,21 @@
         .btn-label { font-size: 0.7rem; }
         .btn-value { font-size: 1rem; font-weight: 700; }
 
-        /* Pop-up */
         #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:1000; }
         .popup { background:#fff; padding:20px; border-radius:10px; width:90%; max-width:400px; }
-        textarea { width:100%; height:200px; margin:10px 0; padding:10px; box-sizing:border-box; }
+        textarea { width:100%; height:200px; margin:10px 0; padding:10px; box-sizing:border-box; font-family: 'Kanit', sans-serif; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="screenshot-instruction">⚠️ ตรวจเช็คเมนูให้ถูกต้องก่อนสั่งนะคะ ⚠️</div>
+        <div class="screenshot-instruction">
+            ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
+            • สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>
+            • เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>
+            • งดแถมช้อนพลาสติก<br>
+            <small><i>เริ่มใช้ตั้งแต่ 18 มีนาคม เป็นต้นไป</i></small>
+        </div>
+        
         <h1>🛒 สรุปรายการ</h1>
 
         <div class="customer-form-box">
@@ -65,14 +72,21 @@
                 <input type="tel" id="cust-phone" placeholder="08xxxxxxxx">
             </div>
             <div class="form-group">
-                <label>การรับสินค้า</label>
+                <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
                 <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="🪑ทานที่ร้าน" checked><label for="r1">🍽️ ทานที่ร้าน</label>
-                    <input type="radio" id="r2" name="stype" value="🏡กลับบ้าน"><label for="r2">🥡 กลับบ้าน</label>
-                    <input type="radio" id="r3" name="stype" value="🛵Delivery (กรุณาแจ้งที่อยู่ในแชท)"><label for="r3">🛵 ส่งเดลิเวอรี่</label>
+                    <input type="radio" id="r1" name="stype" value="🪑 ทานที่ร้าน" onchange="loadCart()">
+                    <label for="r1">🍽️ ทานที่ร้าน</label>
+                    
+                    <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน" onchange="loadCart()">
+                    <label for="r2">🥡 กลับบ้าน</label>
+                    
+                    <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="loadCart()">
+                    <label for="r3">🛵 ส่งเดลิเวอรี่</label>
                 </div>
             </div>
         </div>
+
+        <div id="delivery-status"></div>
 
         <div id="cart-list"></div>
     </div>
@@ -97,22 +111,32 @@
     <div id="overlay">
         <div class="popup">
             <h3>✅ คัดลอกไปวางในแชท</h3>
+            <p style="font-size: 0.8rem; color: #666;">กดยืนยันเพื่อนำรายการไปส่งในแชท</p>
             <textarea id="order-text" readonly></textarea>
-            <button onclick="copyAndChat()" style="width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:5px; font-weight:700;">คัดลอกและไปที่แชท</button>
-            <button onclick="document.getElementById('overlay').style.display='none'" style="width:100%; margin-top:10px; background:none; border:none; color:#888;">ปิด</button>
+            <button onclick="copyAndChat()" style="width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:5px; font-weight:700; cursor:pointer;">คัดลอกและไปที่แชท</button>
+            <button onclick="document.getElementById('overlay').style.display='none'" style="width:100%; margin-top:10px; background:none; border:none; color:#888; cursor:pointer;">ปิดหน้าต่างนี้</button>
         </div>
     </div>
 
     <script>
         let cartItems = [];
+
         function loadCart() {
             cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
             const list = document.getElementById('cart-list');
-            let total = 0;
+            const deliveryStatus = document.getElementById('delivery-status');
+            let totalFood = 0;
             list.innerHTML = '';
+            deliveryStatus.innerHTML = '';
+
+            if (cartItems.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">ไม่มีรายการอาหารในตะกร้า</p>';
+                document.getElementById('grand-total').innerText = 0;
+                return;
+            }
 
             cartItems.forEach((item, idx) => {
-                total += item.price;
+                totalFood += item.price;
                 let html = `<div class="cart-item">
                     <div class="item-header">
                         <span>${item.name}</span>
@@ -129,7 +153,19 @@
                 html += `</div>`;
                 list.innerHTML += html;
             });
-            document.getElementById('grand-total').innerText = total;
+
+            let deliveryFee = 0;
+            const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+            if(serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
+                if(totalFood < 80) {
+                    deliveryFee = 10;
+                    deliveryStatus.innerHTML = `<div style="color:red; background:#fff; padding:10px; border:1px solid red; border-radius:8px;">+ ค่าบริการ Delivery 10 บ. (ยอดไม่ถึง 80)</div>`;
+                } else {
+                    deliveryStatus.innerHTML = `<div style="color:green; background:#fff; padding:10px; border:1px solid green; border-radius:8px;">ฟรีค่าส่งเดลิเวอรี่!</div>`;
+                }
+            }
+
+            document.getElementById('grand-total').innerText = totalFood + deliveryFee;
         }
 
         function remove(idx) {
@@ -138,66 +174,73 @@
             loadCart();
         }
 
-function checkout() {
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
-    
-    // ดึงค่าการรับสินค้าที่เลือก (แก้ไขจุดที่ทำให้กดปุ่มไม่ติด)
-    const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
-    const serviceType = serviceTypeEl ? serviceTypeEl.value : "ไม่ได้ระบุ";
+        function checkout() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
 
-        if(!name) return alert('กรุณาระบุชื่อผู้รับ');
-        if(phone.length !== 10) return alert('กรุณากรอกเบอร์โทรให้ครบ 10 หลัก');
-        if(cartItems.length === 0) return alert('ยังไม่มีเมนูในตะกร้า');
-    
-    // ส่วนหัวของออเดอร์
-    let txt = `📢 *รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)🏮*\n`;
-    txt += `━━━━━━━━━━━━\n`;
-    txt += `👤 ชื่อผู้รับ: ${name}\n`;
-    txt += `📞 เบอร์โทร: ${phone}\n`;
-    txt += `📍 วิธีรับ: ${serviceType}\n`;
-    txt += `━━━━━━━━━━━━\n\n`;
+            if(!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
+            if(phone.length !== 10) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ');
+            if(!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
+            if(cartItems.length === 0) return alert('❌ ยังไม่มีเมนูในตะกร้าเลยค่ะ');
+            
+            const serviceType = serviceTypeEl.value;
+            let totalFood = 0;
+            cartItems.forEach(item => totalFood += item.price);
+            
+            let deliveryFee = 0;
+            if(serviceType.includes('Delivery') && totalFood < 80) {
+                deliveryFee = 10;
+            }
+            
+            let txt = `📢*รายการสั่งซื้อใหม่(จิจะ เฮงเฮง)🏮*\n`;
+            txt += `━━━━━━━━━━━━\n`;
+            txt += `👤 ชื่อผู้รับ: ${name}\n`;
+            txt += `📞 เบอร์โทร: ${phone}\n`;
+            txt += `📍 วิธีรับ: ${serviceType}\n`;
+            txt += `━━━━━━━━━━━━\n\n`;
 
-    // รายการอาหารแต่ละออเดอร์
-    cartItems.forEach((item, i) => {
-        txt += `${i + 1}. 🍜 *${item.name}*\n`;
-        txt += `   ราคา: ${item.price} บาท\n`;
-        
-        // รายละเอียดท็อปปิ้ง (ถ้ามี)
-        if(item.details && item.details.length > 0) {
-            item.details.forEach(d => {
-                txt += `   ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
+            cartItems.forEach((item, i) => {
+                txt += `${i + 1}. 🍜 *${item.name}*\n`;
+                txt += `   ราคา: ${item.price} บาท\n`;
+                
+                if(item.details && item.details.length > 0) {
+                    item.details.forEach(d => {
+                        txt += `   ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
+                    });
+                }
+                
+                if (i < cartItems.length - 1) {
+                    txt += `------------------\n`;
+                }
             });
-        }
-        
-        // --- ส่วนที่เพิ่ม: ขีดเส้นคั่นชัดเจนเมื่อมีออเดอร์ถัดไป ---
-        if (i < cartItems.length - 1) {
-            txt += `------------------\n`;
-        }
-    });
 
-    // สรุปยอดรวมท้ายบิล
-    txt += `\n━━━━━━━━━━━━\n`;
-    txt += `🪙 *ยอดรวมทั้งหมด: ${document.getElementById('grand-total').innerText} บาท*`;
-    txt += `\n━━━━━━━━━━━━`;
-    
-    document.getElementById('order-text').value = txt;
-    document.getElementById('overlay').style.display = 'flex';
-}
+            if(deliveryFee > 0) {
+                txt += `\n------------------\n`;
+                txt += `🚚 ค่าบริการ Delivery: ${deliveryFee} บาท\n`;
+                txt += `*ส่งฟรี มีขั้นต่ำ 80 บาท*\n`;
+            }
+
+            txt += `\n━━━━━━━━━━━━\n`;
+            txt += `🧺💰*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*`;
+            txt += `\n━━━━━━━━━━━━`;
+            
+            document.getElementById('order-text').value = txt;
+            document.getElementById('overlay').style.display = 'flex';
+        }
 
         function copyAndChat() {
             const el = document.getElementById('order-text');
             el.select();
+            el.setSelectionRange(0, 99999);
             document.execCommand('copy');
-            alert('คัดลอกข้อความแล้ว! กำลังไปที่แชท...');
+            
+            alert('คัดลอกรายการสั่งซื้อแล้ว! กำลังเปิดแชท JIJA-HengHeng...');
             sessionStorage.removeItem('cartItems');
             window.location.href = 'https://m.me/727234960462724';
         }
 
-        loadCart();
+        window.onload = loadCart;
     </script>
 </body>
 </html>
-
-
-
