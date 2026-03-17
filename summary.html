@@ -224,7 +224,10 @@
             txt += `\n━━━━━━━━━━━━\n`;
             txt += `🧺💰*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*`;
             txt += `\n━━━━━━━━━━━━`;
-            
+            text += '=======Thank you🙏=======\n';
+
+        return text;
+    }          
             document.getElementById('order-text').value = txt;
             document.getElementById('overlay').style.display = 'flex';
         }
