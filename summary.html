@@ -74,7 +74,7 @@
             <div class="form-group">
                 <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
                 <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="🪑 ทานที่ร้าน" onchange="loadCart()">
+                    <input type="radio" id="r1" name="stype" value="🍽️ ทานที่ร้าน" onchange="loadCart()">
                     <label for="r1">🍽️ ทานที่ร้าน</label>
                     
                     <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน" onchange="loadCart()">
@@ -87,6 +87,7 @@
         </div>
 
         <div id="delivery-status"></div>
+
         <div id="cart-list"></div>
     </div>
 
@@ -135,13 +136,11 @@
             }
 
             cartItems.forEach((item, idx) => {
-                let itemBasePrice = item.price;
-                totalFood += itemBasePrice;
-
+                totalFood += item.price;
                 let html = `<div class="cart-item">
                     <div class="item-header">
                         <span>${item.name}</span>
-                        <span>${itemBasePrice} บ. <button class="remove-btn" onclick="remove(${idx})">ลบ</button></span>
+                        <span>${item.price} บ. <button class="remove-btn" onclick="remove(${idx})">ลบ</button></span>
                     </div>`;
                 
                 if(item.details && item.details.length > 0) {
@@ -193,35 +192,36 @@
             if(serviceType.includes('Delivery') && totalFood < 80) {
                 deliveryFee = 10;
             }
+            
+            let txt = '========================\n';
+            txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
+            txt += '========================\n';
+            txt += `👤 ชื่อ: ${name} | 📞 โทร: ${phone}\n`;
+            txt += `📍 วิธีรับ: ${serviceType}\n`;
+            txt += `━━━━━━━━━━━━\n`;
 
-            let txt = '======================\n';
-            txt += '📢 *รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)*\n';
-            txt += '======================\n';
-            txt += `👤 ผู้รับ: ${name}\n`;
-            txt += `📞 โทร: ${phone}\n`;
-            txt += `📍 รับสินค้า: ${serviceType}\n`;
-            txt += '━━━━━━━━━━━━\n';
-            txt += '*📋 รายการอาหาร*\n';
-
-            cartItems.forEach((item, index) => {
-                txt += `${index + 1}. ${item.name} (${item.price} บ.)\n`;
-                if (item.details && item.details.length > 0) {
-                    item.details.forEach(detail => {
-                        let detailName = detail.name + (detail.spice ? ` (เผ็ด: ${detail.spice})` : '');
-                        let priceInfo = detail.price > 0 ? ` (+${detail.price * detail.count} บ.)` : '';
-                        txt += `   - ${detailName} x${detail.count}${priceInfo}\n`;
+            cartItems.forEach((item, i) => {
+                txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
+                if(item.details && item.details.length > 0) {
+                    item.details.forEach(d => {
+                        txt += ` ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
                     });
                 }
             });
 
             if(deliveryFee > 0) {
-                txt += `🚚 ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
+                txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
             }
 
-            txt += '━━━━━━━━━━━━\n';
-            txt += `🧺💰 *ยอดรวมทั้งสิ้น: ${totalFood + deliveryFee} บาท*\n`;
-            txt += '━━━━━━━━━━━━\n';
-            txt += 'ขอบคุณที่อุดหนุนค่ะ 🙏';
+            txt += `━━━━━━━━━━━━\n`;
+            txt += `🧺*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*🪭\n`;
+            txt += `━━━━━━━━━━━━\n`;
+
+            if (deliveryFee > 0) {
+                txt += `สั่งเดลิเวอรี่ ส่งฟรี มีขั้นต่ำ 80 บาท\n`;
+            }
+
+            txt += `━━ขอบพระคุณค่ะ 🙏✨━━`;
             
             document.getElementById('order-text').value = txt;
             document.getElementById('overlay').style.display = 'flex';
@@ -233,9 +233,8 @@
             el.setSelectionRange(0, 99999);
             document.execCommand('copy');
             
-            alert('คัดลอกรายการแล้ว! กำลังเปิด Messenger...');
+            alert('คัดลอกแล้ว!โปรดวางในแชท JIJA-HengHeng...');
             sessionStorage.removeItem('cartItems');
-            // ลิงก์ไปยัง Messenger ของร้านตามที่ระบุในโค้ดเดิม
             window.location.href = 'https://m.me/727234960462724';
         }
 
