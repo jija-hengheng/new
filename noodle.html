@@ -211,7 +211,8 @@
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
 
         function openOptions(id, name, price, type) {
-            currentItem = { id, name, price, options: [], type: type };
+            // กำหนดค่าเริ่มต้น รวมถึง eggQty สำหรับ suki
+            currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0 };
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('tempPrice').innerText = price;
             
@@ -219,13 +220,23 @@
             list.innerHTML = '';
 
             if(type === 'suki') {
-                // รายการพื้นฐาน
-                const sukiOpts = [{n:'+ไข่', p:10}, {n:'+ชีสอาบ', p:20}, {n:'+หมูหมักนุ่ม', p:10}];
-                
-                // เฉพาะ s4 (สุกี้ x หมูนุ่ม x หมึกกรอบ) เพิ่มไม่ใส่ผัก +0
-                if(id === 's4') {
-                    sukiOpts.push({n:'🪷ไม่ใส่ผัก', p:0});
-                }
+                // รายการ ไข่ไก่ แบบกด +/-
+                list.innerHTML += `
+                    <div class="opt-row">
+                        <div>
+                            <span>+ ไข่ไก่</span><br>
+                            <small style="color:#888">(+10.- ต่อฟอง)</small>
+                        </div>
+                        <div class="addon-counter">
+                            <div class="btn-round" onclick="updateEggCount(-1)">-</div>
+                            <span id="eggQty" style="font-weight:600; min-width:20px; text-align:center">0</span>
+                            <div class="btn-round" onclick="updateEggCount(1)">+</div>
+                        </div>
+                    </div>`;
+
+                // รายการเสริมอื่นๆ (ไม่รวมไข่แล้ว)
+                const sukiOpts = [{n:'+ชีสอาบ', p:20}, {n:'+หมูหมักนุ่ม', p:10}];
+                if(id === 's4') sukiOpts.push({n:'🪷ไม่ใส่ผัก', p:0});
 
                 sukiOpts.forEach(opt => {
                     list.innerHTML += `
@@ -236,6 +247,7 @@
                         </label>`;
                 });
             } else {
+                // หมี่ไก่ฉีก
                 list.innerHTML = `
                     <div class="opt-row">
                         <div>
@@ -248,29 +260,42 @@
                             <div class="btn-round" onclick="updateAddonCount(1)">+</div>
                         </div>
                     </div>`;
-                currentItem.addonQty = 0;
             }
             document.getElementById('optModal').style.display = 'flex';
         }
 
         function updateSukiOpt(name, price, chk) {
-            let currentTotal = parseInt(document.getElementById('tempPrice').innerText);
             if(chk.checked) {
-                currentTotal += price;
                 currentItem.options.push({n: name, p: price});
             } else {
-                currentTotal -= price;
                 currentItem.options = currentItem.options.filter(o => o.n !== name);
             }
-            document.getElementById('tempPrice').innerText = currentTotal;
+            updateTotalPrice();
+        }
+
+        function updateEggCount(change) {
+            if(currentItem.eggQty + change < 0) return;
+            currentItem.eggQty += change;
+            document.getElementById('eggQty').innerText = currentItem.eggQty;
+            updateTotalPrice();
         }
 
         function updateAddonCount(change) {
             if(currentItem.addonQty + change < 0) return;
             currentItem.addonQty += change;
             document.getElementById('addonQty').innerText = currentItem.addonQty;
-            const newTotal = currentItem.price + (currentItem.addonQty * 10);
-            document.getElementById('tempPrice').innerText = newTotal;
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            let total = currentItem.price;
+            if(currentItem.type === 'suki') {
+                total += (currentItem.eggQty * 10);
+                currentItem.options.forEach(opt => total += opt.p);
+            } else {
+                total += (currentItem.addonQty * 10);
+            }
+            document.getElementById('tempPrice').innerText = total;
         }
 
         function addToCart() {
@@ -279,6 +304,9 @@
 
             if (currentItem.type === 'suki') {
                 details.push({ name: currentItem.name, price: currentItem.price, count: 1, type: 'Main' });
+                if(currentItem.eggQty > 0) {
+                    details.push({ name: "ไข่ไก่", price: 10, count: currentItem.eggQty, type: 'Addon' });
+                }
                 currentItem.options.forEach(opt => {
                     details.push({ name: opt.n, price: opt.p, count: 1, type: 'Addon' });
                 });
@@ -289,8 +317,12 @@
                 }
             }
             
+            let extraName = "";
+            if(currentItem.type === 'suki' && currentItem.eggQty > 0) extraName = ` (+ไข่ ${currentItem.eggQty} ฟอง)`;
+            if(currentItem.type === 'noodle' && currentItem.addonQty > 0) extraName = ` (+น้ำพริก ${currentItem.addonQty} ห่อ)`;
+
             const newOrder = {
-                name: currentItem.name + (currentItem.type === 'noodle' && currentItem.addonQty > 0 ? ` (+น้ำพริก ${currentItem.addonQty} ห่อ)` : ''),
+                name: currentItem.name + extraName,
                 price: finalPrice,
                 count: 1,
                 details: details,

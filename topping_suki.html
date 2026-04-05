@@ -112,7 +112,6 @@
             font-weight: 700;
         }
         
-        /* New Badge Style */
         .badge-new {
             position: absolute;
             top: 5px;
@@ -215,6 +214,56 @@
             font-weight: 700;
             margin-left: 5px;
         }
+
+        /* Sauce Modal Styles */
+        #sauce-modal {
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.7); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+        .sauce-modal-content {
+            background: white; 
+            width: 100%; 
+            max-width: 400px; 
+            border-radius: 20px; 
+            padding: 20px; 
+            text-align: center;
+        }
+        .sauce-option-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-top: 20px;
+        }
+        .sauce-card {
+            border: 2px solid #ddd; 
+            border-radius: 15px; 
+            padding: 10px; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .sauce-card:hover {
+            border-color: #940109;
+        }
+        .sauce-card img {
+            width: 80px; 
+            height: 80px; 
+            object-fit: contain; 
+            margin-bottom: 10px;
+        }
+        .sauce-card div {
+            font-size: 0.85em; 
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -235,22 +284,34 @@
         </div>
     </div>
 
+    <div id="sauce-modal">
+        <div class="sauce-modal-content">
+            <h2 style="color: #940109; margin-top: 0;">เลือกน้ำจิ้มแถม</h2>
+            <p style="font-size: 0.9em; color: #666;">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
+            <div class="sauce-option-grid">
+                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า', 'f11.png')">
+                    <img src="images/f11.png" alt="หม่าล่า">
+                    <div>น้ำจิ้มงาคั่วหม่าล่า</div>
+                </div>
+                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง', 'sk.png')">
+                    <img src="images/sk.png" alt="สุกี้">
+                    <div>น้ำจิ้มสุกี้กวางตุ้ง</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
-    // ========================================================
-    // === 1. TOPPING DATA ===
-    // ========================================================
     const TOPPING_DATA = [
         { id: 'T0.0', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
-
+        { id: 'T6', category: 'หมวดพิเศษ', name: 'สามชั้นพันเห็ดเข็มทอง', image: '3chunpunhed.png', price: 12 },
         { id: 'T0', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
         { id: 'T1', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
         { id: 'T2', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
         { id: 'T3', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
         { id: 'T4', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
         { id: 'T5', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
-        { id: 'T6', category: 'หมวดเนื้อหมู', name: 'สามชั้นพันเห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
-        { id: 'T6.5', category: 'หมวดเนื้อหมู', name: 'ไส้กรอกพันเบคอน', image: 'beconpun.png', price: 10 },
-
+        { id: 'T6.5', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
         { id: 'T7', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
         { id: 'T8', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
         { id: 'T9', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบชีส', image: 'nunggroobchhet.png', price: 10 },
@@ -264,14 +325,12 @@
         { id: 'T17', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
         { id: 'T18', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
         { id: 'T19', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ขนมจีบ', image: 'kanomjeep.png', price: 10 },
-
         { id: 'T20', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
         { id: 'T21', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
         { id: 'T22', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
         { id: 'T23', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้ใหญ่', image: 'Zenfongyai.png', price: 10 },
         { id: 'T24', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
         { id: 'T25', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
-
         { id: 'T26', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 }, 
         { id: 'T27', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
         { id: 'T28', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
@@ -285,12 +344,10 @@
         { id: 'T35', category: 'หมวดผัก – เส้น', name: 'วุ้นเส้น', image: 'woonzen.png', price: 10 },
         { id: 'T36', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
         { id: 'T37', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
-
         { id: 'T38', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },
         { id: 'T39', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
         { id: 'T40', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
-
-        { id: 'T41', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ม้วน แพ็คละ 59 บาท', image: 'fong-pack.png', price: 59, note: 'แบบยกแพ็ค' },
+        { id: 'T41', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ม้วน', image: 'fong-pack.png', price: 59, note: 'แบบยกแพ็ค' },
         { id: 'T42', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
         { id: 'T43', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – เผือก', image: 'zen-p.png', price: 29 }, 
         { id: 'T44', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – ปวยเล้ง', image: 'zen-u.png', price: 29 },
@@ -298,7 +355,6 @@
         { id: 'T46', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – ฟักทอง', image: 'zen-f.png', price: 29 },
         { id: 'T47', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบเล็ก', image: 'zen-l.png', price: 29 },
         { id: 'T48', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นเล็กซันเยา', image: 'zunyao.png', price: 29 },
-
         { id: 'T49', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 12 },
         { id: 'T50', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
         { id: 'T51', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 },
@@ -321,15 +377,12 @@
                 ${mainItemDetails.spice ? ` - เผ็ดระดับ: ${mainItemDetails.spice}` : ''}
             `;
         } else {
-             document.getElementById('main-item-info').innerText = 'ไม่พบรายการหลัก กรุณาเลือกรายการใหม่';
-             setTimeout(() => { window.location.href = 'suki_type.html'; }, 1000);
+             window.location.href = 'suki_type.html';
         }
     }
 
     function renderToppings() {
         const container = document.getElementById('topping-sections');
-        if (!container) return;
-
         const groupedToppings = TOPPING_DATA.reduce((acc, item) => {
             acc[item.category] = acc[item.category] || [];
             acc[item.category].push(item);
@@ -338,30 +391,21 @@
 
         let html = '';
         for (const category in groupedToppings) {
-            html += `<div class="topping-category">`;
-            html += `<h2 class="category-title">${category}</h2>`;
-            html += `<div class="topping-grid">`;
-
+            html += `<div class="topping-category"><h2 class="category-title">${category}</h2><div class="topping-grid">`;
             groupedToppings[category].forEach(item => {
                 html += `
-                    <div class="topping-card" 
-                        data-id="${item.id}"
-                        onclick="updateToppingSelection('${item.id}')"
-                        id="card-${item.id}"
-                    >
+                    <div class="topping-card" data-id="${item.id}" onclick="updateToppingSelection('${item.id}')" id="card-${item.id}">
                         ${item.isNew ? `<span class="badge-new">New</span>` : ''}
                         <img src="images/${item.image}" alt="${item.name}">
                         <div class="topping-name">${item.name}</div>
                         ${item.note ? `<div class="topping-note">${item.note}</div>` : ''}
                         <div class="topping-price">${item.price.toLocaleString()} บาท</div>
-                        
                         <div class="count-controls">
                             <button onclick="changeCount(event, '${item.id}', -1)">-</button>
                             <span class="count-display" id="count-${item.id}">1</span>
                             <button onclick="changeCount(event, '${item.id}', 1)">+</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
             html += `</div></div>`;
         }
@@ -372,17 +416,13 @@
     function updateToppingSelection(id) {
         const itemData = TOPPING_DATA.find(item => item.id === id);
         const cardElement = document.getElementById(`card-${id}`);
-
-        if (!itemData || !cardElement) return;
-
         if (selectedToppings[id]) {
             delete selectedToppings[id];
             cardElement.classList.remove('selected');
         } else {
             selectedToppings[id] = { ...itemData, count: 1 };
             cardElement.classList.add('selected');
-            const countDisplay = document.getElementById(`count-${id}`);
-            if (countDisplay) countDisplay.innerText = 1;
+            document.getElementById(`count-${id}`).innerText = 1;
         }
         updateTotalDisplay();
     }
@@ -390,7 +430,6 @@
     function changeCount(event, id, delta) {
         event.stopPropagation();
         if (!selectedToppings[id]) return;
-
         let newCount = selectedToppings[id].count + delta;
         if (newCount <= 0) {
             updateToppingSelection(id);
@@ -404,14 +443,9 @@
     function updateTotalDisplay() {
         let toppingTotal = Object.values(selectedToppings).reduce((total, item) => total + (item.price * item.count), 0);
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
-
-        const mainPrice = mainItemDetails.price || 0;
-        grandTotal = mainPrice + toppingTotal;
-
-        const totalDisplayElement = document.getElementById('grand-total-display');
+        grandTotal = (mainItemDetails.price || 0) + toppingTotal;
         const nextButton = document.getElementById('next-btn');
-
-        if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} บาท`;
+        document.getElementById('grand-total-display').innerText = `${grandTotal.toLocaleString()} บาท`;
         
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             nextButton.classList.add('disabled');
@@ -422,6 +456,7 @@
         }
     }
 
+    // --- ส่วนแก้ไขเงื่อนไขสุกี้แห้ง ---
     function calculateAndSave() {
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
@@ -429,10 +464,29 @@
             return;
         }
 
+        // ตรวจสอบว่าเป็นสุกี้แห้งหรือไม่ (เช็คจากชื่อเมนู)
+        const isSukiHang = mainItemDetails.name.includes("สุกี้แห้ง");
+
+        if (isSukiHang) {
+            // ถ้าเป็นสุกี้แห้ง บันทึกทันทีโดยไม่เลือกน้ำจิ้ม
+            processOrder(null, null);
+        } else {
+            // ถ้าเป็น สุกี้น้ำ หรือ สุกี้เนย ให้แสดง Modal เลือกน้ำจิ้มฟรี
+            document.getElementById('sauce-modal').style.display = 'flex';
+        }
+    }
+
+    function processOrder(sauceName, sauceImg) {
         let orderItems = [];
         orderItems.push({ id: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
+        
         if (mainItemDetails.spice) {
              orderItems.push({ id: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
+        }
+        
+        // ถ้าน้ำจิ้มไม่ใช่ null (คือมีให้เลือก) ให้ใส่เพิ่มเข้าไปในออเดอร์
+        if (sauceName) {
+            orderItems.push({ id: 'FREE_SAUCE', name: sauceName, price: 0, count: 1, type: 'Sauce' });
         }
 
         Object.values(selectedToppings).forEach(topping => {
@@ -446,7 +500,7 @@
         });
 
         const finalOrderSet = {
-            name: mainItemDetails.name + (totalToppingCount > 0 ? ` (+${totalToppingCount} รายการ)` : ''), 
+            name: mainItemDetails.name, 
             price: grandTotal,
             count: 1, 
             details: orderItems,
@@ -468,4 +522,3 @@
 </script>
 </body>
 </html>
-
