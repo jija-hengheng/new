@@ -199,10 +199,13 @@
             gap: 8px;
             width: 90%;
             justify-content: center;
+            transition: 0.3s;
         }
         
         .next-btn.disabled {
-            background-color: #ccc;
+            background-color: #666 !important;
+            opacity: 0.8;
+            cursor: not-allowed;
         }
 
         .total-amount {
@@ -277,8 +280,8 @@
 
     <div class="footer-fixed">
         <div class="footer-content">
-            <button class="next-btn" id="next-btn" onclick="calculateAndSave()">
-                ✅ เพิ่มลงในตะกร้า 
+            <button class="next-btn disabled" id="next-btn" onclick="calculateAndSave()" disabled>
+                📌 เลือกท็อปปิ้งเพิ่มอีก 3 ไม้ 
                 <span class="total-amount" id="grand-total-display">0 บาท</span>
             </button>
         </div>
@@ -443,48 +446,53 @@
     function updateTotalDisplay() {
         let toppingTotal = Object.values(selectedToppings).reduce((total, item) => total + (item.price * item.count), 0);
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
-        grandTotal = (mainItemDetails.price || 0) + toppingTotal;
+
+        const mainPrice = mainItemDetails.price || 0;
+        grandTotal = mainPrice + toppingTotal;
+
+        const totalDisplayElement = document.getElementById('grand-total-display');
         const nextButton = document.getElementById('next-btn');
-        document.getElementById('grand-total-display').innerText = `${grandTotal.toLocaleString()} บาท`;
+
+        if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} บาท`;
         
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             nextButton.classList.add('disabled');
+            nextButton.disabled = true; // ล็อคปุ่ม
             nextButton.innerHTML = `📌 เลือกท็อปปิ้งเพิ่มอีก ${MIN_TOPPINGS_COUNT - totalToppingCount} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         } else {
             nextButton.classList.remove('disabled');
-            nextButton.innerHTML = `✅ เพิ่มลงในตะกร้า <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
+            nextButton.disabled = false; // ปลดล็อคปุ่ม
+            nextButton.innerHTML = `✅ยืนยันออเดอร์ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         }
     }
 
-    // --- ส่วนแก้ไขเงื่อนไขสุกี้แห้ง ---
     function calculateAndSave() {
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
+        
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             alert(`⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${MIN_TOPPINGS_COUNT} ไม้`);
             return;
         }
 
-        // ตรวจสอบว่าเป็นสุกี้แห้งหรือไม่ (เช็คจากชื่อเมนู)
         const isSukiHang = mainItemDetails.name.includes("สุกี้แห้ง");
 
         if (isSukiHang) {
-            // ถ้าเป็นสุกี้แห้ง บันทึกทันทีโดยไม่เลือกน้ำจิ้ม
             processOrder(null, null);
         } else {
-            // ถ้าเป็น สุกี้น้ำ หรือ สุกี้เนย ให้แสดง Modal เลือกน้ำจิ้มฟรี
             document.getElementById('sauce-modal').style.display = 'flex';
         }
     }
 
     function processOrder(sauceName, sauceImg) {
         let orderItems = [];
+        let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
+
         orderItems.push({ id: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
         
         if (mainItemDetails.spice) {
              orderItems.push({ id: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
         }
         
-        // ถ้าน้ำจิ้มไม่ใช่ null (คือมีให้เลือก) ให้ใส่เพิ่มเข้าไปในออเดอร์
         if (sauceName) {
             orderItems.push({ id: 'FREE_SAUCE', name: sauceName, price: 0, count: 1, type: 'Sauce' });
         }
@@ -500,7 +508,7 @@
         });
 
         const finalOrderSet = {
-            name: mainItemDetails.name, 
+            name: mainItemDetails.name + (totalToppingCount > 0 ? ` (+${totalToppingCount} รายการ)` : ''), 
             price: grandTotal,
             count: 1, 
             details: orderItems,
