@@ -196,11 +196,16 @@
             let txt = '========================\n';
             txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
             txt += '========================\n';
-            txt += `👤 ชื่อ: ${name} | 📞 โทร: ${phone}\n`;
+            txt += `👤 ชื่อ: ${name}\n`;
+            txt += `📞 โทร: ${phone}\n`;
             txt += `📍 วิธีรับ: ${serviceType}\n`;
             txt += `━━━━━━━━━━━━\n`;
 
             cartItems.forEach((item, i) => {
+                // เพิ่มการเว้นบรรทัดระหว่างออเดอร์ (ยกเว้นรายการแรก)
+                if (i > 0) {
+                    txt += `\n`; 
+                }
                 txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
                 if(item.details && item.details.length > 0) {
                     item.details.forEach(d => {
@@ -209,11 +214,12 @@
                 }
             });
 
+            txt += `━━━━━━━━━━━━\n`;
+            
             if(deliveryFee > 0) {
                 txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
             }
 
-            txt += `━━━━━━━━━━━━\n`;
             txt += `🧺*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*🪭\n`;
             txt += `━━━━━━━━━━━━\n`;
 
@@ -233,7 +239,7 @@
             el.setSelectionRange(0, 99999);
             document.execCommand('copy');
             
-            alert('คัดลอกแล้ว!โปรดวางในแชท JIJA-HengHeng...');
+            alert('คัดลอกแล้ว! โปรดวางในแชท JIJA-HengHeng...');
             sessionStorage.removeItem('cartItems');
             window.location.href = 'https://m.me/727234960462724';
         }
