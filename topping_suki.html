@@ -457,11 +457,11 @@
         
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             nextButton.classList.add('disabled');
-            nextButton.disabled = true; // ล็อคปุ่ม
+            nextButton.disabled = true; 
             nextButton.innerHTML = `📌 เลือกท็อปปิ้งเพิ่มอีก ${MIN_TOPPINGS_COUNT - totalToppingCount} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         } else {
             nextButton.classList.remove('disabled');
-            nextButton.disabled = false; // ปลดล็อคปุ่ม
+            nextButton.disabled = false; 
             nextButton.innerHTML = `✅ยืนยันออเดอร์ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
         }
     }
@@ -474,9 +474,11 @@
             return;
         }
 
+        // เงื่อนไขข้าม Modal: สุกี้แห้ง หรือ มาม่าเซ็ต (isNoodleSet)
         const isSukiHang = mainItemDetails.name.includes("สุกี้แห้ง");
+        const isMamaSet = mainItemDetails.isNoodleSet === true;
 
-        if (isSukiHang) {
+        if (isSukiHang || isMamaSet) {
             processOrder(null, null);
         } else {
             document.getElementById('sauce-modal').style.display = 'flex';
