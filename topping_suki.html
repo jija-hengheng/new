@@ -280,7 +280,7 @@
 
     <div class="footer-fixed">
         <div class="footer-content">
-            <button class="next-btn disabled" id="next-btn" onclick="calculateAndSave()" disabled>
+            <button class="next-btn disabled" id="next-btn" onclick="calculateAndSave()">
                 📌 เลือกท็อปปิ้งเพิ่มอีก 3 ไม้ 
                 <span class="total-amount" id="grand-total-display">0 บาท</span>
             </button>
@@ -306,6 +306,7 @@
 
 <script>
     const TOPPING_DATA = [
+        { id: 'T53', category: 'หมวดข้าว', name: 'ข้าวสวย', image: 'khao.jpg', price: 10 },
         { id: 'T0.0', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
         { id: 'T6', category: 'หมวดพิเศษ', name: 'สามชั้นพันเห็ดเข็มทอง', image: '3chunpunhed.png', price: 12 },
         { id: 'T0', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
