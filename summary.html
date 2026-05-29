@@ -23,6 +23,14 @@
         .radio-group label { padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: 0.3s; flex-grow: 1; text-align: center; background: #fff; }
         .radio-group input[type="radio"]:checked + label { background: var(--primary-red); color: white; border-color: var(--primary-red); font-weight: bold; }
 
+        /* ตกแต่งโลโก้ขนาดเล็กให้พอดีกับตัวอักษรและจัดให้อยู่กึ่งกลางแนวนอน/แนวตั้งพอดี */
+        .logo-mini {
+            height: 24px;
+            vertical-align: middle;
+            margin-left: 5px;
+            margin-top: -3px;
+        }
+
         #delivery-status { margin-bottom: 15px; font-weight: bold; text-align: center; border-radius: 8px; }
 
         .cart-item { background: #fff; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -82,6 +90,17 @@
                     
                     <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="loadCart()">
                     <label for="r3">🛵 ส่งเดลิเวอรี่</label>
+                </div>
+            </div>
+ 
+            <div class="form-group" style="margin-top: 20px;">
+                <label>ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span style="color:red">*</span></label>
+                <div class="radio-group">
+                    <input type="radio" id="p1" name="ptype" value="ใช้สิทธิ" onchange="loadCart()">
+                    <label for="p1">ใช้สิทธิ</label>
+                    
+                    <input type="radio" id="p2" name="ptype" value="ไม่ใช้สิทธิ" onchange="loadCart()">
+                    <label for="p2">ไม่ใช้สิทธิ</label>
                 </div>
             </div>
         </div>
@@ -155,17 +174,37 @@
             });
 
             let deliveryFee = 0;
+            let extraServiceFee = 0;
             const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+            const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
+
+            // 1. เงื่อนไขค่าเดลิเวอรี่แบบเดิม
             if(serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
                 if(totalFood < 80) {
                     deliveryFee = 10;
-                    deliveryStatus.innerHTML = `<div style="color:red; background:#fff; padding:10px; border:1px solid red; border-radius:8px;">+ ค่าบริการ Delivery 10 บ. (ยอดไม่ถึง 80)</div>`;
-                } else {
-                    deliveryStatus.innerHTML = `<div style="color:green; background:#fff; padding:10px; border:1px solid green; border-radius:8px;">ฟรีค่าส่งเดลิเวอรี่!</div>`;
                 }
             }
 
-            document.getElementById('grand-total').innerText = totalFood + deliveryFee;
+            // 2. เงื่อนไขใหม่: ใช้สิทธิ + เดลิเวอรี่ คิดเพิ่ม 5 บาท
+            if(serviceTypeEl && serviceTypeEl.value.includes('Delivery') && privilegeTypeEl && privilegeTypeEl.value === 'ใช้สิทธิ') {
+                extraServiceFee = 5;
+            }
+
+            // ส่วนการแสดงกล่องแจ้งเตือนสถานะค่าบริการต่าง ๆ บนหน้าจอ
+            let statusHtml = '';
+            if(serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
+                if(totalFood < 80) {
+                    statusHtml += `<div style="color:red; background:#fff; padding:10px; border:1px solid red; border-radius:8px; margin-bottom:8px;">+ ค่าบริการ Delivery 10 บ. (ยอดไม่ถึง 80)</div>`;
+                } else {
+                    statusHtml += `<div style="color:green; background:#fff; padding:10px; border:1px solid green; border-radius:8px; margin-bottom:8px;">ฟรีค่าส่งเดลิเวอรี่!</div>`;
+                }
+            }
+            if(extraServiceFee > 0) {
+                statusHtml += `<div style="color:#d9534f; background:#fff; padding:10px; border:1px solid #d9534f; border-radius:8px;">+ ค่าบริการระบบเพิ่ม 5 บ. (ใช้สิทธิโครงการ + เดลิเวอรี่)</div>`;
+            }
+            deliveryStatus.innerHTML = statusHtml;
+
+            document.getElementById('grand-total').innerText = totalFood + deliveryFee + extraServiceFee;
         }
 
         function remove(idx) {
@@ -178,19 +217,28 @@
             const name = document.getElementById('cust-name').value.trim();
             const phone = document.getElementById('cust-phone').value.trim();
             const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+            const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
 
             if(!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
             if(phone.length !== 10) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ');
             if(!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
+            if(!privilegeTypeEl) return alert('❌ กรุณาเลือกการใช้สิทธิโครงการ');
             if(cartItems.length === 0) return alert('❌ ยังไม่มีเมนูในตะกร้าเลยค่ะ');
             
             const serviceType = serviceTypeEl.value;
+            const privilegeType = privilegeTypeEl.value;
             let totalFood = 0;
             cartItems.forEach(item => totalFood += item.price);
             
             let deliveryFee = 0;
             if(serviceType.includes('Delivery') && totalFood < 80) {
                 deliveryFee = 10;
+            }
+
+            // คำนวณค่าบริการระบบเพิ่ม 5 บาทในเงื่อนไขส่งแชทด้วย
+            let extraServiceFee = 0;
+            if(serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') {
+                extraServiceFee = 5;
             }
             
             let txt = '========================\n';
@@ -199,10 +247,10 @@
             txt += `👤 ชื่อ: ${name}\n`;
             txt += `📞 โทร: ${phone}\n`;
             txt += `📍 วิธีรับ: ${serviceType}\n`;
+            txt += `โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
             txt += `━━━━━━━━━━━━\n`;
 
             cartItems.forEach((item, i) => {
-                // เพิ่มการเว้นบรรทัดระหว่างออเดอร์ (ยกเว้นรายการแรก)
                 if (i > 0) {
                     txt += `\n`; 
                 }
@@ -219,8 +267,11 @@
             if(deliveryFee > 0) {
                 txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
             }
+            if(extraServiceFee > 0) {
+                txt += `✨ค่าบริการระบบเพิ่ม: ${extraServiceFee} บ. (สิทธิรัฐ+เดลิเวอรี่)\n`;
+            }
 
-            txt += `🧺*ยอดรวมทั้งหมด: ${totalFood + deliveryFee} บาท*🪭\n`;
+            txt += `🧺*ยอดรวมทั้งหมด: ${totalFood + deliveryFee + extraServiceFee} บาท*🪭\n`;
             txt += `━━━━━━━━━━━━\n`;
 
             if (deliveryFee > 0) {
