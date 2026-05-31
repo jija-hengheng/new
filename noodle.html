@@ -189,6 +189,11 @@
                 <img src="images/mhee-kai.png" class="item-img">
                 <div class="item-info"><div class="item-name">หมี่ไก่ฉีก</div><div class="item-price">50.-</div></div>
             </div>
+            <!-- เพิ่มเมนูใหม่ตรงนี้ -->
+            <div class="menu-card" onclick="openOptions('n2', 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', 79, 'noodle')">
+                <img src="images/79.png" class="item-img">
+                <div class="item-info"><div class="item-name">หมี่ไก่ฉีก พิเศษ เส้นxไก่</div><div class="item-price">79.-</div></div>
+            </div>
         </div>
     </div>
 
@@ -211,7 +216,6 @@
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
 
         function openOptions(id, name, price, type) {
-            // กำหนดค่าเริ่มต้น รวมถึง eggQty สำหรับ suki
             currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0 };
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('tempPrice').innerText = price;
@@ -220,7 +224,6 @@
             list.innerHTML = '';
 
             if(type === 'suki') {
-                // รายการ ไข่ไก่ แบบกด +/-
                 list.innerHTML += `
                     <div class="opt-row">
                         <div>
@@ -234,7 +237,6 @@
                         </div>
                     </div>`;
 
-                // รายการเสริมอื่นๆ (ไม่รวมไข่แล้ว)
                 const sukiOpts = [{n:'+ชีสอาบ', p:20}, {n:'+หมูหมักนุ่ม', p:10}];
                 if(id === 's4') sukiOpts.push({n:'🪷ไม่ใส่ผัก', p:0});
 
@@ -247,7 +249,6 @@
                         </label>`;
                 });
             } else {
-                // หมี่ไก่ฉีก
                 list.innerHTML = `
                     <div class="opt-row">
                         <div>
@@ -311,7 +312,8 @@
                     details.push({ name: opt.n, price: opt.p, count: 1, type: 'Addon' });
                 });
             } else {
-                details.push({ name: "หมี่ไก่ฉีก", price: 50, count: 1, type: 'Main' });
+                // ปรับให้ดึงชื่อตามเมนูหลักที่เลือก (จะบันทึกเป็น หมี่ไก่ฉีก หรือ หมี่ไก่ฉีก พิเศษ เส้นxไก่ ตามจริง)
+                details.push({ name: currentItem.name, price: currentItem.price, count: 1, type: 'Main' });
                 if (currentItem.addonQty > 0) {
                     details.push({ name: "น้ำพริกกากหมู", price: 10, count: currentItem.addonQty, type: 'Addon' });
                 }
