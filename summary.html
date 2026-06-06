@@ -23,7 +23,12 @@
         .radio-group label { padding: 10px 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: 0.3s; flex-grow: 1; text-align: center; background: #fff; }
         .radio-group input[type="radio"]:checked + label { background: var(--primary-red); color: white; border-color: var(--primary-red); font-weight: bold; }
 
-        /* ตกแต่งโลโก้ขนาดเล็กให้พอดีกับตัวอักษรและจัดให้อยู่กึ่งกลางแนวนอน/แนวตั้งพอดี */
+        /* ตกแต่งปุ่มแชร์ตำแหน่ง */
+        .location-box { display: none; margin-top: 15px; padding: 12px; border: 1px dashed var(--primary-red); border-radius: 8px; background-color: #fff5f5; text-align: center; }
+        .location-btn { background-color: #ff9800; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: 'Kanit', sans-serif; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .location-btn:hover { background-color: #e65100; }
+        .location-status { margin-top: 8px; font-size: 0.85rem; font-weight: bold; }
+
         .logo-mini {
             height: 24px;
             vertical-align: middle;
@@ -82,15 +87,20 @@
             <div class="form-group">
                 <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
                 <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="🍽️ ทานที่ร้าน" onchange="loadCart()">
+                    <input type="radio" id="r1" name="stype" value="🍽️ ทานที่ร้าน" onchange="toggleLocationField(); loadCart();">
                     <label for="r1">🍽️ ทานที่ร้าน</label>
                     
-                    <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน" onchange="loadCart()">
+                    <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน" onchange="toggleLocationField(); loadCart();">
                     <label for="r2">🥡 กลับบ้าน</label>
                     
-                    <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="loadCart()">
+                    <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();">
                     <label for="r3">🛵 ส่งเดลิเวอรี่</label>
                 </div>
+            </div>
+
+            <div class="location-box" id="location-section">
+                <button type="button" class="location-btn" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
+                <div id="location-text" class="location-status" style="color: red;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
             </div>
  
             <div class="form-group" style="margin-top: 20px;">
@@ -139,6 +149,67 @@
 
     <script>
         let cartItems = [];
+        let googleMapsLink = ""; // ตัวแปรเก็บลิงก์ Google Maps
+
+        // ฟังก์ชันเปิด-ปิดการแสดงกล่องปุ่มแชร์ตำแหน่งตามวิธีรับสินค้า
+        function toggleLocationField() {
+            const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+            const locSection = document.getElementById('location-section');
+            if (serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
+                locSection.style.display = 'block';
+            } else {
+                locSection.style.display = 'none';
+                // ล้างค่าหากผู้ใช้เปลี่ยนไปเลือกแบบอื่น
+                googleMapsLink = "";
+                document.getElementById('location-text').innerHTML = "⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง";
+                document.getElementById('location-text').style.color = "red";
+            }
+        }
+
+        // ฟังก์ชันดึงพิกัด Geolocation API จากอุปกรณ์ผู้ใช้
+        function getLocation() {
+            const statusText = document.getElementById('location-text');
+            if (navigator.geolocation) {
+                statusText.innerHTML = "⏳ กำลังดึงตำแหน่งปัจจุบันของคุณ...";
+                statusText.style.color = "#ff9800";
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        // สร้างลิงก์ Google Maps สามารถกดและนำทางได้ทันที
+                        googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                        
+                        statusText.innerHTML = `✅ แชร์ตำแหน่งสำเร็จ! (<a href="${googleMapsLink}" target="_blank" style="color: green; text-decoration: underline;">เปิดดูพิกัดบนแผนที่</a>)`;
+                        statusText.style.color = "green";
+                        alert("ดึงพิกัดตำแหน่งจัดส่งสำเร็จเรียบร้อยค่ะ!");
+                    }, 
+                    function(error) {
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                statusText.innerHTML = "❌ คุณปฏิเสธการเข้าถึงตำแหน่ง กรุณาเปิดสิทธิ์ในเบราว์เซอร์";
+                                alert("❌ กรุณาอนุญาตให้เข้าถึงตำแหน่งปัจจุบัน เพื่อใช้บริการเดลิเวอรี่ค่ะ");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                statusText.innerHTML = "❌ ไม่สามารถระบุตำแหน่งพิกัดปัจจุบันได้";
+                                break;
+                            case error.TIMEOUT:
+                                statusText.innerHTML = "❌ หมดเวลาในการดึงตำแหน่งพิกัด";
+                                break;
+                            default:
+                                statusText.innerHTML = "❌ เกิดข้อผิดพลาดในการดึงตำแหน่งพิกัด";
+                                break;
+                        }
+                        statusText.style.color = "red";
+                        googleMapsLink = "";
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            } else {
+                statusText.innerHTML = "❌ เบราว์เซอร์ของคุณไม่รองรับการแชร์พิกัดตำแหน่ง";
+                statusText.style.color = "red";
+            }
+        }
 
         function loadCart() {
             cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
@@ -178,19 +249,16 @@
             const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
             const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
 
-            // 1. เงื่อนไขค่าเดลิเวอรี่แบบเดิม
             if(serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
                 if(totalFood < 80) {
                     deliveryFee = 10;
                 }
             }
 
-            // 2. เงื่อนไขใหม่: ใช้สิทธิ + เดลิเวอรี่ คิดเพิ่ม 5 บาท
             if(serviceTypeEl && serviceTypeEl.value.includes('Delivery') && privilegeTypeEl && privilegeTypeEl.value === 'ใช้สิทธิ') {
                 extraServiceFee = 5;
             }
 
-            // ส่วนการแสดงกล่องแจ้งเตือนสถานะค่าบริการต่าง ๆ บนหน้าจอ
             let statusHtml = '';
             if(serviceTypeEl && serviceTypeEl.value.includes('Delivery')) {
                 if(totalFood < 80) {
@@ -222,6 +290,12 @@
             if(!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
             if(phone.length !== 10) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ');
             if(!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
+            
+            // ตรวจสอบเงื่อนไขบังคับแชร์พิกัดเมื่อเลือก Delivery
+            if(serviceTypeEl.value.includes('Delivery') && !googleMapsLink) {
+                return alert('❌ สำหรับบริการเดลิเวอรี่ กรุณากดปุ่มแชร์ตำแหน่งจัดส่งก่อนนะคะ');
+            }
+
             if(!privilegeTypeEl) return alert('❌ กรุณาเลือกการใช้สิทธิโครงการ');
             if(cartItems.length === 0) return alert('❌ ยังไม่มีเมนูในตะกร้าเลยค่ะ');
             
@@ -235,7 +309,6 @@
                 deliveryFee = 10;
             }
 
-            // คำนวณค่าบริการระบบเพิ่ม 5 บาทในเงื่อนไขส่งแชทด้วย
             let extraServiceFee = 0;
             if(serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') {
                 extraServiceFee = 5;
@@ -247,6 +320,12 @@
             txt += `👤 ชื่อ: ${name}\n`;
             txt += `📞 โทร: ${phone}\n`;
             txt += `📍 วิธีรับ: ${serviceType}\n`;
+            
+            // หากมีลิงก์ Google Maps ให้ใส่เข้าไปในสรุปข้อความออเดอร์
+            if (googleMapsLink) {
+                txt += `🗺️ แผนที่จัดส่ง: ${googleMapsLink}\n`;
+            }
+
             txt += `โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
             txt += `━━━━━━━━━━━━\n`;
 
@@ -295,7 +374,10 @@
             window.location.href = 'https://m.me/727234960462724';
         }
 
-        window.onload = loadCart;
+        window.onload = function() {
+            toggleLocationField();
+            loadCart();
+        };
     </script>
 </body>
 </html>
