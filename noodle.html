@@ -23,7 +23,6 @@
         .addon-counter { display: flex; align-items: center; gap: 12px; }
         .btn-round { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--primary-red); background: #fff; color: var(--primary-red); font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .btn-confirm { background: var(--primary-red); color: var(--bg-cream); width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; margin-top: 15px; }
-        /* สไตล์เพิ่มเติมสำหรับน้ำจิ้ม */
         .sauce-group { display: flex; gap: 10px; margin: 10px 0; }
         .sauce-option { flex: 1; padding: 10px; border: 2px solid var(--primary-red); border-radius: 8px; text-align: center; cursor: pointer; color: var(--primary-red); }
         .sauce-option.active { background-color: var(--primary-red); color: white; }
@@ -61,7 +60,7 @@
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
 
         function openOptions(id, name, price, type) {
-            currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0, sauce: 'สูตรกวางตุ้ง' };
+            currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0, sauce: null };
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('tempPrice').innerText = price;
             
@@ -69,11 +68,10 @@
             list.innerHTML = '';
 
             if(type === 'suki') {
- 
                 list.innerHTML += `<p style="margin:10px 0 5px 0">เลือกสูตรที่คุณต้องการทาน (ฟรี):</p>
                     <div class="sauce-group">
-                        <div id="s1_btn" class="sauce-option active" onclick="selectSauce('สูตรกวางตุ้ง')">สูตรกวางตุ้ง</div>
-                        <div id="s2_btn" class="sauce-option" onclick="selectSauce('สูตรเต้าหู้ยี้')">สูตรเต้าหู้ยี้</div>
+                        <div id="s1_btn" class="sauce-option" onclick="selectSauce('สูตรเต้าหู้ยี้')">สูตรเต้าหู้ยี้</div>
+                        <div id="s2_btn" class="sauce-option" onclick="selectSauce('สูตรกวางตุ้ง')">สูตรกวางตุ้ง</div>
                     </div>`;
 
                 list.innerHTML += `<div class="opt-row"><div><span>+ ไข่ไก่</span><br><small style="color:#888">(+10.- ต่อฟอง)</small></div>
@@ -93,8 +91,8 @@
 
         function selectSauce(sauce) {
             currentItem.sauce = sauce;
-            document.getElementById('s1_btn').className = (sauce === 'สูตรกวางตุ้ง') ? 'sauce-option active' : 'sauce-option';
-            document.getElementById('s2_btn').className = (sauce === 'สูตรเต้าหู้ยี้') ? 'sauce-option active' : 'sauce-option';
+            document.getElementById('s1_btn').className = (sauce === 'สูตรเต้าหู้ยี้') ? 'sauce-option active' : 'sauce-option';
+            document.getElementById('s2_btn').className = (sauce === 'สูตรกวางตุ้ง') ? 'sauce-option active' : 'sauce-option';
         }
 
         function updateSukiOpt(name, price, chk) {
@@ -129,6 +127,11 @@
         }
 
         function addToCart() {
+            if(currentItem.type === 'suki' && !currentItem.sauce) {
+                alert('กรุณาเลือกสูตรที่ต้องการก่อนครับ');
+                return;
+            }
+
             let extraName = "";
             if(currentItem.type === 'suki') {
                 extraName = ` (${currentItem.sauce})`;
