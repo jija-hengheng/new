@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         let cartItems = [];
         let googleMapsLink = ""; 
 
@@ -172,13 +172,9 @@
                 locSection.style.display = 'block';
             } else {
                 locSection.style.display = 'none';
-                googleMapsLink = "";
-                document.getElementById('location-text').innerHTML = "⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง";
-                document.getElementById('location-text').style.color = "red";
             }
         }
 
-        // จัดการแสดง/ซ่อน วิธีการชำระเงินตามการเลือกใช้สิทธิโครงการ
         function togglePaymentSection() {
             const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
             const paymentSection = document.getElementById('payment-section');
@@ -186,7 +182,6 @@
                 paymentSection.style.display = 'block';
             } else {
                 paymentSection.style.display = 'none';
-                // ล้างการเลือกชำระเงินเดิมออกถ้าเปลี่ยนไปใช้สิทธิ
                 const checkedPayment = document.querySelector('input[name="paymentType"]:checked');
                 if(checkedPayment) checkedPayment.checked = false;
             }
@@ -195,44 +190,22 @@
         function getLocation() {
             const statusText = document.getElementById('location-text');
             if (navigator.geolocation) {
-                statusText.innerHTML = "⏳ กำลังดึงตำแหน่งปัจจุบันของคุณ...";
+                statusText.innerHTML = "⏳ กำลังดึงตำแหน่ง...";
                 statusText.style.color = "#ff9800";
-                
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        // แก้ไข Syntax ของ String ที่เคยเสียให้ถูกต้อง
-                        googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
-                        
-                        statusText.innerHTML = `✅ แชร์ตำแหน่งสำเร็จ! (<a href="${googleMapsLink}" target="_blank" style="color: green; text-decoration: underline;">เปิดดูพิกัดบนแผนที่</a>)`;
+                        googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+                        statusText.innerHTML = `✅ แชร์ตำแหน่งสำเร็จ!`;
                         statusText.style.color = "green";
-                        alert("ดึงพิกัดตำแหน่งจัดส่งสำเร็จเรียบร้อยค่ะ!");
                     }, 
                     function(error) {
-                        switch(error.code) {
-                            case error.PERMISSION_DENIED:
-                                statusText.innerHTML = "❌ คุณปฏิเสธการเข้าถึงตำแหน่ง กรุณาเปิดสิทธิ์ในเบราว์เซอร์";
-                                alert("❌ กรุณาอนุญาตให้เข้าถึงตำแหน่งปัจจุบัน เพื่อใช้บริการเดลิเวอรี่ค่ะ");
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                statusText.innerHTML = "❌ ไม่สามารถระบุตำแหน่งพิกัดปัจจุบันได้";
-                                break;
-                            case error.TIMEOUT:
-                                statusText.innerHTML = "❌ หมดเวลาในการดึงตำแหน่งพิกัด";
-                                break;
-                            default:
-                                statusText.innerHTML = "❌ เกิดข้อผิดพลาดในการดึงตำแหน่งพิกัด";
-                                break;
-                        }
+                        statusText.innerHTML = "❌ ไม่สามารถดึงตำแหน่งได้";
                         statusText.style.color = "red";
-                        googleMapsLink = "";
                     },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
-            } else {
-                statusText.innerHTML = "❌ เบราว์เซอร์ของคุณไม่รองรับการแชร์พิกัดตำแหน่ง";
-                statusText.style.color = "red";
             }
         }
 
@@ -316,14 +289,7 @@
             if(!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
             if(phone.length !== 10 || isNaN(phone)) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักเป็นตัวเลขค่ะ');
             if(!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
-            
-            if(serviceTypeEl.value.includes('Delivery') && !googleMapsLink) {
-                return alert('❌ สำหรับบริการเดลิเวอรี่ กรุณากดปุ่มแชร์ตำแหน่งจัดส่งก่อนนะคะ');
-            }
-
             if(!privilegeTypeEl) return alert('❌ กรุณาเลือกการใช้สิทธิโครงการ');
-            
-            // ตรวจสอบเงื่อนไขชำระเงินกรณีไม่ใช้สิทธิ (ตอนนี้มี Element รองรับแล้วจะไม่เกิด Error crash)
             if(privilegeTypeEl.value === 'ไม่ใช้สิทธิ' && !paymentTypeEl) {
                 return alert('❌ กรุณาเลือกวิธีชำระเงิน (เงินสด/สแกนจ่าย)');
             }
@@ -335,36 +301,27 @@
             cartItems.forEach(item => totalFood += item.price);
             
             let deliveryFee = 0;
-            if(serviceType.includes('Delivery') && totalFood < 80) {
-                deliveryFee = 10;
-            }
-
+            if(serviceType.includes('Delivery') && totalFood < 80) deliveryFee = 10;
             let extraServiceFee = 0;
-            if(serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') {
-                extraServiceFee = 5;
-            }
+            if(serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') extraServiceFee = 5;
             
-            let txt = '========================\n';
-            txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
-            txt += '========================\n';
-            txt += `👤 ชื่อ: ${name}\n`;
-            txt += `📞 โทร: ${phone}\n`;
-            txt += `📍 วิธีรับ: ${serviceType}\n`;
+            let txt = '========================\n📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n========================\n';
+            txt += `👤 ชื่อ: ${name}\n📞 โทร: ${phone}\n📍 วิธีรับ: ${serviceType}\n`;
             
             if (googleMapsLink) {
                 txt += `🗺️ แผนที่จัดส่ง: ${googleMapsLink}\n`;
+            } else if (serviceType.includes('Delivery')) {
+                txt += `🗺️ แผนที่จัดส่ง: (ลูกค้าไม่ได้แชร์ตำแหน่ง)\n`;
             }
 
             txt += `โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
-            
-            if (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) {
-                txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
-            }
-            
+            if (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
             txt += `━━━━━━━━━━━━\n`;
 
-            cartItems.forEach((item, i) => {
-                if (i > 0) txt += `\n`; 
+                     cartItems.forEach((item, i) => {
+                if (i > 0) {
+                    txt += `\n`; 
+                }
                 txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
                 if(item.details && item.details.length > 0) {
                     item.details.forEach(d => {
@@ -374,22 +331,10 @@
             });
 
             txt += `━━━━━━━━━━━━\n`;
-            
-            if(deliveryFee > 0) {
-                txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
-            }
-            if(extraServiceFee > 0) {
-                txt += `✨ค่าบริการระบบเพิ่ม: ${extraServiceFee} บ. (สิทธิรัฐ+เดลิเวอรี่)\n`;
-            }
-
+            if(deliveryFee > 0) txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
+            if(extraServiceFee > 0) txt += `✨ค่าบริการระบบเพิ่ม: ${extraServiceFee} บ.\n`;
             txt += `🧺*ยอดรวมทั้งหมด: ${totalFood + deliveryFee + extraServiceFee} บาท*🪭\n`;
-            txt += `━━━━━━━━━━━━\n`;
-
-            if (serviceType.includes('Delivery') && totalFood < 80) {
-                txt += `สั่งเดลิเวอรี่ ส่งฟรี มีขั้นต่ำ 80 บาท\n`;
-            }
-
-            txt += `━━ขอบพระคุณค่ะ 🙏✨━━`;
+            txt += `━━━━━━━━━━━━\n━━ขอบพระคุณค่ะ 🙏✨━━`;
             
             document.getElementById('order-text').value = txt;
             document.getElementById('overlay').style.display = 'flex';
@@ -397,8 +342,6 @@
 
         function copyAndChat() {
             const textToCopy = document.getElementById('order-text').value;
-            
-            // เปลี่ยนมาใช้ Clipboard API ยุคใหม่เพื่อความเสถียรบนโมบายล์เบราว์เซอร์
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     proceedToChat();
@@ -430,5 +373,6 @@
             loadCart();
         };
     </script>
-</body>
+
+   </body>
 </html>
