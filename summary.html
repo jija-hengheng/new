@@ -305,21 +305,25 @@ function checkout() {
     let extraServiceFee = 0;
     if(serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') extraServiceFee = 5;
     
-    let txt = '========================\n📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n========================\n';
-    txt += `👤 ชื่อ: ${name}\n📞 โทร: ${phone}\n📍 วิธีรับ: ${serviceType}\n`;
-    
+            let txt = '========================\n';
+            txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
+            txt += '========================\n';
+            txt += `👤 ชื่อผู้รับ: ${name}\n`;
+            txt += `📞 โทร: ${phone}\n`;
+            txt += `📍 วิธีรับ: ${serviceType}\n`;
     if (googleMapsLink) {
-        txt += `🗺️ แผนที่จัดส่ง: ${googleMapsLink}\n`;
+            txt += `🗺️ แผนที่จัดส่ง: ${googleMapsLink}\n`;
     } else if (serviceType.includes('Delivery')) {
-        txt += `🗺️ แผนที่จัดส่ง: (ลูกค้าไม่ได้แชร์ตำแหน่ง)\n`;
+            txt += `🗺️ แผนที่จัดส่ง: (ลูกค้าไม่ได้แชร์ตำแหน่ง)\n`;
     }
 
-    txt += `โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
-    if (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
-    txt += `━━━━━━━━━━━━\n`;
+            txt += `🔹โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
+    if (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) 
+            txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
+            txt += `━━━━━━━━━━━━\n`;
     
     // สรุปจำนวนรายการอาหารทั้งหมด
-    txt += `🥡🍴 *รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
+    txt += `🥢 รายการอาหารทั้งหมด: ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
 
     cartItems.forEach((item, i) => {
         if (i > 0) {
