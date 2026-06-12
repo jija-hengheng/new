@@ -323,7 +323,8 @@ function checkout() {
             txt += `━━━━━━━━━━━━\n`;
     
     // สรุปจำนวนรายการอาหารทั้งหมด
-    txt += `🥡🍴*รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
+          txt += `🥡🍴*รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
+          txt += `\n`; 
 
     cartItems.forEach((item, i) => {
         if (i > 0) {
@@ -333,6 +334,7 @@ function checkout() {
         if(item.details && item.details.length > 0) {
             item.details.forEach(d => {
                 txt += ` ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
+                txt += `\n`; 
             });
         }
     });
