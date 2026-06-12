@@ -328,7 +328,6 @@ function checkout() {
 
     cartItems.forEach((item, i) => {
         if (i > 0) {
-            txt += `\n`; 
         }
         txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
         if(item.details && item.details.length > 0) {
