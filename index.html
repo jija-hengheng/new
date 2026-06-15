@@ -20,7 +20,7 @@
             color: #333;
         }
 
-        .container { max-width: 600px; margin: auto; }
+        .container { max-width: 600px; margin: auto; padding-bottom: 80px; }
 
         .logo-container { text-align: center; padding: 20px 0 10px 0; }
         .logo-image { max-width: 120px; height: auto; }
@@ -112,6 +112,29 @@
             text-align: center;
             line-height: 1.3;
         }
+
+        /* Floating Cart Button */
+        .fab-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            background: var(--primary-red);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-decoration: none;
+            z-index: 999;
+            border: 2px solid #fff;
+            text-align: center;
+        }
+        .fab-cart b { font-size: 1rem; line-height: 1; }
+        .fab-cart span { font-size: 0.6rem; }
     </style>
 </head>
 <body>
@@ -153,8 +176,8 @@
                 <div class="card-top-content" style="background-image: url('images/suki.png');">
                     <div class="click-here-button-overlay">เลือกเมนู</div>
                 </div>
-                <div class="menu-title-strip">ชาบู&หม่าล่าทั้ง</div>
-                <div class="card-details"><p class="menu-details-text">ชาบู หม่าล่า ทั่ง เซียงกัว ปั้น สุกี้แห้ง</p></div>
+                <div class="menu-title-strip">ชาบูหม่าล่า</div>
+                <div class="card-details"><p class="menu-details-text">ซุปเข้มข้น ท็อปปิ้งหลากหลาย</p></div>
             </div>
 
             <div class="menu-card" onclick="window.location.href='mama_type.html';">
@@ -193,5 +216,27 @@
         </div>
     </div>
 
+    <a href="summary.html" id="fabCart" class="fab-cart">
+        <b id="fabTotal">0</b>
+        <span id="fabCount">0 รายการ</span>
+    </a>
+
+    <script>
+        function updateCartUI() {
+            const cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+            const fab = document.getElementById('fabCart');
+            
+            if (cart.length > 0) {
+                fab.style.display = 'flex';
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                document.getElementById('fabTotal').innerText = total;
+                document.getElementById('fabCount').innerText = cart.length + ' รายการ';
+            } else {
+                fab.style.display = 'none';
+            }
+        }
+        // เรียกใช้ฟังก์ชันตอนโหลดหน้า
+        updateCartUI();
+    </script>
 </body>
 </html>
