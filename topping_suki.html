@@ -306,63 +306,65 @@
 
 <script>
     const TOPPING_DATA = [
-        { id: 'T01', category: 'หมวดข้าว', name: 'ข้าวสวย', image: 'khao.jpg', price: 10 },
-        { id: 'T02', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
-        { id: 'T03', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
-        { id: 'T04', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
-        { id: 'T05', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
-        { id: 'T06', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
-        { id: 'T07', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
-        { id: 'T08', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
-        { id: 'T09', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
-        { id: 'T10', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
-        { id: 'T11', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
-        { id: 'T12', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบจัมโบ้', image: 'nunggroobchhet.png', price: 10 },
-        { id: 'T13', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'มินิคอกเทล', image: 'mini.png', price: 10 },
-        { id: 'T14', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เปาไข่กุ้ง', image: 'paokaigung.png', price: 10 },
-        { id: 'T15', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ปลาดอลลี่', image: 'dolly.png', price: 10 },
-        { id: 'T16', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้ชีส', image: 'paochese.png', price: 10 },
-        { id: 'T17', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ซีฟู้ด', image: 'fongZ-fod.png', price: 10 },
-        { id: 'T18', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
-        { id: 'T19', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
-        { id: 'T20', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
-        { id: 'T56', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ข้าวโพด', image: 'fongkao.png', price: 10, isNew: true },
-        { id: 'T57', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ชิกุวะญี่ปุ่น', image: 'chigo.png', price: 10, isNew: true },
-        { id: 'T21', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
-        { id: 'T22', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
-        { id: 'T23', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
-        { id: 'T24', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้ใหญ่', image: 'Zenfongyai.png', price: 10 },
-        { id: 'T25', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
-        { id: 'T26', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
-        { id: 'T27', category: 'หมวดผัก – เส้น', name: 'เห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
-        { id: 'T28', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 }, 
-        { id: 'T29', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
-        { id: 'T30', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
-        { id: 'T31', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันหนึบ', image: 'zenlek-mun.png', price: 10 },
-        { id: 'T32', category: 'หมวดผัก – เส้น', name: 'บะหมี่ผัก', image: 'bamheepuk.png', price: 10 },
-        { id: 'T33', category: 'หมวดผัก – เส้น', name: 'ข้าวโพด', image: 'kaopod.png', price: 10 },
-        { id: 'T34', category: 'หมวดผัก – เส้น', name: 'ผักกาด', image: 'pukgad.png', price: 10 },
-        { id: 'T35', category: 'หมวดผัก – เส้น', name: 'วากาเมะ', image: 'wakame.png', price: 10 },
-        { id: 'T36', category: 'หมวดผัก – เส้น', name: 'เส้นบุกหม่าล่า', image: 'zenbuk.png', price: 10 },
-        { id: 'T37', category: 'หมวดผัก – เส้น', name: 'เบบี้กวางตุ้ง', image: 'babygwangtung.png', price: 10 },
-        { id: 'T38', category: 'หมวดผัก – เส้น', name: 'วุ้นเส้น', image: 'woonzen.png', price: 10 },
-        { id: 'T39', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
-        { id: 'T40', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
-        { id: 'T41', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },
-        { id: 'T42', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
-        { id: 'T43', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
-        { id: 'T44', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ม้วน', image: 'fong-pack.png', price: 59, note: 'แบบยกแพ็ค' },
-        { id: 'T45', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
-        { id: 'T46', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – เผือก', image: 'zen-p.png', price: 29 }, 
-        { id: 'T47', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – ปวยเล้ง', image: 'zen-u.png', price: 29 },
-        { id: 'T48', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – มันม่วง', image: 'zen-m.png', price: 29 },
-        { id: 'T49', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบ – ฟักทอง', image: 'zen-f.png', price: 29 },
-        { id: 'T50', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นหนึบเล็ก', image: 'zen-l.png', price: 29 },
-        { id: 'T51', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นเล็กซันเยา', image: 'zunyao.png', price: 29 },
-        { id: 'T52', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 12 },
-        { id: 'T53', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
-        { id: 'T54', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 },
-        { id: 'T55', category: 'หมวดน้ำจิ้ม 220 ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', image: 'mala_sauce.png', price: 69 },
+        { sku: 'TP003', category: 'หมวดข้าว', name: 'ข้าวสวย', image: 'khao.jpg', price: 10 },
+        { sku: 'TP025', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
+        { sku: 'TP022', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
+        { sku: 'TP019', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
+        { sku: 'TP028', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
+        { sku: 'TP020', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
+        { sku: 'TP021', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
+        { sku: 'TP023', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
+        { sku: 'TP030', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
+        { sku: 'TP027', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
+        { sku: 'TP045', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
+        { sku: 'TP046', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบจัมโบ้', image: 'nunggroobchhet.png', price: 10 },
+        { sku: 'TP016', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'มินิคอกเทล', image: 'mini.png', price: 10 },
+        { sku: 'TP032', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เปาไข่กุ้ง', image: 'paokaigung.png', price: 10 },
+        { sku: 'TP008', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ปลาดอลลี่', image: 'dolly.png', price: 10 },
+        { sku: 'TP026', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้ชีส', image: 'paochese.png', price: 10 },
+        { sku: 'TP012', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ซีฟู้ด', image: 'fongZ-fod.png', price: 10 },
+        { sku: 'TP041', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
+        { sku: 'TP024', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
+        { sku: 'TP009', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
+        { sku: 'TP001', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ข้าวโพด', image: 'fongkao.png', price: 10, isNew: true },
+        { sku: 'TP005', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ชิกุวะญี่ปุ่น', image: 'chigo.png', price: 10, isNew: true },
+        { sku: 'TP029', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
+        { sku: 'TP014', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
+        { sku: 'TP034', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
+        { sku: 'TP042', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้ใหญ่', image: 'Zenfongyai.png', price: 10 },
+        { sku: 'TP015', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
+        { sku: 'TP013', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
+        { sku: 'TP040', category: 'หมวดผัก – เส้น', name: 'เห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
+        { sku: 'TP036', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 }, 
+        { sku: 'TP037', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
+        { sku: 'TP035', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
+        { sku: 'TP038', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันหนึบ', image: 'zenlek-mun.png', price: 10 },
+        { sku: 'TP007', category: 'หมวดผัก – เส้น', name: 'บะหมี่ผัก', image: 'bamheepuk.png', price: 10 },
+        { sku: 'TP004', category: 'หมวดผัก – เส้น', name: 'ข้าวโพด', image: 'kaopod.png', price: 10 },
+        { sku: 'TP011', category: 'หมวดผัก – เส้น', name: 'ผักกาด', image: 'pukgad.png', price: 10 },
+        { sku: 'TP017', category: 'หมวดผัก – เส้น', name: 'วากาเมะ', image: 'wakame.png', price: 10 },
+        { sku: 'TP033', category: 'หมวดผัก – เส้น', name: 'เส้นบุกหม่าล่า', image: 'zenbuk.png', price: 10 },
+        { sku: 'TP031', category: 'หมวดผัก – เส้น', name: 'เบบี้กวางตุ้ง', image: 'babygwangtung.png', price: 10 },
+        { sku: 'TP018', category: 'หมวดผัก – เส้น', name: 'วุ้นเส้น', image: 'woonzen.png', price: 10 },
+        { sku: 'TP039', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
+        { sku: 'TP006', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
+        { sku: 'TP047', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },         
+                { sku: 'TP043', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
+        { sku: 'TP044', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
+        { sku: 'Z0F001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ทอด – ยกแพ็ค', image: 'fong-pack.png', price: 59 }, 
+        { sku: 'Z0F002', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้สาหร่าย-ยกแพ็ค', image: 'seaweed_tofu.jpg', price: 99 }, 
+        { sku: 'Z0F005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ดูดซุป-แพ็ค', image: 'fong-29.jpg', price: 29 }, 
+        { sku: 'Z0M001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
+        { sku: 'Z0M005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – เผือก', image: 'zen-p.png', price: 29 }, 
+        { sku: 'Z0M008', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – ผัก', image: 'zen-u.png', price: 29 },
+        { sku: 'Z0M004', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – มันม่วง', image: 'zen-m.png', price: 29 }, 
+        { sku: 'Z0M003', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – ฟักทอง', image: 'zen-f.png', price: 29 },
+        { sku: 'Z0M006', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ-เล็ก', image: 'zen-l.png', price: 29 },
+        { sku: 'Z0M007', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นเล็ก-ซันเย่า', image: 'zunyao.png', price: 29 },
+        { sku: 'NJ003', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 15 }, 
+        { sku: 'NJ001', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
+        { sku: 'NJ002', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 }, 
+        { sku: 'NJ004', category: 'หมวดน้ำจิ้ม 220 ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', image: 'mala_sauce.png', price: 69 },
     ];
     
     let selectedToppings = {}; 
@@ -398,16 +400,16 @@
             html += `<div class="topping-category"><h2 class="category-title">${category}</h2><div class="topping-grid">`;
             groupedToppings[category].forEach(item => {
                 html += `
-                    <div class="topping-card" data-id="${item.id}" onclick="updateToppingSelection('${item.id}')" id="card-${item.id}">
+                    <div class="topping-card" data-sku="${item.sku}" onclick="updateToppingSelection('${item.sku}')" id="card-${item.sku}">
                         ${item.isNew ? `<span class="badge-new">New</span>` : ''}
                         <img src="images/${item.image}" alt="${item.name}">
                         <div class="topping-name">${item.name}</div>
                         ${item.note ? `<div class="topping-note">${item.note}</div>` : ''}
                         <div class="topping-price">${item.price.toLocaleString()} บาท</div>
                         <div class="count-controls">
-                            <button onclick="changeCount(event, '${item.id}', -1)">-</button>
-                            <span class="count-display" id="count-${item.id}">1</span>
-                            <button onclick="changeCount(event, '${item.id}', 1)">+</button>
+                            <button onclick="changeCount(event, '${item.sku}', -1)">-</button>
+                            <span class="count-display" id="count-${item.sku}">1</span>
+                            <button onclick="changeCount(event, '${item.sku}', 1)">+</button>
                         </div>
                     </div>`;
             });
@@ -417,29 +419,29 @@
         updateTotalDisplay();
     }
 
-    function updateToppingSelection(id) {
-        const itemData = TOPPING_DATA.find(item => item.id === id);
-        const cardElement = document.getElementById(`card-${id}`);
-        if (selectedToppings[id]) {
-            delete selectedToppings[id];
+    function updateToppingSelection(sku) {
+        const itemData = TOPPING_DATA.find(item => item.sku === sku);
+        const cardElement = document.getElementById(`card-${sku}`);
+        if (selectedToppings[sku]) {
+            delete selectedToppings[sku];
             cardElement.classList.remove('selected');
         } else {
-            selectedToppings[id] = { ...itemData, count: 1 };
+            selectedToppings[sku] = { ...itemData, count: 1 };
             cardElement.classList.add('selected');
-            document.getElementById(`count-${id}`).innerText = 1;
+            document.getElementById(`count-${sku}`).innerText = 1;
         }
         updateTotalDisplay();
     }
 
-    function changeCount(event, id, delta) {
+    function changeCount(event, sku, delta) {
         event.stopPropagation();
-        if (!selectedToppings[id]) return;
-        let newCount = selectedToppings[id].count + delta;
+        if (!selectedToppings[sku]) return;
+        let newCount = selectedToppings[sku].count + delta;
         if (newCount <= 0) {
-            updateToppingSelection(id);
+            updateToppingSelection(sku);
         } else {
-            selectedToppings[id].count = newCount;
-            document.getElementById(`count-${id}`).innerText = newCount;
+            selectedToppings[sku].count = newCount;
+            document.getElementById(`count-${sku}`).innerText = newCount;
             updateTotalDisplay();
         }
     }
@@ -490,19 +492,19 @@
         let orderItems = [];
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
 
-        orderItems.push({ id: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
+        orderItems.push({ sku: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
         
         if (mainItemDetails.spice) {
-             orderItems.push({ id: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
+             orderItems.push({ sku: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
         }
         
         if (sauceName) {
-            orderItems.push({ id: 'FREE_SAUCE', name: sauceName, price: 0, count: 1, type: 'Sauce' });
+            orderItems.push({ sku: 'FREE_SAUCE', name: sauceName, price: 0, count: 1, type: 'Sauce' });
         }
 
         Object.values(selectedToppings).forEach(topping => {
             orderItems.push({
-                id: topping.id,
+                sku: topping.sku,
                 name: topping.name + (topping.note ? ` (${topping.note})` : ''),
                 price: topping.price,
                 count: topping.count,
