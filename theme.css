@@ -1,0 +1,261 @@
+/* ============================================================
+   จิจะ เฮงเฮง — Shared Theme
+   โทนสี: แดงมงคลจีน + ครีม + ทอง อิงจากโลโก้ตราประทับ
+   ============================================================ */
+
+:root {
+    --primary-red: #940109;
+    --dark-red: #6c0007;
+    --deep-red: #4a0005;
+    --gold: #d4af37;
+    --gold-soft: #f1dfa0;
+    --bg-cream: #f1e9d9;
+    --cream-soft: #faf5ea;
+    --card-white: #ffffff;
+    --ink: #2c1c12;
+    --ink-soft: #6b5c4e;
+    --success-green: #1a7a34;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body.themed {
+    font-family: 'Kanit', sans-serif;
+    background-color: var(--bg-cream);
+    background-image:
+        radial-gradient(circle at 12% 0%, rgba(148,1,9,0.06) 0, transparent 38%),
+        radial-gradient(circle at 90% 8%, rgba(212,175,55,0.09) 0, transparent 32%),
+        radial-gradient(circle at 50% 100%, rgba(148,1,9,0.04) 0, transparent 40%);
+    margin: 0;
+    color: var(--ink);
+}
+
+.t-container { max-width: 620px; margin: auto; padding: 0 12px 110px 12px; }
+
+/* ============ MINI BRAND HEADER (สำหรับหน้าเมนูย่อย) ============ */
+.mini-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: linear-gradient(155deg, var(--primary-red), var(--dark-red));
+    color: var(--cream-soft);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(74,0,5,0.25);
+    border-bottom: 3px solid var(--gold);
+}
+
+.mini-header .back-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cream-soft);
+    text-decoration: none;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+.mini-header .back-btn:active { background: rgba(255,255,255,0.3); }
+
+.mini-header .mini-logo {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--gold-soft);
+    flex-shrink: 0;
+    background: var(--cream-soft);
+}
+
+.mini-header .mini-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: 0.3px;
+    line-height: 1.25;
+}
+.mini-header .mini-sub {
+    font-size: 0.72rem;
+    opacity: 0.85;
+    font-weight: 300;
+}
+
+/* ============ SECTION LABEL / DIVIDER ============ */
+.t-section-label {
+    display: flex; align-items: center; gap: 10px;
+    margin: 18px 4px 12px 4px;
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-red);
+}
+.t-section-label::before {
+    content: "囍";
+    font-size: 0.85rem;
+    color: var(--gold);
+}
+.t-section-label::after { content: ""; flex-grow: 1; height: 1px; background: linear-gradient(to right, rgba(148,1,9,0.35), transparent); }
+
+/* ============ MENU GRID / CARDS ============ */
+.t-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; padding: 10px 4px 0 4px; }
+.t-grid.cols-3 { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.t-card {
+    background: var(--card-white);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 6px 16px rgba(43,28,18,0.08);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.t-card:active { transform: scale(0.96); }
+.t-card.selected { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(148,1,9,0.12); }
+
+.t-card-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    background: #f2ece0;
+    display: block;
+}
+.t-card-img-bg {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.t-card-body { padding: 9px 10px 11px 10px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+.t-card-name { font-size: 0.86rem; font-weight: 500; line-height: 1.3; min-height: 2.3em; color: var(--ink); }
+.t-card-price { color: var(--primary-red); font-weight: 700; font-size: 0.98rem; }
+
+.t-card-strip {
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    color: var(--cream-soft);
+    padding: 9px 5px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.t-badge {
+    position: absolute; top: 7px; right: 7px;
+    background: linear-gradient(135deg, var(--gold), #b8902e);
+    color: #3a2a00;
+    font-size: 0.58rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.t-badge-new {
+    position: absolute; top: 6px; left: 6px;
+    background: var(--success-green); color: #fff;
+    font-size: 0.55rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 20px;
+    z-index: 2;
+}
+
+/* ============ BUTTONS ============ */
+.t-btn-primary {
+    background: linear-gradient(155deg, var(--primary-red), var(--dark-red));
+    color: var(--cream-soft);
+    border: 2px solid var(--gold-soft);
+    padding: 13px 20px;
+    border-radius: 14px;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 6px 18px rgba(148,1,9,0.35);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+.t-btn-primary:active { transform: scale(0.97); }
+.t-btn-primary.disabled, .t-btn-primary:disabled {
+    background: #b7ab98; border-color: #d8cfc0; box-shadow: none; color: #fff; opacity: 0.75;
+}
+
+.t-btn-ghost {
+    background: none; border: none; color: var(--ink-soft);
+    font-family: 'Kanit', sans-serif; cursor: pointer;
+}
+
+/* ============ FIXED FOOTER BAR ============ */
+.t-footer-fixed {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: var(--cream-soft);
+    border-top: 2px solid var(--gold);
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.1);
+    z-index: 500;
+}
+
+/* ============ FLOATING CART FAB ============ */
+.t-fab-cart {
+    position: fixed; bottom: 18px; right: 18px;
+    width: 66px; height: 66px;
+    background: linear-gradient(155deg, var(--primary-red), var(--dark-red));
+    color: var(--cream-soft);
+    border-radius: 50%;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 8px 22px rgba(148,1,9,0.4);
+    text-decoration: none;
+    z-index: 999;
+    border: 3px solid var(--gold-soft);
+    text-align: center;
+}
+.t-fab-cart:active { transform: scale(1.08); }
+.t-fab-cart b { font-size: 1rem; line-height: 1; }
+.t-fab-cart span { font-size: 0.58rem; }
+
+/* ============ MODAL / BOTTOM SHEET ============ */
+.t-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(44,28,18,0.55);
+    z-index: 1000; align-items: flex-end; justify-content: center;
+}
+.t-modal.center { align-items: center; }
+.t-modal-sheet {
+    background: var(--cream-soft);
+    width: 100%; max-width: 480px;
+    border-radius: 22px 22px 0 0;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: tSlideUp 0.28s ease-out;
+    border-top: 3px solid var(--gold);
+}
+.t-modal.center .t-modal-sheet { border-radius: 20px; border-top: 3px solid var(--gold); width: 90%; }
+@keyframes tSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.t-modal-title { font-family: 'Noto Serif Thai', serif; color: var(--primary-red); font-weight: 700; margin: 0 0 12px 0; font-size: 1.1rem; }
+
+.t-opt-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px dashed rgba(148,1,9,0.15); }
+.t-counter { display: flex; align-items: center; gap: 12px; }
+.t-btn-round {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1.5px solid var(--primary-red); background: #fff; color: var(--primary-red);
+    font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+
+/* ============ MISC ============ */
+.t-info-pill {
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(148,1,9,0.18);
+    color: var(--primary-red);
+    font-weight: 600;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 14px;
+    margin: 4px 4px 18px 4px;
+    font-size: 0.88rem;
+}
+
+.t-toast {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(44,28,18,0.9); color: #fff; padding: 12px 24px;
+    border-radius: 30px; z-index: 3000; display: none; font-weight: 500;
+}
+
+::selection { background: var(--gold-soft); color: var(--deep-red); }

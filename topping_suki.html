@@ -3,293 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกท็อปปิ้งสุกี้/หม่าล่า</title> 
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <title>เลือกท็อปปิ้งสุกี้/หม่าล่า</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        /* ======================================= */
-        /* === 1. BASE STYLES & TYPOGRAPHY === */
-        /* ======================================= */
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f1e9d9;
-            color: #333;
-            margin: 0;
-            padding: 10px;
-            padding-bottom: 150px;
-        } 
-        .container {
-            max-width: 960px;
-            margin: auto;
-            padding: 0;
-        }
-        h1 {
-            color: #940109;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-        p.price-info {
-            color: #940109;
-            text-align: center;
-            font-size: 1.0em;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        
-        /* ======================================= */
-        /* === 2. TOPPING STYLES === */
-        /* ======================================= */
-        .topping-category {
-            margin-bottom: 25px;
-            border-top: 3px solid #940109;
-            padding-top: 15px;
-        }
+        body { padding-bottom: 120px; }
+
+        .topping-category { margin-bottom: 22px; }
         .category-title {
-            font-size: 1.3em;
-            color: #940109;
+            position: sticky; top: 58px;
+            background: var(--bg-cream);
+            padding: 10px 4px;
+            color: var(--primary-red);
+            font-family: 'Noto Serif Thai', serif;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 12px;
-            padding-left: 5px;
-        }
-        .topping-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 8px;
-            padding: 0 5px;
-        }
-        .topping-card {
-            background-color: #ffffff;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            padding: 8px 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 140px;
-        }
-        .topping-card:hover {
-            border-color: #940109;
-        }
-        .topping-card.selected {
-            border-color: #27ae60;
-            box-shadow: 0 0 10px rgba(39, 174, 96, 0.3);
-            background-color: #e8f5e9;
-        }
-        
-        .topping-card img {
-            width: 100%;
-            max-width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin: 0 auto 5px auto;
-        }
-        .topping-name {
-            font-size: 0.75em;
-            font-weight: 700;
-            color: #333;
-            line-height: 1.1;
-            min-height: 2.2em; 
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 2px;
-        }
-        .topping-note {
-            font-size: 0.65em; 
-            color: #555; 
-            line-height: 1;
-            margin-bottom: 3px;
-        }
-        .topping-price {
-            font-size: 0.9em;
-            color: #940109;
-            font-weight: 700;
-        }
-        
-        .badge-new {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #ff0000;
-            color: white;
-            font-size: 0.6em;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 5px;
-            text-transform: uppercase;
+            border-bottom: 2px solid var(--gold);
             z-index: 10;
         }
 
-        .count-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 5px;
-            visibility: hidden; 
-            opacity: 0;
-            transition: all 0.2s;
-        }
-        .topping-card.selected .count-controls {
-            visibility: visible;
-            opacity: 1;
-        }
-        .count-controls button {
-            background-color: #940109;
-            color: white;
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-size: 1.0em;
-            line-height: 1;
-            cursor: pointer;
-            padding: 0;
-            margin: 0 2px;
-        }
-        .count-controls .count-display {
-            font-size: 0.9em;
-            font-weight: 700;
-            width: 20px;
+        .topping-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 10px; padding: 0 4px; }
+        .topping-card {
+            background: var(--card-white);
+            border-radius: 13px;
+            padding: 7px;
             text-align: center;
-            color: #940109;
-        }
-
-        /* ======================================= */
-        /* === 3. FIXED FOOTER === */
-        /* ======================================= */
-        .footer-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: transparent;
-            padding: 15px 0;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        .footer-content {
-            max-width: 960px;
-            margin: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 15px;
-            pointer-events: none;
-        }
-
-        .next-btn {
-            background-color: #940109; 
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-size: 1.0em;
-            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 90%;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        
-        .next-btn.disabled {
-            background-color: #666 !important;
-            opacity: 0.8;
-            cursor: not-allowed;
-        }
-
-        .total-amount {
-            background-color: #ffffff;
-            color: #940109;
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            font-weight: 700;
-            margin-left: 5px;
-        }
-
-        /* Sauce Modal Styles */
-        #sauce-modal {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.7); 
-            z-index: 2000; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 20px; 
-            box-sizing: border-box;
-        }
-        .sauce-modal-content {
-            background: white; 
-            width: 100%; 
-            max-width: 400px; 
-            border-radius: 20px; 
-            padding: 20px; 
-            text-align: center;
-        }
-        .sauce-option-grid {
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-top: 20px;
-        }
-        .sauce-card {
-            border: 2px solid #ddd; 
-            border-radius: 15px; 
-            padding: 10px; 
-            cursor: pointer; 
+            border: 2px solid transparent;
             transition: 0.2s;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(43,28,18,0.06);
         }
-        .sauce-card:hover {
-            border-color: #940109;
-        }
-        .sauce-card img {
-            width: 80px; 
-            height: 80px; 
-            object-fit: contain; 
-            margin-bottom: 10px;
-        }
-        .sauce-card div {
-            font-size: 0.85em; 
-            font-weight: bold;
-        }
+        .topping-card.selected { border-color: var(--primary-red); background-color: #fffaf9; box-shadow: 0 0 0 3px rgba(148,1,9,0.1); }
+        .topping-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 9px; }
+        .topping-name { font-size: 0.72rem; font-weight: 500; margin: 5px 0; height: 2.2em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: var(--ink); }
+        .topping-price { font-size: 0.82rem; font-weight: 700; color: var(--primary-red); }
+
+        .count-controls { display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 5px; visibility: hidden; }
+        .selected .count-controls { visibility: visible; }
+        .count-controls button { background: var(--primary-red); color: white; border: none; width: 21px; height: 21px; border-radius: 50%; cursor: pointer; }
+        .count-display { font-weight: bold; width: 18px; color: var(--primary-red); }
+
+        .next-btn.disabled { background: #b7ab98 !important; border-color: #d8cfc0 !important; box-shadow: none !important; }
+        .badge-new { position: absolute; top: 5px; left: 5px; background: var(--success-green); color: #fff; font-size: 0.55rem; font-weight: 700; padding: 2px 6px; border-radius: 20px; z-index: 2; }
+
+        #sauce-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44,28,18,0.55); z-index: 1000; justify-content: center; align-items: center; }
+        .sauce-modal-content { background: var(--cream-soft); padding: 20px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; border-top: 3px solid var(--gold); }
+        .sauce-option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .sauce-card { cursor: pointer; }
+        .sauce-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; }
     </style>
 </head>
-<body>
+<body class="themed">
 
-    <div class="container">
-        <h1>เลือกท็อปปิ้ง🧺</h1>
-        <p class="price-info" id="main-item-info"></p>
-
-        <div id="topping-sections"></div>
-    </div>
-
-    <div class="footer-fixed">
-        <div class="footer-content">
-            <button class="next-btn disabled" id="next-btn" onclick="calculateAndSave()">
-                📌 เลือกท็อปปิ้งเพิ่มอีก 3 ไม้ 
-                <span class="total-amount" id="grand-total-display">0 บาท</span>
-            </button>
+    <div class="mini-header">
+        <a href="suki_type.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🧺 เลือกท็อปปิ้ง</div>
+            <div class="mini-sub">เลือกได้อย่างน้อย 3 ไม้</div>
         </div>
     </div>
 
+<div class="t-container" style="padding-top:12px;">
+    <p class="t-info-pill" id="main-item-info"></p>
+    <div id="topping-sections"></div>
+</div>
+
+<div class="t-footer-fixed">
+    <button class="t-btn-primary disabled" id="next-btn" style="width:100%;" onclick="calculateAndSave()">
+        เลือกท็อปปิ้งเพิ่มอีก 3 ไม้ (<span id="grand-total-display">0 บาท</span>)
+    </button>
+</div>
+
     <div id="sauce-modal">
         <div class="sauce-modal-content">
-            <h2 style="color: #940109; margin-top: 0;">เลือกน้ำจิ้มแถม</h2>
+            <h2 style="color: var(--primary-red); margin-top: 0; font-family:'Noto Serif Thai',serif;">เลือกน้ำจิ้มแถม</h2>
             <p style="font-size: 0.9em; color: #666;">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
             <div class="sauce-option-grid">
                 <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า', 'f11.png')">
@@ -492,7 +281,7 @@
         let orderItems = [];
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
 
-        orderItems.push({ sku: 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
+        orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
         
         if (mainItemDetails.spice) {
              orderItems.push({ sku: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });

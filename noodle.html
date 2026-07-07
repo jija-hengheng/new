@@ -4,204 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เมนูเส้น - สั่งอาหาร</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root {
-            --primary-red: #940109;
-            --bg-cream: #f1e9d9;
-            --card-white: #ffffff;
-            --text-main: #333;
-        }
-
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-cream);
-            margin: 0;
-            padding-bottom: 100px;
-            color: var(--text-main);
-        }
-
-        .header {
-            background-color: var(--primary-red);
-            color: var(--bg-cream);
-            padding: 15px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .container {
-            padding: 10px;
-            max-width: 600px;
-            margin: auto;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 5px;
-        }
-
-        .menu-card {
-            background: var(--card-white);
-            border-radius: 15px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
-
-        .item-img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            background-color: #eee;
-        }
-
-        .item-info {
-            padding: 10px;
-            flex-grow: 1;
-        }
-
-        .item-name {
-            font-size: 0.9rem;
-            font-weight: 500;
-            line-height: 1.2;
-            margin-bottom: 5px;
-            min-height: 2.4em;
-        }
-
-        .item-price {
-            color: var(--primary-red);
-            font-weight: 600;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: flex-end;
-        }
-
-        .modal-content {
-            background: #fff;
-            width: 100%;
-            border-radius: 20px 20px 0 0;
-            padding: 20px;
-            box-sizing: border-box;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .opt-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .addon-counter {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-round {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid var(--primary-red);
-            background: #fff;
-            color: var(--primary-red);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .btn-confirm {
-            background: var(--primary-red);
-            color: var(--bg-cream);
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 15px;
-        }
-
-        .fab-cart {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 65px;
-            height: 65px;
-            background: var(--primary-red);
-            color: var(--bg-cream);
-            border-radius: 50%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-decoration: none;
-            z-index: 900;
-            border: 2px solid var(--bg-cream);
-        }
-        .fab-cart b { font-size: 1.1rem; }
-        .fab-cart span { font-size: 0.6rem; }
+        body { padding-bottom: 110px; }
+        .item-price { color: var(--primary-red); }
+        .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px dashed rgba(148,1,9,0.15); }
+        .addon-counter { display: flex; align-items: center; gap: 12px; }
+        .btn-round { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--primary-red); background: #fff; color: var(--primary-red); font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
-<body>
+<body class="themed">
 
-    <div class="header">
-        <h2 style="margin:0">🥢 เลือกเมนูของคุณ</h2>
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🥢 อาหารจานเดี่ยว</div>
+            <div class="mini-sub">เลือกเมนูของคุณ</div>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="menu-grid">
-            <div class="menu-card" onclick="openOptions('s1', 'สุกี้แห้งวุ้นเส้นไข่ข้น', 59, 'suki')">
-                <img src="images/suki-S.png" class="item-img">
-                <div class="item-info"><div class="item-name">สุกี้แห้งวุ้นเส้นไข่ข้น</div><div class="item-price">59.-</div></div>
+    <div class="t-container">
+        <div class="t-grid">
+            <div class="t-card" onclick="openOptions('s1', 'สุกี้แห้งวุ้นเส้นไข่ข้น', 59, 'suki')">
+                <img src="images/suki-S.png" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">สุกี้แห้งวุ้นเส้นไข่ข้น</div><div class="t-card-price">59.-</div></div>
             </div>
-            <div class="menu-card" onclick="openOptions('s2', 'สุกี้ x หมูนุ่ม', 69, 'suki')">
-                <img src="images/suki2.jpg" class="item-img">
-                <div class="item-info"><div class="item-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม</div><div class="item-price">69.-</div></div>
+            <div class="t-card" onclick="openOptions('s2', 'สุกี้ x หมูนุ่ม', 69, 'suki')">
+                <img src="images/suki2.jpg" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม</div><div class="t-card-price">69.-</div></div>
             </div>
-            <div class="menu-card" onclick="openOptions('s3', 'สุกี้ x หมูนุ่ม ใส่ผัก', 69, 'suki')">
-                <img src="images/suki3.jpg" class="item-img">
-                <div class="item-info"><div class="item-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม ใส่ผัก</div><div class="item-price">69.-</div></div>
+            <div class="t-card" onclick="openOptions('s3', 'สุกี้ x หมูนุ่ม ใส่ผัก', 69, 'suki')">
+                <img src="images/suki3.jpg" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม ใส่ผัก</div><div class="t-card-price">69.-</div></div>
             </div>
-            <div class="menu-card" onclick="openOptions('s4', 'สุกี้ x หมูนุ่ม x หมึกกรอบ', 79, 'suki')">
-                <img src="images/suki-xl.png" class="item-img">
-                <div class="item-info"><div class="item-name">สุกี้ไข่ข้น x หมูนุ่ม x หมึกกรอบ</div><div class="item-price">79.-</div></div>
+            <div class="t-card" onclick="openOptions('s4', 'สุกี้ x หมูนุ่ม x หมึกกรอบ', 79, 'suki')">
+                <img src="images/suki-xl.png" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">สุกี้ไข่ข้น x หมูนุ่ม x หมึกกรอบ</div><div class="t-card-price">79.-</div></div>
             </div>
-            <div class="menu-card" onclick="openOptions('n1', 'หมี่ไก่ฉีก', 50, 'noodle')">
-                <img src="images/mhee-kai.png" class="item-img">
-                <div class="item-info"><div class="item-name">หมี่ไก่ฉีก</div><div class="item-price">50.-</div></div>
+            <div class="t-card" onclick="openOptions('n1', 'หมี่ไก่ฉีก', 50, 'noodle')">
+                <img src="images/mhee-kai.png" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">หมี่ไก่ฉีก</div><div class="t-card-price">50.-</div></div>
             </div>
         </div>
     </div>
 
-    <div id="optModal" class="modal" onclick="if(event.target == this) closeModal()">
-        <div class="modal-content">
-            <h3 id="modalTitle" style="margin-top:0">ชื่อเมนู</h3>
+    <div id="optModal" class="t-modal" onclick="if(event.target == this) closeModal()">
+        <div class="t-modal-sheet">
+            <h3 id="modalTitle" class="t-modal-title">ชื่อเมนู</h3>
             <div id="optionList"></div>
-            <button class="btn-confirm" onclick="addToCart()">เพิ่มลงตะกร้า - <span id="tempPrice">0</span>.-</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#888; margin-top:10px;">ยกเลิก</button>
+            <button class="t-btn-primary" style="width:100%; margin-top:6px;" onclick="addToCart()">เพิ่มลงตะกร้า - <span id="tempPrice">0</span>.-</button>
+            <button onclick="closeModal()" class="t-btn-ghost" style="width:100%; margin-top:10px;">ยกเลิก</button>
         </div>
     </div>
 
-    <a href="summary.html" id="fabCart" class="fab-cart">
+    <a href="summary.html" id="fabCart" class="t-fab-cart">
         <b id="fabTotal">0</b>
         <span id="fabCount">0 รายการ</span>
     </a>

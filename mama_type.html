@@ -4,197 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เลือกเมนู: บะหมี่กึ่งสำเร็จรูป</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        /* ======================================= */
-        /* === 1. BASE STYLES & TYPOGRAPHY (NEW COLORS) === */
-        /* ======================================= */
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f1e9d9; /* สีครีมอ่อน */
-            color: #940109; /* สีแดงเข้ม */
-            margin: 0;
-            padding: 20px 0 120px 0; 
-        }
-        .container {
-            max-width: 650px; 
-            margin: auto; 
-            padding: 0 15px;
-        }
-        h1 {
-            color: #940109; 
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 10px;
-            border-bottom: 3px solid #940109;
-            padding-bottom: 10px;
-        }
-        p.info {
-            text-align: center;
-            font-size: 1.1em;
-            color: #940109;
-            margin-bottom: 25px;
-            font-weight: 500;
-            opacity: 0.8;
-        }
-        
-        /* ======================================= */
-        /* === 2. MAMA GRID & CARD STYLES === */
-        /* ======================================= */
-        .mama-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-            gap: 15px;
-        }
+        body { padding-bottom: 140px; }
+
+        .mama-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 13px; padding: 10px 4px 0 4px; }
         .mama-card {
             background-color: #fff;
-            border: 2px solid #e0d7c6;
-            border-radius: 15px;
+            border: 2px solid transparent;
+            border-radius: 16px;
             padding: 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            min-height: 200px;
+            box-shadow: 0 6px 16px rgba(43,28,18,0.08);
+            min-height: 190px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-        .mama-card:hover {
-            box-shadow: 0 6px 15px rgba(148, 1, 9, 0.15);
-            transform: translateY(-2px);
-            border-color: #940109;
-        }
-        .mama-card.selected {
-            border: 4px solid #940109; 
-            box-shadow: 0 0 15px rgba(148, 1, 9, 0.3);
-        }
-        
-        .mama-card img {
-            max-width: 80%;
-            height: auto;
-            margin: 0 auto 10px auto;
-            object-fit: contain;
-            max-height: 100px; 
-        }
-        .mama-name {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .mama-price {
-            font-size: 1em;
-            color: #940109;
-            font-weight: 700;
-        }
+        .mama-card.selected { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(148,1,9,0.12); }
+        .mama-card img { max-width: 78%; height: auto; margin: 0 auto 8px auto; object-fit: contain; max-height: 90px; }
+        .mama-name { font-size: 0.92em; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+        .mama-price { font-size: 0.92em; color: var(--primary-red); font-weight: 700; }
 
-        /* ======================================= */
-        /* === 3. FLOATING BUTTON & SUMMARY (NEW) === */
-        /* ======================================= */
-        
-        /* แถบสรุปจำนวนแบบลอยด้านล่าง */
-        .footer-fixed {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 600px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            padding: 15px;
-            box-sizing: border-box;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #940109;
-        }
-        
-        .order-info-group {
-            display: flex;
-            flex-direction: column;
-            color: #940109;
-        }
-        .order-summary {
-            font-weight: 700;
-            font-size: 0.95em;
-        }
-        .order-summary span {
-            color: #333;
-        }
+        .order-info-group { display: flex; flex-direction: column; color: var(--primary-red); }
+        .order-summary { font-weight: 700; font-size: 0.92em; }
+        .order-summary span { color: var(--ink); }
+        .quantity-control { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .count-btn { background-color: var(--primary-red); color: #fff; border: none; border-radius: 8px; width: 28px; height: 28px; font-size: 1.1em; cursor: pointer; }
+        #mama-count { font-size: 1.05em; font-weight: 700; min-width: 20px; text-align: center; }
+        .total-display { font-weight: 700; margin-left: 8px; color: var(--ink); }
 
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 5px;
-        }
-        .count-btn {
-            background-color: #940109;
-            color: #fff;
-            border: none;
-            border-radius: 5px; /* สี่เหลี่ยมมุมเล็กๆ */
-            width: 28px;
-            height: 28px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        #mama-count {
-            font-size: 1.1em;
-            font-weight: 700;
-            min-width: 20px;
-            text-align: center;
-        }
-        .total-display {
-            font-weight: 700;
-            margin-left: 10px;
-        }
-
-        /* ปุ่มลอย "เลือกท็อปปิ้ง" แบบสี่เหลี่ยมมุมเล็กๆ */
-        .next-button {
-            background-color: #940109;
-            color: #f1e9d9;
-            border: none;
-            border-radius: 5px; /* สี่เหลี่ยมมุมเล็กๆ ตามโจทย์ */
-            padding: 12px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: 700;
-            opacity: 0.4;
-            pointer-events: none;
-            box-shadow: 0 4px 10px rgba(148, 1, 9, 0.3);
-            white-space: nowrap;
-        }
-        .next-button.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .next-button.active:hover {
-            background-color: #720107;
-            transform: scale(1.05);
-        }
+        .next-button { opacity: 0.4; pointer-events: none; }
+        .next-button.active { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 500px) {
-            .footer-fixed {
-                flex-direction: column;
-                gap: 12px;
-                text-align: center;
-                bottom: 10px;
-            }
-            .order-info-group { align-items: center; }
+            .t-footer-fixed { display: flex; flex-direction: column; gap: 10px; text-align: center; }
             .next-button { width: 100%; }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🍜 เลือกเมนู: บะหมี่กึ่งสำเร็จรูป</h1>
-        <p class="info">กรุณาเลือกมาม่าที่คุณต้องการ</p>
-        
+<body class="themed">
+
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🍜 ต้มมาม่าทรงเครื่อง</div>
+            <div class="mini-sub">เลือกได้เพียง 1 เมนู</div>
+        </div>
+    </div>
+
+    <div class="t-container">
         <div class="mama-grid">
             <div class="mama-card" data-id="M1" data-name="มาม่า เย็นตาโฟ" data-price="10" onclick="selectMama(this)">
                 <img src="images/yentafo.png" alt="มาม่า เย็นตาโฟ">
@@ -234,7 +97,7 @@
         </div>
     </div>
 
-    <div class="footer-fixed" id="footer-summary" style="display:none;">
+    <div class="t-footer-fixed" id="footer-summary" style="display:none;">
         <div class="order-info-group">
             <div class="order-summary">
                 เมนู: <span id="selected-mama-name">ยังไม่ได้เลือก</span> 
@@ -246,7 +109,7 @@
                 <span class="total-display">รวม: <span id="current-total-price">10</span> บ.</span>
             </div>
         </div>
-        <button class="next-button" id="next-btn" onclick="goToToppings()">
+        <button class="t-btn-primary next-button" id="next-btn" onclick="goToToppings()">
             เลือกท็อปปิ้ง 👉
         </button>
     </div>

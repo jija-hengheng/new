@@ -4,65 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เมนูเครื่องดื่ม - จิจะ เฮงเฮง</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root { --primary-red: #940109; --bg-cream: #f1e9d9; }
-        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-cream); color: #333; margin: 0; padding: 15px; padding-bottom: 100px; }
-        
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h1 { color: var(--primary-red); margin-bottom: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .header p { font-size: 0.9rem; color: #666; margin-top: 0; }
+        body { padding-bottom: 110px; }
 
-        /* Grid รายการอาหาร */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: auto; }
-        .menu-item { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; position: relative; border: 1px solid rgba(148, 1, 9, 0.1); }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; max-width: 600px; margin: auto; padding: 0 4px; }
+        .menu-item { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 16px rgba(43,28,18,0.08); display: flex; flex-direction: column; position: relative; border: 1px solid rgba(148, 1, 9, 0.06); }
         .menu-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #fff; padding: 5px; box-sizing: border-box; }
         
-        .menu-info { padding: 10px; text-align: center; flex-grow: 1; }
-        .menu-name { font-weight: 700; font-size: 0.95rem; height: 2.4em; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; color: #444; }
-        .menu-price { color: var(--primary-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+        .menu-info { padding: 8px 10px; text-align: center; flex-grow: 1; }
+        .menu-name { font-weight: 500; font-size: 0.88rem; height: 2.4em; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; color: var(--ink); }
+        .menu-price { color: var(--primary-red); font-weight: 700; font-size: 1.02rem; margin-bottom: 8px; }
         
-        /* ตัวควบคุมจำนวน */
-        .qty-control { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-        .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: #fdfdfd; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; color: var(--primary-red); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .btn-qty:active { background: #eee; }
-        .qty-val { font-weight: 700; min-width: 20px; font-size: 1.1rem; }
+        .qty-control { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+        .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--primary-red); background: #fdfdfd; cursor: pointer; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; color: var(--primary-red); }
+        .qty-val { font-weight: 700; min-width: 20px; font-size: 1.05rem; }
 
-        .add-btn { width: 100%; padding: 12px; background: var(--primary-red); color: white; border: none; font-weight: 700; border-radius: 0 0 15px 15px; cursor: pointer; transition: 0.3s; }
-        .add-btn:hover { background: #b3020b; }
+        .add-btn { width: 100%; padding: 11px; background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft); border: none; font-weight: 600; border-radius: 0 0 16px 16px; cursor: pointer; }
 
-        /* 🔴 ปุ่มสรุปยอดวงกลม สีแดง ฝั่งขวา (Floating Action Button) */
-        .floating-cart { 
-            position: fixed; bottom: 30px; right: 20px; 
-            width: 70px; height: 70px; 
-            background: var(--primary-red); color: white; 
-            border-radius: 50%; border: 4px solid #fff;
+        .floating-cart {
+            position: fixed; bottom: 22px; right: 18px;
+            width: 68px; height: 68px;
+            background: linear-gradient(155deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft);
+            border-radius: 50%; border: 3px solid var(--gold-soft);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            box-shadow: 0 8px 22px rgba(148,1,9,0.4);
             text-decoration: none; z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .floating-cart:hover { transform: scale(1.1); }
-        .cart-icon { font-size: 1.6rem; margin-bottom: -2px; }
-        .badge { 
-            position: absolute; top: -2px; right: -2px; 
-            background: #ffc107; color: #000; 
-            font-size: 0.85rem; font-weight: 800; 
-            width: 24px; height: 24px; border-radius: 50%; 
+        .cart-icon { font-size: 1.5rem; margin-bottom: -2px; }
+        .badge {
+            position: absolute; top: -2px; right: -2px;
+            background: var(--gold); color: #3a2a00;
+            font-size: 0.8rem; font-weight: 800;
+            width: 23px; height: 23px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body>
+<body class="themed">
 
-    <div class="header">
-        <h1>🏮 เครื่องดื่ม</h1>
-        <p>สดชื่น พร้อมแก้วฟรีน้ำแข็งทุกเมนู</p>
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🥤 เครื่องดื่ม</div>
+            <div class="mini-sub">สดชื่น พร้อมแก้วฟรีน้ำแข็งทุกเมนู</div>
+        </div>
     </div>
 
+    <div class="t-container" style="padding-top:14px;">
     <div class="menu-grid" id="menu-container">
         </div>
+    </div>
 
     <a href="summary.html" class="floating-cart" id="btn-summary">
         <span class="badge" id="cart-count">0</span>
