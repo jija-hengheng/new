@@ -94,25 +94,59 @@
 
     <script>
         const mainItems = [
-            { id: 1, name: 'ชุดอิ่มจุ สุดคุ้ม', price: 69, img: 'images/11.png' },
-            { id: 2, name: 'ชุดสายหมู', price: 79, img: 'images/9.png' },
-            { id: 3, name: 'ชุดติดเทรน', price: 99, img: 'images/10.png' },
-            { id: 4, name: 'ชุดรวมหัวปาร์ตี้', price: 199, img: 'images/12.png' }
+            { id: 1, name: 'ชุดอิ่มจุ สุดคุ้ม', price: 69, img: 'images/11.png', skuBase: 'อิ่มจุสุดคุ้ม' },
+            { id: 2, name: 'ชุดสายหมู', price: 79, img: 'images/9.png', skuBase: 'สายหมู' },
+            { id: 3, name: 'ชุดติดเทรน', price: 99, img: 'images/10.png', skuBase: 'ติดเทรน' },
+            { id: 4, name: 'ชุดรวมหัวปาร์ตี้', price: 199, img: 'images/12.png', skuBase: 'รวมหัวปาร์ตี้' }
         ];
 
         const sauceItems = [
-            { id: 101, name: 'น้ำจิ้มงาคั่วหม่าล่า (ขวด)', price: 69, img: 'images/mala_sauce.png' },
-            { id: 102, name: 'น้ำจิ้มสุกี้กวางตุ้ง', price: 15, img: 'images/N-suki.png' },
-            { id: 103, name: 'น้ำจิ้มงาคั่วหม่าล่า', price: 29, img: 'images/N-mala.png' },
-            { id: 104, name: 'น้ำจิ้มงาคั่วหอม(ขาว)', price: 25, img: 'images/N-vha.png' }
+            { id: 101, name: 'น้ำจิ้มงาคั่วหม่าล่า (ขวด)', price: 69, img: 'images/mala_sauce.png', sku: 'NJ004' },
+            { id: 102, name: 'น้ำจิ้มสุกี้กวางตุ้ง', price: 15, img: 'images/N-suki.png', sku: 'NJ003' },
+            { id: 103, name: 'น้ำจิ้มงาคั่วหม่าล่า', price: 29, img: 'images/N-mala.png', sku: 'NJ001' },
+            { id: 104, name: 'น้ำจิ้มงาคั่วหอม(ขาว)', price: 25, img: 'images/N-vha.png', sku: 'NJ002' }
         ];
 
         const soupOptions = [
-            { name: 'น้ำซุปดำ', extra: 0 },
-            { name: 'น้ำซุปหม่าล่าดั้งเดิม', extra: 0 },
-            { name: 'น้ำซุปหม่าล่าน้ำข้น', extra: 10 },
-            { name: 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', extra: 10 }
+            { name: 'น้ำซุปดำ', extra: 0, skuTag: 'น้ำดำ', hasSpice: false },
+            { name: 'น้ำซุปหม่าล่าดั้งเดิม', extra: 0, skuTag: 'ดั้งเดิม', hasSpice: true },
+            { name: 'น้ำซุปหม่าล่าน้ำข้น', extra: 10, skuTag: 'น้ำข้น', hasSpice: true },
+            { name: 'น้ำซุปหม่าล่าน้ำข้นน้ำดำ', extra: 10, skuTag: 'หม่าล่าน้ำดำ', hasSpice: true }
         ];
+
+        // ตาราง SKU จริงจาก Loyverse POS (export_items.csv)
+        const SET_SKU_MATRIX = {
+            'อิ่มจุสุดคุ้ม': {
+                'น้ำดำ': { 'ปกติ': 'SET05' },
+                'ดั้งเดิม': { 'น้อย': 'SET12', 'กลาง': 'SET13', 'มาก': 'SET14' },
+                'น้ำข้น': { 'น้อย': 'SET15', 'กลาง': 'SET16', 'มาก': 'SET17' },
+                'หม่าล่าน้ำดำ': { 'น้อย': 'SET18', 'กลาง': 'SET19', 'มาก': 'SET20' }
+            },
+            'สายหมู': {
+                'น้ำดำ': { 'ปกติ': 'SET31' },
+                'ดั้งเดิม': { 'น้อย': 'SET35', 'กลาง': 'SET36', 'มาก': 'SET37' },
+                'น้ำข้น': { 'น้อย': 'SET38', 'กลาง': 'SET39', 'มาก': 'SET40' },
+                'หม่าล่าน้ำดำ': { 'น้อย': 'SET32', 'กลาง': 'SET33', 'มาก': 'SET34' }
+            },
+            'ติดเทรน': {
+                'น้ำดำ': { 'ปกติ': 'SET21' },
+                'ดั้งเดิม': { 'น้อย': 'SET22', 'กลาง': 'SET23', 'มาก': 'SET24' },
+                'น้ำข้น': { 'น้อย': 'SET28', 'กลาง': 'SET29', 'มาก': 'SET30' },
+                'หม่าล่าน้ำดำ': { 'น้อย': 'SET25', 'กลาง': 'SET26', 'มาก': 'SET27' }
+            },
+            'รวมหัวปาร์ตี้': {
+                'น้ำดำ': { 'ปกติ': 'SET01' },
+                'ดั้งเดิม': { 'น้อย': 'SET02', 'กลาง': 'SET03', 'มาก': 'SET04' },
+                'น้ำข้น': { 'น้อย': 'SET06', 'กลาง': 'SET07', 'มาก': 'SET08' },
+                'หม่าล่าน้ำดำ': { 'น้อย': 'SET09', 'กลาง': 'SET10', 'มาก': 'SET11' }
+            }
+        };
+
+        function getSetSku(skuBase, skuTag, spicy) {
+            const group = SET_SKU_MATRIX[skuBase] && SET_SKU_MATRIX[skuBase][skuTag];
+            if (!group) return '';
+            return group[spicy] || group['ปกติ'] || '';
+        }
 
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
         let currentItem = null;
@@ -190,20 +224,23 @@
 
         function confirmSelection() {
             let finalName = `${currentItem.name} (${selectedSoup.name})`;
+            let spicyForSku = 'ปกติ';
             if(selectedSoup.name.includes('หม่าล่า')) {
                 finalName += ` [เผ็ด${selectedSpicy}]`;
+                spicyForSku = selectedSpicy;
             }
-            saveToCart(finalName, currentItem.price + selectedSoup.extra);
+            const sku = getSetSku(currentItem.skuBase, selectedSoup.skuTag, spicyForSku);
+            saveToCart(finalName, currentItem.price + selectedSoup.extra, sku);
             closeModal();
         }
 
         function addSauceToCart(id) {
             const sauce = sauceItems.find(s => s.id === id);
-            saveToCart(sauce.name, sauce.price);
+            saveToCart(sauce.name, sauce.price, sauce.sku);
         }
 
-        function saveToCart(name, price) {
-            cart.push({ name, price, details: [] });
+        function saveToCart(name, price, sku) {
+            cart.push({ name, price, sku: sku || '', details: [] });
             sessionStorage.setItem('cartItems', JSON.stringify(cart));
             updateCartUI();
             showToast();

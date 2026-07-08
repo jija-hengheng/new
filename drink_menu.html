@@ -67,13 +67,14 @@
 
     <script>
         // รายการเมนูอ้างอิงรูปจากโฟลเดอร์ images/ เป็นไฟล์ .png ทั้งหมด
+        // sku อ้างอิงจาก export_items.csv (Loyverse POS)
         const drinks = [
-            { name: 'โค้ก + แก้วน้ำแข็ง', price: 25, img: 'images/coke.png' },
-            { name: 'น้ำฟักเขียว + แก้วน้ำแข็ง', price: 25, img: 'images/fuk.png' },
-            { name: 'น้ำเก๊กฮวย + แก้วน้ำแข็ง', price: 25, img: 'images/gek.png' },
-            { name: 'น้ำจับเลี้ยง + แก้วน้ำแข็ง', price: 25, img: 'images/jup.png' },
-            { name: 'น้ำลำไย + แก้วน้ำแข็ง', price: 25, img: 'images/lum.png' },
-            { name: 'น้ำดื่มขวด', price: 10, img: 'images/water.png' } // อย่าลืมเตรียมไฟล์ water.png ในโฟลเดอร์ images นะครับ
+            { name: 'โค้ก + แก้วน้ำแข็ง', price: 25, img: 'images/coke.png', sku: 'D0003' },
+            { name: 'น้ำฟักเขียว + แก้วน้ำแข็ง', price: 25, img: 'images/fuk.png', sku: 'D0007' },
+            { name: 'น้ำเก๊กฮวย + แก้วน้ำแข็ง', price: 25, img: 'images/gek.png', sku: 'D0004' },
+            { name: 'น้ำจับเลี้ยง + แก้วน้ำแข็ง', price: 25, img: 'images/jup.png', sku: 'D0005' },
+            { name: 'น้ำลำไย + แก้วน้ำแข็ง', price: 25, img: 'images/lum.png', sku: 'D0006' },
+            { name: 'น้ำดื่มขวด', price: 10, img: 'images/water.png', sku: 'D0002' } // อย่าลืมเตรียมไฟล์ water.png ในโฟลเดอร์ images นะครับ
         ];
 
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
@@ -92,7 +93,7 @@
                             <button class="btn-qty" onclick="changeQty('qty-${idx}', 1)">+</button>
                         </div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, 'qty-${idx}')">เพิ่มลงตะกร้า</button>
+                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, 'qty-${idx}', '${item.sku}')">เพิ่มลงตะกร้า</button>
                 </div>
             `).join('');
             updateCartCount();
@@ -105,13 +106,14 @@
             el.innerText = val;
         }
 
-        function addToCart(name, price, qtyId) {
+        function addToCart(name, price, qtyId, sku) {
             const quantity = parseInt(document.getElementById(qtyId).innerText);
             
             for (let i = 0; i < quantity; i++) {
                 cart.push({
                     name: name,
                     price: price,
+                    sku: sku,
                     details: []
                 });
             }

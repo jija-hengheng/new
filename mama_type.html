@@ -59,37 +59,37 @@
 
     <div class="t-container">
         <div class="mama-grid">
-            <div class="mama-card" data-id="M1" data-name="มาม่า เย็นตาโฟ" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM003" data-name="มาม่า เย็นตาโฟ" data-price="10" onclick="selectMama(this)">
                 <img src="images/yentafo.png" alt="มาม่า เย็นตาโฟ">
                 <div class="mama-name">มาม่า เย็นตาโฟ</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-            <div class="mama-card" data-id="M2" data-name="มาม่า หมูสับ" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM005" data-name="มาม่า หมูสับ" data-price="10" onclick="selectMama(this)">
                 <img src="images/moosub.png" alt="มาม่า หมูสับ">
                 <div class="mama-name">มาม่า หมูสับ</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-            <div class="mama-card" data-id="M3" data-name="มาม่า ต้มยำกุ้งน้ำข้น" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM002" data-name="มาม่า ต้มยำกุ้งน้ำข้น" data-price="10" onclick="selectMama(this)">
                 <img src="images/tomyumZom.png" alt="มาม่า ต้มยำกุ้งน้ำข้น">
                 <div class="mama-name">มาม่า ต้มยำกุ้งน้ำข้น</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-            <div class="mama-card" data-id="M4" data-name="มาม่า ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM004" data-name="มาม่า ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
                 <img src="images/tomyumkung.png" alt="มาม่า ต้มยำกุ้ง">
                 <div class="mama-name">มาม่า ต้มยำกุ้ง</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-            <div class="mama-card" data-id="M5" data-name="ยำยำ ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM001" data-name="ยำยำ ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
                 <img src="images/yumyumred.png" alt="ยำยำ ต้มยำกุ้ง">
                 <div class="mama-name">ยำยำ ต้มยำกุ้ง</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-           <div class="mama-card" data-id="M6" data-name="ยำยำ ต้มยำน้ำข้น" data-price="10" onclick="selectMama(this)">
+           <div class="mama-card" data-id="MM007" data-name="ยำยำ ต้มยำน้ำข้น" data-price="10" onclick="selectMama(this)">
                 <img src="images/yumyumzom.png" alt="ยำยำ ต้มยำน้ำข้น (สีส้ม)">
                 <div class="mama-name">ยำยำ ต้มยำน้ำข้น</div>
                 <div class="mama-price">10 บ.</div>
             </div>
-            <div class="mama-card" data-id="M7" data-name="ไวไว ต้มยำหมูสับ" data-price="10" onclick="selectMama(this)">
+            <div class="mama-card" data-id="MM006" data-name="ไวไว ต้มยำหมูสับ" data-price="10" onclick="selectMama(this)">
                 <img src="images/vvmoosub.png" alt="ไวไว ต้มยำหมูสับ">
                 <div class="mama-name">ไวไว ต้มยำหมูสับ</div>
                 <div class="mama-price">10 บ.</div>
@@ -160,6 +160,7 @@
         const totalMamaPrice = selectedMama.price * selectedMama.count;
         const mainItemData = {
             mainId: selectedMama.id,
+            sku: selectedMama.id,
             name: `${selectedMama.name} x ${selectedMama.count} ห่อ`, 
             price: totalMamaPrice, 
             spice: 'มาม่า',

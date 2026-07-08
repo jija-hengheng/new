@@ -81,11 +81,11 @@
             <h2 style="color: var(--primary-red); margin-top: 0; font-family:'Noto Serif Thai',serif;">เลือกน้ำจิ้มแถม</h2>
             <p style="font-size: 0.9em; color: #666;">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
             <div class="sauce-option-grid">
-                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า', 'f11.png')">
+                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า', 'f11.png', 'NJ001')">
                     <img src="images/f11.png" alt="หม่าล่า">
                     <div>น้ำจิ้มงาคั่วหม่าล่า</div>
                 </div>
-                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง', 'sk.png')">
+                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง', 'sk.png', 'NJ003')">
                     <img src="images/sk.png" alt="สุกี้">
                     <div>น้ำจิ้มสุกี้กวางตุ้ง</div>
                 </div>
@@ -102,7 +102,7 @@
         { sku: 'TP028', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
         { sku: 'TP020', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
         { sku: 'TP021', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
-        { sku: 'TP023', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
+        { sku: '10058', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
         { sku: 'TP030', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
         { sku: 'TP027', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
         { sku: 'TP045', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
@@ -112,9 +112,9 @@
         { sku: 'TP008', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ปลาดอลลี่', image: 'dolly.png', price: 10 },
         { sku: 'TP026', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้ชีส', image: 'paochese.png', price: 10 },
         { sku: 'TP012', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ซีฟู้ด', image: 'fongZ-fod.png', price: 10 },
-        { sku: 'TP041', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
+        { sku: 'แมงกะพรุน', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
         { sku: 'TP024', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
-        { sku: 'TP009', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
+        { sku: '10049', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
         { sku: 'TP001', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ข้าวโพด', image: 'fongkao.png', price: 10, isNew: true },
         { sku: 'TP005', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ชิกุวะญี่ปุ่น', image: 'chigo.png', price: 10, isNew: true },
         { sku: 'TP029', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
@@ -277,18 +277,15 @@
         }
     }
 
-    function processOrder(sauceName, sauceImg) {
+    function processOrder(sauceName, sauceImg, sauceSku) {
         let orderItems = [];
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
 
-        orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainItemDetails.name, price: mainItemDetails.price, count: 1, type: 'Main' });
-        
-        if (mainItemDetails.spice) {
-             orderItems.push({ sku: 'S1', name: `ระดับเผ็ด: ${mainItemDetails.spice}`, price: 0, count: 1, type: 'Spice' });
-        }
-        
+        const mainName = mainItemDetails.name + (mainItemDetails.spice ? ` (เผ็ด${mainItemDetails.spice})` : '');
+        orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainName, price: mainItemDetails.price, count: 1, type: 'Main' });
+
         if (sauceName) {
-            orderItems.push({ sku: 'FREE_SAUCE', name: sauceName, price: 0, count: 1, type: 'Sauce' });
+            orderItems.push({ sku: sauceSku || '', name: sauceName, price: 0, count: 1, type: 'Sauce' });
         }
 
         Object.values(selectedToppings).forEach(topping => {

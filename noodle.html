@@ -47,6 +47,10 @@
                 <img src="images/mhee-kai.png" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">หมี่ไก่ฉีก</div><div class="t-card-price">50.-</div></div>
             </div>
+            <div class="t-card" onclick="openOptions('n2', 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', 79, 'noodle')">
+                <img src="images/79.png" class="t-card-img">
+                <div class="t-card-body"><div class="t-card-name">หมี่ไก่ฉีก พิเศษ เส้นxไก่</div><div class="t-card-price">79.-</div></div>
+            </div>
         </div>
     </div>
 
@@ -67,6 +71,17 @@
     <script>
         let currentItem = {};
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+
+        // ตาราง SKU อ้างอิงจากระบบ Loyverse POS (export_items.csv)
+        // สุกี้แต่ละเมนูมี 2 SKU ตามสูตรน้ำจิ้ม: -01 = กวางตุ้ง, -02 = เต้าหู้ยี้
+        const SUKI_SKU_MAP = {
+            's1': { 'สุกี้กวางตุ้ง': 'SK0G1-01', 'สุกี้เต้าหู้ยี้': 'SK0G1-02' },
+            's2': { 'สุกี้กวางตุ้ง': 'SK0G2-01', 'สุกี้เต้าหู้ยี้': 'SK0G2-02' },
+            's3': { 'สุกี้กวางตุ้ง': 'SK0G3-01', 'สุกี้เต้าหู้ยี้': 'SK0G3-02' },
+            's4': { 'สุกี้กวางตุ้ง': 'SK0G4-01', 'สุกี้เต้าหู้ยี้': 'SK0G4-02' }
+        };
+        const NOODLE_SKU = { 'n1': 'MK1-01', 'n2': '10186' };
+        const ADDON_SKU = { 'ไข่ไก่': 'TP044', '+ชีสอาบ': 'TP025', '+หมูหมักนุ่ม': 'TP022', 'น้ำพริกกากหมู': 'MK1-03' };
 
         function openOptions(id, name, price, type) {
             currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0, sukiType: '' };
@@ -169,19 +184,22 @@
 
             const finalPrice = parseInt(document.getElementById('tempPrice').innerText);
             let details = [];
+            let mainSku = '';
 
             if (currentItem.type === 'suki') {
-                details.push({ name: `${currentItem.name} (${currentItem.sukiType})`, price: currentItem.price, count: 1, type: 'Main' });
+                mainSku = (SUKI_SKU_MAP[currentItem.id] && SUKI_SKU_MAP[currentItem.id][currentItem.sukiType]) || '';
+                details.push({ name: `${currentItem.name} (${currentItem.sukiType})`, price: currentItem.price, count: 1, type: 'Main', sku: mainSku });
                 if(currentItem.eggQty > 0) {
-                    details.push({ name: "ไข่ไก่", price: 10, count: currentItem.eggQty, type: 'Addon' });
+                    details.push({ name: "ไข่ไก่", price: 10, count: currentItem.eggQty, type: 'Addon', sku: ADDON_SKU['ไข่ไก่'] });
                 }
                 currentItem.options.forEach(opt => {
-                    details.push({ name: opt.n, price: opt.p, count: 1, type: 'Addon' });
+                    details.push({ name: opt.n, price: opt.p, count: 1, type: 'Addon', sku: ADDON_SKU[opt.n] || '' });
                 });
             } else {
-                details.push({ name: "หมี่ไก่ฉีก", price: 50, count: 1, type: 'Main' });
+                mainSku = NOODLE_SKU[currentItem.id] || '';
+                details.push({ name: currentItem.name, price: currentItem.price, count: 1, type: 'Main', sku: mainSku });
                 if (currentItem.addonQty > 0) {
-                    details.push({ name: "น้ำพริกกากหมู", price: 10, count: currentItem.addonQty, type: 'Addon' });
+                    details.push({ name: "น้ำพริกกากหมู", price: 10, count: currentItem.addonQty, type: 'Addon', sku: ADDON_SKU['น้ำพริกกากหมู'] });
                 }
             }
             
@@ -191,6 +209,7 @@
 
             const newOrder = {
                 name: currentItem.name + extraName,
+                sku: mainSku,
                 price: finalPrice,
                 count: 1,
                 details: details,
