@@ -131,7 +131,6 @@
 
 <script>
     // ===== ตั้งค่า Backend (Google Apps Script Web App) =====
-    // ⚠️ เปลี่ยน URL นี้เป็น URL จริงหลัง Deploy ไฟล์ loyverse-backend.gs ของคุณ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzE18wHdEQu_Mu0eDCpfE7lIhC7TDhiu-vZogqOaN0ZHXfT2pAw1SSuIhsq9TZpYodbRg/exec";
 
     let cartItems = [];
@@ -286,7 +285,8 @@
                 name: item.name,
                 sku: item.sku || '',
                 qty: 1,
-                price: item.price
+                price: item.price,
+                details: item.details || []
             })),
             totalFood: totalFood,
             deliveryFee: deliveryFee,
