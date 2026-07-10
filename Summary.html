@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปรายการอาหารทั้งหมด</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body { padding-bottom: 130px; }
+
+        .screenshot-instruction { border: 2px solid var(--gold); background-color: #fff8e6; color: var(--primary-red); padding: 14px; margin: 14px 4px 20px; border-radius: 14px; text-align: left; font-weight: 400; font-size: 0.86rem; line-height: 1.5; }
+
+        .customer-form-box { background: #fff; border: 1.5px solid rgba(148,1,9,0.15); border-radius: 16px; padding: 18px; margin: 0 4px 22px; box-shadow: 0 6px 16px rgba(43,28,18,0.06); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--ink); font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 1.5px solid #e0d7c6; border-radius: 10px; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        .form-group input:focus { outline: none; border-color: var(--primary-red); }
+
+        .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .radio-group input[type="radio"] { display: none; }
+        .radio-group label { padding: 10px 14px; border: 1.5px solid #e0d7c6; border-radius: 10px; cursor: pointer; transition: 0.2s; flex-grow: 1; text-align: center; background: #fff; font-size: 0.88rem; }
+        .radio-group input[type="radio"]:checked + label { background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft); border-color: var(--primary-red); font-weight: 600; }
+
+        .location-box { display: none; margin-top: 15px; padding: 12px; border: 1px dashed var(--primary-red); border-radius: 12px; background-color: #fff5f5; text-align: center; }
+        .location-btn { background: linear-gradient(135deg, var(--gold), #b8902e); color: #3a2a00; border: none; padding: 10px 15px; border-radius: 10px; font-family: 'Kanit', sans-serif; font-weight: 700; cursor: pointer; width: 100%; font-size: 0.92rem; }
+        .location-status { margin-top: 8px; font-size: 0.83rem; font-weight: 600; }
+
+        #payment-section { display: none; margin-top: 15px; border-top: 1px dashed #e0d7c6; padding-top: 15px; }
+
+        .logo-mini { height: 22px; vertical-align: middle; margin-left: 5px; margin-top: -3px; }
+
+        #delivery-status { margin: 0 4px 15px; font-weight: 600; text-align: center; border-radius: 10px; color: var(--primary-red); }
+
+        .cart-item { background: #fff; border-radius: 14px; padding: 14px; margin: 0 4px 13px; box-shadow: 0 5px 14px rgba(43,28,18,0.07); }
+        .item-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary-red); border-bottom: 1px dashed rgba(148,1,9,0.2); padding-bottom: 6px; }
+        .details-box { background: var(--cream-soft); padding: 8px 10px; border-radius: 8px; margin-top: 8px; font-size: 0.86rem; }
+        .details-box ul { list-style: none; padding: 0; margin: 0; }
+        .details-box li { display: flex; justify-content: space-between; border-bottom: 1px dotted #e5dbc9; padding: 2px 0; color: var(--ink-soft); }
+        .remove-btn { background: #c0392b; color: white; border: none; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.76rem; }
+
+        .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 14px calc(12px + env(safe-area-inset-bottom)); z-index: 100; background: var(--cream-soft); border-top: 2px solid var(--gold); box-shadow: 0 -6px 20px rgba(0,0,0,0.1); }
+        .summary-bar { max-width: 500px; margin: auto; display: flex; gap: 10px; }
+        .summary-bar button, .total-block {
+            flex: 1; height: 62px; border-radius: 14px; border: 2px solid var(--gold-soft);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer;
+        }
+        .add-more-btn { background: linear-gradient(135deg, #2b6cb0, #1a4d80); color: white; border: none; }
+        .total-block { background: linear-gradient(155deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft); }
+        .checkout-btn { background: linear-gradient(135deg, var(--success-green), #124d21); color: white; border: none; }
+        .btn-label { font-size: 0.68rem; }
+        .btn-value { font-size: 0.98rem; font-weight: 700; }
+
+        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,28,18,0.6); display:none; justify-content:center; align-items:center; z-index:1000; }
+        .popup { background: var(--cream-soft); padding:20px; border-radius:18px; width:90%; max-width:400px; border-top: 3px solid var(--gold); }
+        .popup h3 { color: var(--primary-red); font-family: 'Noto Serif Thai', serif; margin-top: 0; }
+        textarea { width:100%; height:200px; margin:10px 0; padding:10px; box-sizing:border-box; font-family: 'Kanit', sans-serif; font-size: 14px; border-radius: 10px; border: 1.5px solid #e0d7c6; }
+    </style>
+</head>
+<body class="themed">
+
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🛒 สรุปรายการ</div>
+            <div class="mini-sub">ตรวจสอบออเดอร์ก่อนส่ง</div>
+        </div>
+    </div>
+
+    <div class="t-container" style="padding-top:14px;">
+        <div class="screenshot-instruction">
+            ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
+            • สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>
+            • เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>
+            • งดแถมช้อนพลาสติก<br>
+            <small><i>เริ่มใช้ตั้งแต่ 18 มีนาคม เป็นต้นไป</i></small>
+        </div>
+
+        <div class="customer-form-box">
+            <div class="form-group"><label>ชื่อผู้รับ <span style="color:red">*</span></label><input type="text" id="cust-name" placeholder="ชื่อเล่น"></div>
+            <div class="form-group"><label>เบอร์โทร <span style="color:red">*</span></label><input type="tel" id="cust-phone" placeholder="08xxxxxxxx" maxlength="10"></div>
+            <div class="form-group">
+                <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
+                <div class="radio-group">
+                    <input type="radio" id="r1" name="stype" value="🍽️ ทานที่ร้าน" onchange="toggleLocationField(); loadCart();"><label for="r1">🍽️ ทานที่ร้าน</label>
+                    <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();"><label for="r2">🥡 กลับบ้าน</label>
+                    <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();"><label for="r3">🛵 ส่งเดลิเวอรี่</label>
+                </div>
+            </div>
+            <div class="location-box" id="location-section">
+                <button type="button" class="location-btn" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
+                <div id="location-text" class="location-status" style="color: red;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label>ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span style="color:red">*</span></label>
+                <div class="radio-group">
+                    <input type="radio" id="p1" name="ptype" value="ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();"><label for="p1">ใช้สิทธิ</label>
+                    <input type="radio" id="p2" name="ptype" value="ไม่ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();"><label for="p2">ไม่ใช้สิทธิ</label>
+                </div>
+            </div>
+            <div class="form-group" id="payment-section">
+                <label>วิธีชำระเงิน <span style="color:red">*</span></label>
+                <div class="radio-group">
+                    <input type="radio" id="pay1" name="paymentType" value="💵 เงินสด"><label for="pay1">💵 เงินสด</label>
+                    <input type="radio" id="pay2" name="paymentType" value="📱 สแกนชำระ"><label for="pay2">📱 สแกนจ่าย</label>
+                </div>
+            </div>
+        </div>
+        <div id="delivery-status"></div>
+        <div id="cart-list"></div>
+    </div>
+
+    <div class="footer-fixed">
+        <div class="summary-bar">
+            <button class="add-more-btn" onclick="location.href='index.html'"><span class="btn-label">➕ เพิ่มเมนู</span><span class="btn-value">เลือกต่อ</span></button>
+            <div class="total-block"><span class="btn-label">ยอดรวม</span><span class="btn-value"><span id="grand-total">0</span> บ.</span></div>
+            <button class="checkout-btn" onclick="checkout()"><span class="btn-label">🛒 พร้อมสั่ง</span><span class="btn-value">สรุปแชท</span></button>
+        </div>
+    </div>
+
+    <div id="overlay">
+        <div class="popup">
+            <h3>✅ คัดลอกไปวางในแชท</h3>
+            <textarea id="order-text" readonly></textarea>
+            <button onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
+            <button onclick="document.getElementById('overlay').style.display='none'" class="t-btn-ghost" style="width:100%; margin-top:10px;">ปิดหน้าต่างนี้</button>
+        </div>
+    </div>
+
+<script>
+    // ===== ตั้งค่า Backend (Google Apps Script Web App) =====
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzMkLd226Vtnxdy8Te-QtBWO6bDw4OoFgpv4YNnO9jzO-BPT_qdYUI7Ld6OVUrgwMgH8A/exec";
+
+    let cartItems = [];
+    let googleMapsLink = "";
+    let currentOrderData = null; // เก็บข้อมูลออเดอร์ปัจจุบัน ใช้ตอนกด "คัดลอกและไปที่แชท"
+
+    function toggleLocationField() {
+        const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+        const locSection = document.getElementById('location-section');
+        locSection.style.display = (serviceTypeEl && serviceTypeEl.value.includes('Delivery')) ? 'block' : 'none';
+    }
+
+    function togglePaymentSection() {
+        const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
+        const paymentSection = document.getElementById('payment-section');
+        if (privilegeTypeEl && privilegeTypeEl.value === 'ไม่ใช้สิทธิ') {
+            paymentSection.style.display = 'block';
+        } else {
+            paymentSection.style.display = 'none';
+            const checkedPayment = document.querySelector('input[name="paymentType"]:checked');
+            if (checkedPayment) checkedPayment.checked = false;
+        }
+    }
+
+    function getLocation() {
+        const statusText = document.getElementById('location-text');
+        if (navigator.geolocation) {
+            statusText.innerHTML = "⏳ กำลังดึงตำแหน่ง...";
+            navigator.geolocation.getCurrentPosition(pos => {
+                googleMapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                statusText.innerHTML = `✅ แชร์ตำแหน่งสำเร็จ!`;
+                statusText.style.color = "green";
+            }, () => { statusText.innerHTML = "❌ ไม่สามารถดึงตำแหน่งได้"; statusText.style.color = "red"; });
+        }
+    }
+
+    function loadCart() {
+        cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+        const list = document.getElementById('cart-list');
+        const deliveryStatus = document.getElementById('delivery-status');
+        let totalFood = 0;
+        list.innerHTML = '';
+        deliveryStatus.innerHTML = '';
+
+        if (cartItems.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">ไม่มีรายการอาหารในตะกร้า</p>';
+            document.getElementById('grand-total').innerText = 0;
+            return;
+        }
+
+        cartItems.forEach((item, idx) => {
+            totalFood += item.price;
+            let html = `<div class="cart-item"><div class="item-header"><span>${item.name}</span><span>${item.price} บ. <button class="remove-btn" onclick="remove(${idx})">ลบ</button></span></div>`;
+            if (item.details && item.details.length > 0) {
+                html += `<div class="details-box"><ul>`;
+                item.details.forEach(d => { html += `<li><span>- ${d.name} x${d.count}</span><span>${d.price * d.count} บ.</span></li>`; });
+                html += `</ul></div>`;
+            }
+            html += `</div>`;
+            list.innerHTML += html;
+        });
+
+        let deliveryFee = 0;
+        let extraServiceFee = 0;
+        const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+        const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
+        if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && totalFood < 80) deliveryFee = 10;
+        if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && privilegeTypeEl && privilegeTypeEl.value === 'ใช้สิทธิ') extraServiceFee = 5;
+        document.getElementById('grand-total').innerText = totalFood + deliveryFee + extraServiceFee;
+    }
+
+    function remove(idx) {
+        cartItems.splice(idx, 1);
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        loadCart();
+    }
+
+    function checkout() {
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
+        const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
+        const paymentTypeEl = document.querySelector('input[name="paymentType"]:checked');
+
+        if (!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
+        if (phone.length !== 10 || isNaN(phone)) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ');
+        if (!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
+        if (!privilegeTypeEl) return alert('❌ กรุณาเลือกการใช้สิทธิโครงการ');
+        if (privilegeTypeEl.value === 'ไม่ใช้สิทธิ' && !paymentTypeEl) return alert('❌ กรุณาเลือกวิธีชำระเงิน');
+        if (cartItems.length === 0) return alert('❌ ยังไม่มีเมนูในตะกร้าค่ะ');
+
+        const serviceType = serviceTypeEl.value;
+        const privilegeType = privilegeTypeEl.value;
+        let totalFood = 0;
+        cartItems.forEach(item => totalFood += item.price);
+
+        let deliveryFee = 0;
+        if (serviceType.includes('Delivery') && totalFood < 80) deliveryFee = 10;
+        let extraServiceFee = 0;
+        if (serviceType.includes('Delivery') && privilegeType === 'ใช้สิทธิ') extraServiceFee = 5;
+
+        const grandTotal = totalFood + deliveryFee + extraServiceFee;
+        const orderId = Math.floor(100000 + Math.random() * 900000).toString();
+        const paymentType = (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) ? paymentTypeEl.value : '';
+
+        // ===== สร้างข้อความสรุปสำหรับวางในแชท (เหมือนเดิมทุกอย่าง) =====
+        let txt = '========================\n';
+        txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
+        txt += '========================\n';
+        txt += `👤 ชื่อผู้รับ: ${name}\n`;
+        txt += `📞 โทร: ${phone}\n`;
+        txt += `📍 วิธีรับ: ${serviceType}\n`;
+        if (googleMapsLink) {
+            txt += `🗺️ แผนที่จัดส่ง: ${googleMapsLink}\n`;
+        } else if (serviceType.includes('Delivery')) {
+            txt += `🗺️ แผนที่จัดส่ง: (ลูกค้าไม่ได้แชร์ตำแหน่ง)\n`;
+        }
+
+        txt += `🔹โครงการรัฐ: ${privilegeType === 'ใช้สิทธิ' ? 'ใช้สิทธิไทยช่วยไทย พลัส 60/40' : 'ไม่ใช้สิทธิ'}\n`;
+        if (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl)
+            txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
+        txt += `━━━━━━━━━━━━\n`;
+
+        txt += `🍴🥡 *รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
+
+        cartItems.forEach((item, i) => {
+            if (i > 0) txt += `\n`;
+            txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
+            if (item.details && item.details.length > 0) {
+                item.details.forEach(d => {
+                    txt += ` ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
+                });
+            }
+        });
+
+        txt += `━━━━━━━━━━━━\n`;
+        if (deliveryFee > 0) txt += `🛵ค่าบริการ Delivery: ${deliveryFee} บ.\n`;
+        if (extraServiceFee > 0) txt += `✨ค่าบริการระบบเพิ่ม: ${extraServiceFee} บ.\n`;
+        txt += `🧺*ยอดรวมทั้งหมด: ${grandTotal} บาท*🪭\n`;
+        txt += `━━━━━━━━━━━━\n━━ขอบพระคุณค่ะ 🙏✨━━`;
+        txt += `\n\n(เลขที่ออเดอร์: ${orderId})`;
+
+        // ===== เก็บข้อมูลแบบมีโครงสร้าง ไว้ส่งเข้า Sheets ตอนกดคัดลอก =====
+        currentOrderData = {
+            orderID: orderId,
+            name: name,
+            phone: phone,
+            orderType: serviceType,
+            mapLink: googleMapsLink || '',
+            summaryText: txt,
+            items: cartItems.map(item => ({
+                name: item.name,
+                sku: item.sku || '',
+                qty: 1,
+                price: item.price,
+                details: item.details || []
+            })),
+            totalFood: totalFood,
+            deliveryFee: deliveryFee,
+            extraFee: extraServiceFee,
+            grandTotal: grandTotal,
+            privilegeType: privilegeType,
+            paymentType: paymentType
+        };
+
+        document.getElementById('order-text').value = txt;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    function copyAndChat() {
+        if (!currentOrderData) return;
+
+        // ส่งข้อมูลเข้า Google Sheets เบื้องหลัง แบบไม่รอผล (ไม่บล็อกการเด้งไปแชท)
+        try {
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentOrderData)
+            }).catch(err => console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err));
+        } catch (err) {
+            console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err);
+        }
+
+        // คัดลอกข้อความ แล้วเด้งไปแชททันที ไม่ต้องรอ Sheets
+        const textToCopy = document.getElementById('order-text').value;
+        try {
+            navigator.clipboard.writeText(textToCopy);
+        } catch (err) {
+            console.error('คัดลอกข้อความไม่สำเร็จ:', err);
+        }
+        window.location.href = 'https://m.me/727234960462724';
+    }
+
+    window.onload = function() { toggleLocationField(); togglePaymentSection(); loadCart(); };
+</script>
+</body>
+</html>
