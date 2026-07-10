@@ -124,14 +124,15 @@
         <div class="popup">
             <h3>✅ คัดลอกไปวางในแชท</h3>
             <textarea id="order-text" readonly></textarea>
-            <button onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
+            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
             <button onclick="document.getElementById('overlay').style.display='none'" class="t-btn-ghost" style="width:100%; margin-top:10px;">ปิดหน้าต่างนี้</button>
         </div>
     </div>
 
 <script>
     // ===== ตั้งค่า Backend (Google Apps Script Web App) =====
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxyi_P4JOPP2bIwP6hUJhSaShwlTXIoXahuBrXoge7FFbqfHJunfh9oIk0X1zcYbGUY_w/exec";
+    // ⚠️ เปลี่ยน URL นี้เป็น URL จริงหลัง Deploy ไฟล์ loyverse-backend.gs ของคุณ
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx-lePqefRyQVAOFiPoTkVXnBGLI_xuczTdJMhaGaYvwiwSwTOrH-ygh56U435lVZmGaw/exec";
 
     let cartItems = [];
     let googleMapsLink = "";
@@ -300,8 +301,15 @@
         document.getElementById('overlay').style.display = 'flex';
     }
 
+    let orderAlreadySent = false;
+
     function copyAndChat() {
         if (!currentOrderData) return;
+        if (orderAlreadySent) return; // กันกดซ้ำ/ดับเบิลแทป ทำให้ออเดอร์เดียวกันถูกส่งซ้ำเข้าระบบ
+        orderAlreadySent = true;
+
+        const btn = document.getElementById('checkoutBtn');
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = 'กำลังส่งออเดอร์...'; }
 
         // ส่งข้อมูลเข้า Google Sheets เบื้องหลัง แบบไม่รอผล (ไม่บล็อกการเด้งไปแชท)
         try {
