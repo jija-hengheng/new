@@ -84,9 +84,12 @@
             <div class="form-group">
                 <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
                 <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="❌❌❌" onchange="toggleLocationField(); loadCart();"><label for="r1">❌❌❌</label>
+                    <input type="radio" id="r1" name="stype" value="🍽️ ทานที่ร้าน" onchange="toggleLocationField(); loadCart();"><label for="r1">🍽️ ทานที่ร้าน</label>
                     <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();"><label for="r2">🥡 กลับบ้าน</label>
                     <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();"><label for="r3">🛵 ส่งเดลิเวอรี่</label>
+                </div>
+                <div id="hotpot-lock-note" style="display:none; font-size:0.75rem; color: var(--primary-red); margin-top:6px;">
+                    🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้
                 </div>
             </div>
             <div class="location-box" id="location-section">
@@ -124,18 +127,33 @@
         <div class="popup">
             <h3>✅ คัดลอกไปวางในแชท</h3>
             <textarea id="order-text" readonly></textarea>
-            <button onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
+            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
             <button onclick="document.getElementById('overlay').style.display='none'" class="t-btn-ghost" style="width:100%; margin-top:10px;">ปิดหน้าต่างนี้</button>
         </div>
     </div>
 
 <script>
     // ===== ตั้งค่า Backend (Google Apps Script Web App) =====
+    // ⚠️ เปลี่ยน URL นี้เป็น URL จริงหลัง Deploy ไฟล์ loyverse-backend.gs ของคุณ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0gfPzqgLvbIpDi89mnytO6MQ5Tp9queoBVt9gEeVVdwJjnuJPS4cd1H5D5UdCs-U1IA/exec";
 
     let cartItems = [];
     let googleMapsLink = "";
     let currentOrderData = null; // เก็บข้อมูลออเดอร์ปัจจุบัน ใช้ตอนกด "คัดลอกและไปที่แชท"
+
+    // ป้องกันลูกค้าเปลี่ยนวิธีรับสินค้า เมื่อมาจาก flow หม้อไฟ (ทานที่ร้านเท่านั้น)
+    function applyHotpotOrderTypeLock() {
+        if (sessionStorage.getItem('orderFlow') !== 'HOTPOT') return;
+        const dineIn = document.getElementById('r1');
+        const takeaway = document.getElementById('r2');
+        const delivery = document.getElementById('r3');
+        dineIn.checked = true;
+        dineIn.disabled = true;
+        takeaway.disabled = true;
+        delivery.disabled = true;
+        document.getElementById('hotpot-lock-note').style.display = 'block';
+        toggleLocationField();
+    }
 
     function toggleLocationField() {
         const serviceTypeEl = document.querySelector('input[name="stype"]:checked');
@@ -300,22 +318,10 @@
         document.getElementById('overlay').style.display = 'flex';
     }
 
-    function copyAndChat() {
-        if (!currentOrderData) return;
+    let orderAlreadySent = false;
 
-        // ส่งข้อมูลเข้า Google Sheets เบื้องหลัง แบบไม่รอผล (ไม่บล็อกการเด้งไปแชท)
-        try {
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentOrderData)
-            }).catch(err => console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err));
-        } catch (err) {
-            console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err);
-        }
-
-        // คัดลอกข้อความ แล้วเด้งไปแชททันที ไม่ต้องรอ Sheets
+    function goToChat() {
+        // คัดลอกข้อความ แล้วค่อยเด้งไปแชท (เรียกหลังจากส่ง Sheets เสร็จ/timeout แล้วเท่านั้น)
         const textToCopy = document.getElementById('order-text').value;
         try {
             navigator.clipboard.writeText(textToCopy);
@@ -325,7 +331,44 @@
         window.location.href = 'https://m.me/727234960462724';
     }
 
-    window.onload = function() { toggleLocationField(); togglePaymentSection(); loadCart(); };
+    function copyAndChat() {
+        if (!currentOrderData) return;
+        if (orderAlreadySent) return; // กันกดซ้ำ/ดับเบิลแทป ทำให้ออเดอร์เดียวกันถูกส่งซ้ำเข้าระบบ
+        orderAlreadySent = true;
+
+        const btn = document.getElementById('checkoutBtn');
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = 'กำลังส่งออเดอร์...'; }
+
+        // กันหน้าเว็บถูกปิด/เปลี่ยนหน้าไปก่อนที่ fetch จะส่งข้อมูลสำเร็จ
+        // (ตัวการหลักที่ทำให้บางออเดอร์ "หาย" ไม่เข้า Google Sheets)
+        let settled = false;
+
+        // ตั้ง timeout กันเน็ตช้า/ค้าง ไม่ให้ลูกค้าต้องรอนานเกินไป (สูงสุด 4 วิ)
+        const timeoutId = setTimeout(() => {
+            if (settled) return;
+            settled = true;
+            console.warn('ส่งข้อมูลไป Sheets ไม่ทันเวลา (timeout) แต่จะพาไปแชทต่อ');
+            goToChat();
+        }, 4000);
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentOrderData)
+        })
+        .catch(err => {
+            console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err);
+        })
+        .finally(() => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
+            goToChat();
+        });
+    }
+
+    window.onload = function() { toggleLocationField(); togglePaymentSection(); loadCart(); applyHotpotOrderTypeLock(); };
 </script>
 </body>
 </html>
