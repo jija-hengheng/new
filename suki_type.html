@@ -36,6 +36,15 @@
         .spicy-container input[type="radio"]:checked + .spicy-option { background-color: var(--primary-red); color: white; border-color: var(--primary-red); }
 
         .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; padding: 14px; display: flex; justify-content: center; z-index: 1000; background: var(--cream-soft); border-top: 2px solid var(--gold); box-shadow: 0 -6px 20px rgba(0,0,0,0.1); }
+
+        .soup-card.locked { opacity: 0.45; filter: grayscale(70%); pointer-events: none; position: relative; }
+        .soup-card.locked::after {
+            content: "ไม่รองรับหม้อไฟ";
+            position: absolute; top: 6px; left: 6px;
+            background: rgba(44,28,18,0.8); color: #fff;
+            font-size: 0.6rem; font-weight: 600;
+            padding: 3px 8px; border-radius: 20px;
+        }
     </style>
 </head>
 <body class="themed">
@@ -202,6 +211,19 @@
     </div>
 
     <script>
+        // ถ้ามาจาก Flow หม้อไฟ (ทานที่ร้าน) ให้ปิดการใช้งานเมนูที่ไม่เหมาะกับการต้ม/ลวกเอง
+        // (หม่าล่าผัดแห้ง, สุกี้แห้ง, หม่าล่าปั้น (ย่าง)) โดยแสดงเป็นสีเทา กดไม่ได้
+        function applyHotpotLocks() {
+            if (sessionStorage.getItem('orderFlow') !== 'HOTPOT') return;
+            const lockedIds = ['s9', 's6', 's10']; // หม่าล่าผัดแห้ง, สุกี้แห้ง, หม่าล่าปั้น (ย่าง)
+            lockedIds.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input) return;
+                input.disabled = true;
+                input.closest('.soup-card').classList.add('locked');
+            });
+        }
+
         function goToToppings() {
             const selected = document.querySelector('input[name="soup"]:checked');
             if (!selected) return alert('กรุณาเลือกเมนู');
@@ -225,6 +247,8 @@
             sessionStorage.setItem('sukiMainItem', JSON.stringify(sukiDetails));
             window.location.href = 'topping_suki.html';
         }
+
+        document.addEventListener('DOMContentLoaded', applyHotpotLocks);
     </script>
 </body>
 </html>

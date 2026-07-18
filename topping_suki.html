@@ -50,8 +50,31 @@
         #sauce-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44,28,18,0.55); z-index: 1000; justify-content: center; align-items: center; }
         .sauce-modal-content { background: var(--cream-soft); padding: 20px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; border-top: 3px solid var(--gold); }
         .sauce-option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .sauce-card { cursor: pointer; }
+        .sauce-card { cursor: pointer; border-radius: 12px; padding: 4px; border: 2px solid transparent; }
         .sauce-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; }
+        .sauce-card.selected { border-color: var(--primary-red); background: #fffaf9; }
+        .sauce-card-name { font-size: 0.78rem; margin-top: 4px; color: var(--ink); }
+
+        .serve-option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+        .serve-img-ph {
+            width: 100%; aspect-ratio: 1/1; border-radius: 12px;
+            background: #f2ece0; display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; overflow: hidden;
+        }
+        .serve-img-ph img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        .serve-card.locked { opacity: 0.4; filter: grayscale(70%); pointer-events: none; cursor: not-allowed; }
+        .serve-card-name { font-size: 0.68rem; margin-top: 4px; color: var(--ink); line-height: 1.25; }
+        #serve-lock-note { font-size: 0.72rem; color: var(--primary-red); margin-top: 8px; line-height: 1.5; }
+        .add-more-topping-btn {
+            display: block; margin: 12px auto 0 auto;
+            background: transparent; border: 1px solid #d8cfc0; color: #8a7a63;
+            font-size: 0.72rem; padding: 6px 16px; border-radius: 8px;
+            cursor: pointer; font-family: inherit;
+        }
+        .add-more-topping-btn:hover { background: #f2ece0; }
+
+        #hotpot-modal-title { color: var(--primary-red); font-family: 'Noto Serif Thai', serif; margin: 18px 0 0 0; font-size: 1.05rem; }
+        #modalConfirmBtn.disabled { background: #b7ab98 !important; border-color: #d8cfc0 !important; box-shadow: none !important; }
     </style>
 </head>
 <body class="themed">
@@ -80,15 +103,25 @@
         <div class="sauce-modal-content">
             <h2 style="color: var(--primary-red); margin-top: 0; font-family:'Noto Serif Thai',serif;">เลือกน้ำจิ้มแถม</h2>
             <p style="font-size: 0.9em; color: #666;">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
-            <div class="sauce-option-grid">
-                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า', 'f11.png', 'NJ001')">
+            <div class="sauce-option-grid" id="sauce-choice-grid">
+                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า" data-img="f11.png" data-sku="NJ001" onclick="handleSauceClick(this)">
                     <img src="images/f11.png" alt="หม่าล่า">
-                    <div>น้ำจิ้มงาคั่วหม่าล่า</div>
+                    <div class="sauce-card-name">น้ำจิ้มงาคั่วหม่าล่า</div>
                 </div>
-                <div class="sauce-card" onclick="processOrder('🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง', 'sk.png', 'NJ003')">
+                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง" data-img="sk.png" data-sku="NJ003" onclick="handleSauceClick(this)">
                     <img src="images/sk.png" alt="สุกี้">
-                    <div>น้ำจิ้มสุกี้กวางตุ้ง</div>
+                    <div class="sauce-card-name">น้ำจิ้มสุกี้กวางตุ้ง</div>
                 </div>
+            </div>
+
+            <div id="serve-format-section">
+                <h2 id="hotpot-modal-title">เลือกรูปแบบการเสิร์ฟ</h2>
+                <p style="font-size: 0.8em; color: #666; margin: 2px 0 0 0;">เลือกได้ 1 แบบ</p>
+                <div class="serve-option-grid" id="serve-choice-grid"></div>
+                <button type="button" class="add-more-topping-btn" onclick="closeSauceModal()">🧺เลือกท็อปปิ้งเพิ่ม</button>
+                <button class="t-btn-primary disabled" id="modalConfirmBtn" style="width:100%; margin-top:14px;" onclick="confirmHotpotOrder()" disabled>
+                    เลือกน้ำจิ้มและรูปแบบเสิร์ฟให้ครบ
+                </button>
             </div>
         </div>
     </div>
@@ -258,6 +291,83 @@
         }
     }
 
+    const orderFlow = sessionStorage.getItem('orderFlow') || '';
+
+    // ตัวเลือกรูปแบบการเสิร์ฟ (เฉพาะ flow HOTPOT) — ราคา 0 บาท เป็นแค่ SKU บอกรูปแบบการเสิร์ฟ
+    const SERVE_OPTIONS = [
+        { id: 'cup', sku: 'HP001', name: 'เสิร์ฟถ้วยพร้อมทาน (ชุดแก้ว + ตะเกียบ 1 คน)', img: 'Hotpot-0.png', minAmount: 0 },
+        { id: 'pot1', sku: 'HP002', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 1 คน)', img: 'Hotpot-1.png', minAmount: 80 },
+        { id: 'pot2', sku: 'HP003', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 2 คน)', img: 'Hotpot-2.png', minAmount: 140 }
+    ];
+    let selectedSauce = null;
+    let selectedServe = null;
+
+    // ยอดที่ใช้เช็คเงื่อนไขรูปแบบการเสิร์ฟ = ยอดของออเดอร์/ถ้วยนี้ชุดเดียว (เมนูหลัก + ท็อปปิ้งที่กำลังจะสั่ง)
+    // ไม่นับรวมยอดออเดอร์อื่นที่มีอยู่แล้วในตะกร้า เพราะแต่ละถ้วย/ชุดต้องถึงยอดขั้นต่ำของตัวเอง
+    function getCartTotalSoFar() {
+        return grandTotal;
+    }
+
+    function renderServeOptions() {
+        const grid = document.getElementById('serve-choice-grid');
+        const totalSoFar = getCartTotalSoFar();
+        let html = '';
+        SERVE_OPTIONS.forEach(opt => {
+            const unlocked = totalSoFar >= opt.minAmount;
+            const isSelected = selectedServe && selectedServe.id === opt.id;
+            html += `
+                <div class="sauce-card serve-card ${isSelected ? 'selected' : ''} ${unlocked ? '' : 'locked'}"
+                     onclick="${unlocked ? `selectServe('${opt.id}')` : ''}">
+                    <div class="serve-img-ph"><img src="images/${opt.img}" alt="${opt.name}"></div>
+                    <div class="serve-card-name">${opt.name}</div>
+                    ${!unlocked ? `<div id="serve-lock-note">สั่งซื้อครบ ${opt.minAmount} บาท จึงเลือกได้</div>` : ''}
+                </div>`;
+        });
+        grid.innerHTML = html;
+    }
+
+    function selectServe(id) {
+        selectedServe = SERVE_OPTIONS.find(o => o.id === id) || null;
+        renderServeOptions();
+        updateHotpotConfirmState();
+    }
+
+    function handleSauceClick(el) {
+        const name = el.dataset.name;
+        const img = el.dataset.img;
+        const sku = el.dataset.sku;
+        if (orderFlow === 'HOTPOT') {
+            selectedSauce = { name, img, sku };
+            document.querySelectorAll('#sauce-choice-grid .sauce-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            updateHotpotConfirmState();
+        } else {
+            processOrder(name, img, sku);
+        }
+    }
+
+    function updateHotpotConfirmState() {
+        const btn = document.getElementById('modalConfirmBtn');
+        if (selectedSauce && selectedServe) {
+            btn.disabled = false;
+            btn.classList.remove('disabled');
+            btn.innerText = '✅ ยืนยันออเดอร์';
+        } else {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+            btn.innerText = 'เลือกน้ำจิ้มและรูปแบบเสิร์ฟให้ครบ';
+        }
+    }
+
+    function closeSauceModal() {
+        document.getElementById('sauce-modal').style.display = 'none';
+    }
+
+    function confirmHotpotOrder() {
+        if (!selectedSauce || !selectedServe) return;
+        processOrder(selectedSauce.name, selectedSauce.img, selectedSauce.sku, selectedServe);
+    }
+
     function calculateAndSave() {
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
         
@@ -266,7 +376,16 @@
             return;
         }
 
-        // เงื่อนไขข้าม Modal: สุกี้แห้ง หรือ มาม่าเซ็ต (isNoodleSet)
+        // flow HOTPOT: ต้องเจอ popup เสมอ (เลือกน้ำจิ้ม + รูปแบบการเสิร์ฟ) ไม่ว่าเมนูหลักจะเป็นอะไร
+        if (orderFlow === 'HOTPOT') {
+            document.getElementById('serve-format-section').style.display = 'block';
+            renderServeOptions();
+            updateHotpotConfirmState();
+            document.getElementById('sauce-modal').style.display = 'flex';
+            return;
+        }
+
+        // เงื่อนไขข้าม Modal (เฉพาะ flow ปกติ ไม่ใช่ HOTPOT): สุกี้แห้ง หรือ มาม่าเซ็ต (isNoodleSet)
         const isSukiHang = mainItemDetails.name.includes("สุกี้แห้ง");
         const isMamaSet = mainItemDetails.isNoodleSet === true;
 
@@ -277,9 +396,14 @@
         }
     }
 
-    function processOrder(sauceName, sauceImg, sauceSku) {
+    function processOrder(sauceName, sauceImg, sauceSku, serveOption) {
         let orderItems = [];
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
+
+        // รูปแบบการเสิร์ฟ (HOTPOT) ต้องอยู่บรรทัดแรกของใบเสร็จ
+        if (serveOption) {
+            orderItems.push({ sku: serveOption.sku, name: serveOption.name, price: 0, count: 1, type: 'ServeFormat' });
+        }
 
         const mainName = mainItemDetails.name + (mainItemDetails.spice ? ` (เผ็ด${mainItemDetails.spice})` : '');
         orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainName, price: mainItemDetails.price, count: 1, type: 'Main' });

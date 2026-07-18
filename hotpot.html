@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍲 หม้อไฟ (ทานที่ร้าน)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        .hotpot-note {
+            background: var(--cream-soft);
+            border: 1px solid rgba(148,1,9,0.15);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin: 12px 4px 4px 4px;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .hotpot-note b { color: var(--primary-red); }
+
+        .base-card {
+            background: var(--card-white);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            box-shadow: 0 6px 16px rgba(43,28,18,0.08);
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: transform 0.15s ease;
+        }
+        .base-card:active { transform: scale(0.97); }
+        .base-card-top {
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+        }
+        .base-card-top img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .base-card-body { padding: 12px 14px 16px 14px; text-align: center; }
+        .base-card-name { font-family: 'Noto Serif Thai', serif; font-weight: 700; color: var(--primary-red); font-size: 1.02rem; margin-bottom: 4px; }
+        .base-card-desc { font-size: 0.78rem; color: var(--ink-soft); }
+    </style>
+</head>
+<body class="themed">
+
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+        <div>
+            <div class="mini-title">🍲 หม้อไฟ (ทานที่ร้าน)</div>
+            <div class="mini-sub">ลูกค้าต้ม/ลวกอาหารเองที่ร้าน</div>
+        </div>
+    </div>
+
+    <div class="t-container" style="padding-top:12px;">
+        <div class="hotpot-note">
+            สำหรับลูกค้า <b>ทานที่ร้านเท่านั้น</b> เลือกฐานเมนูด้านล่างเพื่อเริ่มต้น
+        </div>
+
+        <div class="t-section-label">เลือกฐานเมนู</div>
+
+        <div class="t-grid">
+            <div class="base-card" onclick="goHotpot('suki_type.html')" tabindex="0">
+                <div class="base-card-top"><img src="images/HOTT.png" alt="น้ำซุป"></div>
+                <div class="base-card-body">
+                    <div class="base-card-name">น้ำซุป</div>
+                    <div class="base-card-desc">เลือกน้ำซุปสูตรต่าง ๆ</div>
+                </div>
+            </div>
+
+            <div class="base-card" onclick="goHotpot('mama_type.html')" tabindex="0">
+                <div class="base-card-top"><img src="images/mama.png" alt="รสบะหมี่กึ่งสำเร็จรูป"></div>
+                <div class="base-card-body">
+                    <div class="base-card-name">รสบะหมี่กึ่งสำเร็จรูป</div>
+                    <div class="base-card-desc">เลือกรสมาม่าที่ต้องการ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goHotpot(nextPage) {
+            sessionStorage.setItem('orderFlow', 'HOTPOT');
+            window.location.href = nextPage;
+        }
+    </script>
+</body>
+</html>

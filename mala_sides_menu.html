@@ -3,203 +3,594 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mala Sides Menu - 3 Column Modern Edition</title>
+    <title>สั่งวัตถุดิบชาบูหม่าล่า</title>
+    <!-- ใช้ฟอนต์ Kanit และ Noto Serif Thai ตามโครงสร้างเดิม -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
-        .category-header { display: flex; align-items: center; margin: 22px 4px 13px; }
-        .category-header h2 { font-family: 'Noto Serif Thai', serif; font-size: 1rem; color: var(--primary-red); margin: 0 10px; white-space: nowrap; font-weight: 600; }
-        .category-header::before, .category-header::after { content: ""; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); flex-grow: 1; }
+        /* กำหนดตัวแปรสีหลัก: แดงเข้ม และ ครีม */
+        :root {
+            --primary-red: #940109;
+            --bg-cream: #f1e9d9;
+            --card-white: #ffffff;
+            --ink: #2b1c12;
+            --ink-soft: #6e5e53;
+            --border-cream: #e4dac5;
+        }
 
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; padding: 0 4px; }
-        .card { background: var(--card-white); border-radius: 13px; overflow: hidden; box-shadow: 0 5px 14px rgba(43,28,18,0.07); display: flex; flex-direction: column; border: 1px solid rgba(148, 1, 9, 0.05); }
-        .image-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f9f9f9; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
-        .info { padding: 7px 5px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .name { font-size: 0.72rem; font-weight: 400; color: var(--ink); margin-bottom: 5px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.3em; }
-        .price-tag { color: var(--primary-red); font-weight: 700; font-size: 0.9rem; display: block; }
+        body { 
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-cream); 
+            color: var(--ink);
+            margin: 0;
+            padding-top: 125px; /* เผื่อพื้นที่ให้ Header Fixed และ Tabs */
+            padding-bottom: 90px; 
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        .footer-note { text-align: center; padding: 24px 20px 10px; color: var(--ink-soft); font-size: 0.72rem; }
+        /* ปรับปรุงส่วนหัวให้ Fixed อยู่กับที่เพื่อการใช้งานที่ง่าย */
+        .header-fixed-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: var(--bg-cream);
+            box-shadow: 0 2px 10px rgba(148,1,9,0.08);
+        }
 
-        @media (max-width: 360px) { .name { font-size: 0.68rem; } .price-tag { font-size: 0.8rem; } }
+        .mini-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--primary-red);
+            color: var(--bg-cream);
+        }
+        .back-btn {
+            color: var(--bg-cream);
+            text-decoration: none;
+            font-size: 1.4rem;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        .mini-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--bg-cream);
+        }
+        .mini-title {
+            font-family: 'Noto Serif Thai', serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .mini-sub {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        /* แถบตัวเลือกหมวดหมู่ด้านบน เลื่อนซ้าย-ขวาได้ */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 16px;
+            background-color: #fffaf0;
+            border-bottom: 1px solid var(--border-cream);
+            scrollbar-width: none; /* ซ่อน scrollbar ใน Firefox */
+        }
+        .category-tabs::-webkit-scrollbar {
+            display: none; /* ซ่อน scrollbar ใน Chrome/Safari */
+        }
+        .tab-btn {
+            background: var(--bg-cream);
+            color: var(--primary-red);
+            border: 1px solid var(--border-cream);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: var(--primary-red);
+            color: var(--bg-cream);
+            border-color: var(--primary-red);
+            box-shadow: 0 2px 6px rgba(148,1,9,0.2);
+        }
+
+        /* จัดระเบียบการแสดงผลการ์ดสินค้า */
+        .category-section {
+            padding: 16px 12px 4px;
+        }
+        .category-title {
+            font-family: 'Noto Serif Thai', serif;
+            font-size: 0.95rem;
+            color: var(--primary-red);
+            margin: 0 0 12px 4px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-title::after {
+            content: "";
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-red), transparent);
+            flex-grow: 1;
+        }
+
+        /* ปรับ Grid เป็น 3 คอลัมน์ที่รองรับการสัมผัสได้ดีขึ้น */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 8px; 
+            margin-bottom: 16px;
+        }
+        
+        .card { 
+            background: var(--card-white); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 3px 8px rgba(43,28,18,0.05); 
+            display: flex; 
+            flex-direction: column; 
+            border: 1.5px solid transparent; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .card.selected { 
+            border-color: var(--primary-red); 
+            background-color: #fffbf5; 
+            box-shadow: 0 4px 12px rgba(148,1,9,0.12); 
+        }
+        
+        .image-container { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            overflow: hidden; 
+            background: #f7f4ed; 
+        }
+        .card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        
+        .info { 
+            padding: 6px 4px; 
+            text-align: center; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .name { 
+            font-size: 0.72rem; 
+            font-weight: 500; 
+            color: var(--ink); 
+            margin-bottom: 4px; 
+            line-height: 1.2; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+            height: 2.4em; 
+        }
+        .price-tag { 
+            color: var(--primary-red); 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            margin-bottom: 6px; 
+        }
+
+        /* ปรับแต่งปุ่มและตัวควบคุมจำนวนให้กดง่าย ไม่สับสน */
+        .action-container {
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .select-btn { 
+            border: 1px solid var(--primary-red); 
+            background: #fff; 
+            color: var(--primary-red); 
+            font-size: 0.65rem; 
+            font-weight: 600; 
+            border-radius: 12px; 
+            padding: 3px 10px; 
+            cursor: pointer; 
+            width: 80%;
+            transition: all 0.15s;
+        }
+        .card:hover .select-btn {
+            background: var(--primary-red);
+            color: #fff;
+        }
+        
+        .count-controls { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 4px; 
+            width: 90%;
+        }
+        .count-controls button { 
+            background: var(--primary-red); 
+            color: #fff; 
+            border: none; 
+            width: 22px; 
+            height: 22px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .count-display { 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            color: var(--primary-red); 
+        }
+
+        /* ป้ายสินค้าใหม่ */
+        .new-badge {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: #ff9800;
+            color: white;
+            font-size: 0.55rem;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .footer-note { 
+            text-align: center; 
+            padding: 16px 20px; 
+            color: var(--ink-soft); 
+            font-size: 0.75rem; 
+        }
+
+        /* ปรับปรุงปุ่มกดสั่งซื้อด้านล่าง */
+        .t-footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 12px 16px;
+            box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
+            z-index: 100;
+        }
+        .t-btn-primary {
+            background: var(--primary-red);
+            color: var(--bg-cream);
+            border: none;
+            border-radius: 25px;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(148,1,9,0.25);
+        }
+        .t-btn-primary.disabled { 
+            background: #d4cbba !important; 
+            color: #fff !important; 
+            box-shadow: none !important; 
+            pointer-events: none; 
+        }
+
+        @media (max-width: 360px) { 
+            .name { font-size: 0.68rem; } 
+            .price-tag { font-size: 0.8rem; } 
+            .tab-btn { padding: 5px 10px; font-size: 0.75rem; }
+        }
     </style>
 </head>
-<body class="themed">
+<body>
 
-    <div class="mini-header">
-        <a href="index.html" class="back-btn">←</a>
-        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
-        <div>
-            <div class="mini-title">🧂 วัตถุดิบชาบูหม่าล่า</div>
-            <div class="mini-sub">ต้นตำรับความอร่อย วัตถุดิบพรีเมียม</div>
-        </div>
-    </div>
-
-<div class="t-container" style="padding-top:6px;">
-    
-    <div class="category-header">
-        <h2>กลุ่มเส้นหนึบ</h2>
-    </div>
-    <div class="grid">
-        <div class="card">
-            <div class="image-container"><img src="images/zenred-pack.png" alt="เส้นมันหนึบหน้ากากแดง"></div>
-            <div class="info">
-                <div class="name">เส้นมันหนึบหน้ากากแดง</div>
-                <div class="price-tag">29฿</div>
+    <!-- รวม Header และแผง Tabs เข้าไว้ด้วยกันแบบ Fixed -->
+    <div class="header-fixed-container">
+        <div class="mini-header">
+            <a href="index.html" class="back-btn">←</a>
+            <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+            <div>
+                <div class="mini-title">🧂 วัตถุดิบชาบูหม่าล่า</div>
+                <div class="mini-sub">ต้นตำรับความอร่อย วัตถุดิบพรีเมียม</div>
             </div>
         </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-p.png" alt="เส้นหนึบ เผือก"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ เผือก</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-u.png" alt="เส้นหนึบ ปวยเล้ง"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ ปวยเล้ง</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-m.png" alt="เส้นหนึบ มันม่วง"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ มันม่วง</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-f.png" alt="เส้นหนึบ ฟักทอง"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ ฟักทอง</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-l.png" alt="เส้นหนึบ เล็ก"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ เล็ก</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zunyao.png" alt="เส้นหนึบ ซันเย่า"></div>
-            <div class="info">
-                <div class="name">เส้นหนึบ ซันเย่า</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
+        <!-- แถบหมวดหมู่ดึงข้อมูลอัตโนมัติจาก JavaScript -->
+        <div class="category-tabs" id="category-tabs"></div>
     </div>
 
-    <div class="category-header">
-        <h2>ซุปและพริกหม่าล่า</h2>
-    </div>
-    <div class="grid">
-        <div class="card">
-            <div class="image-container"><img src="images/mala_soup_50.jpg" alt="ซุปหม่าล่า 50ก."></div>
-            <div class="info">
-                <div class="name">ซุปหม่าล่า 50ก.</div>
-                <div class="price-tag">25฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/mala_soup_150.jpg" alt="ซุปหม่าล่า 150ก."></div>
-            <div class="info">
-                <div class="name">ซุปหม่าล่า 150ก.</div>
-                <div class="price-tag">69฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/mala_soup_220.jpg" alt="ซุปหม่าล่า 220ก."></div>
-            <div class="info">
-                <div class="name">ซุปหม่าล่า 220ก.</div>
-                <div class="price-tag">89฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/mala_chili.jpg" alt="พริกหม่าล่า 1+1"></div>
-            <div class="info">
-                <div class="name">พริกหม่าล่า 1+1</div>
-                <div class="price-tag">25฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/mala_chili_extra.jpg" alt="พริกเผ็ดมาก 1+2"></div>
-            <div class="info">
-                <div class="name">พริกเผ็ดมาก 1+2</div>
-                <div class="price-tag">25฿</div>
-            </div>
-        </div>
+    <!-- ส่วนแสดงรายการสินค้าแยกตามหมวดหมู่ -->
+    <div class="t-container">
+        <div id="menu-sections"></div>
     </div>
 
-    <div class="category-header">
-        <h2>เครื่องเคียงและฟองเต้าหู้</h2>
-    </div>
-    <div class="grid">
-        <div class="card">
-            <div class="image-container"><img src="images/fong-pack.png" alt="เต้าหู้ม้วน"></div>
-            <div class="info">
-                <div class="name">เต้าหู้ม้วน (แพ็ค)</div>
-                <div class="price-tag">59฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/seaweed_tofu.jpg" alt="เต้าหู้สาหร่าย"></div>
-            <div class="info">
-                <div class="name">เต้าหู้สาหร่าย</div>
-                <div class="price-tag">99฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/6.jpg" alt="เต้าหู้ใหญ่"></div>
-            <div class="info">
-                <div class="name">เต้าหู้ใหญ่ (แพ็ค)</div>
-                <div class="price-tag">69฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/zen-fong69.jpg" alt="เต้าหู้เล็ก"></div>
-            <div class="info">
-                <div class="name">เต้าหู้เล็ก (แพ็ค)</div>
-                <div class="price-tag">69฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/fong-29.jpg" alt="เต้าหู้ดูดซุป"></div>
-            <div class="info">
-                <div class="name">เต้าหู้ดูดซุป 60ก.</div>
-                <div class="price-tag">29฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/fong(2).png" alt="เส้นสาหร่าย"></div>
-            <div class="info">
-                <div class="name">เส้นสาหร่าย</div>
-                <div class="price-tag">69฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/wakame1.jpg" alt="วากาเมะ"></div>
-            <div class="info">
-                <div class="name">วากาเมะ 100ก.</div>
-                <div class="price-tag">59฿</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="image-container"><img src="images/mala_sauce.png" alt="น้ำจิ้มงาคั่ว"></div>
-            <div class="info">
-                <div class="name">น้ำจิ้มงาคั่ว 220ml</div>
-                <div class="price-tag">69฿</div>
-            </div>
-        </div>
+    <div class="footer-note">
+        เลือกจำนวนที่ต้องการแล้วกด "สั่งออเดอร์" ด้านล่างได้เลยค่ะ 🙏
     </div>
 
-</div>
+    <div class="t-footer-fixed">
+        <button class="t-btn-primary disabled" id="order-footer" onclick="placeOrder()">
+            สั่งออเดอร์ (<span id="order-total">0 บาท</span>)
+        </button>
+    </div>
 
-<div class="footer-note">
-    หากต้องการสั่งวัตถุดิบ แจ้งชื่อเมนูในแชทได้เลยค่ะ 🙏
-</div>
+<script>
+    // ข้อมูลสินค้าจากชุดเดิมทั้งหมด
+    const ITEMS_DATA = [
+        { sku: 'Z0M001', category: 'กลุ่มเส้นหนึบ', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
+        { sku: 'Z0M005', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ เผือก', image: 'zen-p.png', price: 29 },
+        { sku: 'Z0M008', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ ปวยเล้ง', image: 'zen-u.png', price: 29 },
+        { sku: 'Z0M004', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ มันม่วง', image: 'zen-m.png', price: 29 },
+        { sku: 'Z0M003', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ ฟักทอง', image: 'zen-f.png', price: 29 },
+        { sku: 'Z0M006', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ เล็ก', image: 'zen-l.png', price: 29 },
+        { sku: 'Z0M007', category: 'กลุ่มเส้นหนึบ', name: 'เส้นหนึบ ซันเย่า', image: 'zunyao.png', price: 29 },
+
+        { sku: 'MS-SOUP50', category: 'ซุปและพริกหม่าล่า', name: 'ซุปหม่าล่า 50ก.', image: 'mala_soup_50.jpg', price: 25 },
+        { sku: 'MS-SOUP150', category: 'ซุปและพริกหม่าล่า', name: 'ซุปหม่าล่า 150ก.', image: 'mala_soup_150.jpg', price: 69 },
+        { sku: 'MS-SOUP220', category: 'ซุปและพริกหม่าล่า', name: 'ซุปหม่าล่า 220ก.', image: 'mala_soup_220.jpg', price: 89 },
+        { sku: 'MS-CHILI1', category: 'ซุปและพริกหม่าล่า', name: 'พริกหม่าล่า 1+1', image: 'mala_chili.jpg', price: 25 },
+        { sku: 'MS-CHILI2', category: 'ซุปและพริกหม่าล่า', name: 'พริกเผ็ดมาก 1+2', image: 'mala_chili_extra.jpg', price: 25 },
+
+        { sku: 'Z0F001', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เต้าหู้ม้วน (แพ็ค)', image: 'fong-pack.png', price: 59 },
+        { sku: 'Z0F002', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เต้าหู้สาหร่าย', image: 'seaweed_tofu.jpg', price: 99 },
+        { sku: 'MS-TOFU-L', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เต้าหู้ใหญ่ (แพ็ค)', image: '6.jpg', price: 69 },
+        { sku: 'MS-TOFU-S', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เต้าหู้เล็ก (แพ็ค)', image: 'zen-fong69.jpg', price: 69 },
+        { sku: 'Z0F005', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เต้าหู้ดูดซุป 60ก.', image: 'fong-29.jpg', price: 29 },
+        { sku: 'MS-SEAWEED-NOODLE', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'เส้นสาหร่าย', image: 'fong(2).png', price: 69 },
+        { sku: 'MS-WAKAME100', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'วากาเมะ 100ก.', image: 'wakame1.jpg', price: 59 },
+        { sku: 'NJ004', category: 'เครื่องเคียงและฟองเต้าหู้', name: 'น้ำจิ้มงาคั่ว 220ml', image: 'mala_sauce.png', price: 69 },
+
+        { sku: 'TP003', category: 'หมวดข้าว', name: 'ข้าวสวย', image: 'khao.jpg', price: 10 },
+        { sku: 'TP025', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
+        { sku: 'TP022', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
+        { sku: 'TP019', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
+        { sku: 'TP028', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
+        { sku: 'TP020', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
+        { sku: 'TP021', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
+        { sku: '10058', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
+        { sku: 'TP030', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
+        { sku: 'TP027', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
+        { sku: 'TP045', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
+        { sku: 'TP046', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบจัมโบ้', image: 'nunggroobchhet.png', price: 10 },
+        { sku: 'TP016', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'มินิคอกเทล', image: 'mini.png', price: 10 },
+        { sku: 'TP032', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เปาไข่กุ้ง', image: 'paokaigung.png', price: 10 },
+        { sku: 'TP008', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ปลาดอลลี่', image: 'dolly.png', price: 10 },
+        { sku: 'TP026', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้ชีส', image: 'paochese.png', price: 10 },
+        { sku: 'TP012', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ซีฟู้ด', image: 'fongZ-fod.png', price: 10 },
+        { sku: 'แมงกะพรุน', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
+        { sku: 'TP024', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
+        { sku: '10049', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
+        { sku: 'TP001', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ข้าวโพด', image: 'fongkao.png', price: 10, isNew: true },
+        { sku: 'TP005', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ชิกุวะญี่ปุ่น', image: 'chigo.png', price: 10, isNew: true },
+        { sku: 'TP029', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
+        { sku: 'TP014', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
+        { sku: 'TP034', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
+        { sku: 'TP042', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้ใหญ่', image: 'Zenfongyai.png', price: 10 },
+        { sku: 'TP015', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
+        { sku: 'TP013', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
+        { sku: 'TP040', category: 'หมวดผัก – เส้น', name: 'เห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
+        { sku: 'TP036', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 },
+        { sku: 'TP037', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
+        { sku: 'TP035', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
+        { sku: 'TP038', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันหนึบ', image: 'zenlek-mun.png', price: 10 },
+        { sku: 'TP007', category: 'หมวดผัก – เส้น', name: 'บะหมี่ผัก', image: 'bamheepuk.png', price: 10 },
+        { sku: 'TP004', category: 'หมวดผัก – เส้น', name: 'ข้าวโพด', image: 'kaopod.png', price: 10 },
+        { sku: 'TP011', category: 'หมวดผัก – เส้น', name: 'ผักกาด', image: 'pukgad.png', price: 10 },
+        { sku: 'TP017', category: 'หมวดผัก – เส้น', name: 'วากาเมะ', image: 'wakame.png', price: 10 },
+        { sku: 'TP033', category: 'หมวดผัก – เส้น', name: 'เส้นบุกหม่าล่า', image: 'zenbuk.png', price: 10 },
+        { sku: 'TP031', category: 'หมวดผัก – เส้น', name: 'เบบี้กวางตุ้ง', image: 'babygwangtung.png', price: 10 },
+        { sku: 'TP018', category: 'หมวดผัก – เส้น', name: 'วุ้นเส้น', image: 'woonzen.png', price: 10 },
+        { sku: 'TP039', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
+        { sku: 'TP006', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
+        { sku: 'TP047', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },
+        { sku: 'TP043', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
+        { sku: 'TP044', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
+        { sku: 'NJ003', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 15 },
+        { sku: 'NJ001', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
+        { sku: 'NJ002', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 },
+    ];
+
+    let selectedItems = {};
+
+    // คัดแยกกลุ่มหมวดหมู่ทั้งหมดเพื่อนำไปสร้างแถบด้านบน
+    const categories = [...new Set(ITEMS_DATA.map(item => item.category))];
+
+    function renderTabs() {
+        const tabsContainer = document.getElementById('category-tabs');
+        let html = '';
+        categories.forEach((cat, index) => {
+            // ให้หมวดหมู่แรก Active เป็นค่าเริ่มต้น
+            const activeClass = index === 0 ? 'active' : '';
+            html += `<button class="tab-btn ${activeClass}" id="tab-${index}" onclick="scrollToCategory('${cat}', ${index})">${cat}</button>`;
+        });
+        tabsContainer.innerHTML = html;
+    }
+
+    function scrollToCategory(categoryName, index) {
+        // อัปเดตสถานะ Active บนแถบเมนู
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`tab-${index}`).classList.add('active');
+
+        // เลื่อนหน้าจอไปยังเป้าหมาย (หักลบพื้นที่ของ Header Fixed ด้านบน)
+        const targetElement = document.getElementById(`section-${categoryName}`);
+        if (targetElement) {
+            const offset = 135; 
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = targetElement.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    function renderItems() {
+        const container = document.getElementById('menu-sections');
+        const grouped = ITEMS_DATA.reduce((acc, item) => {
+            acc[item.category] = acc[item.category] || [];
+            acc[item.category].push(item);
+            return acc;
+        }, {});
+
+        let html = '';
+        for (const category in grouped) {
+            // ใส่ ID ประจำหมวดหมู่เพื่อให้ทำงานร่วมกับการกดเลื่อนจากแถบด้านบนได้
+            html += `<div class="category-section" id="section-${category}">
+                        <div class="category-title">${category}</div>
+                        <div class="grid">`;
+            
+            grouped[category].forEach(item => {
+                const sel = selectedItems[item.sku];
+                html += `
+                    <div class="card ${sel ? 'selected' : ''}" id="card-${item.sku}" onclick="selectItem('${item.sku}')">
+                        ${item.isNew ? '<span class="new-badge">ใหม่!</span>' : ''}
+                        <div class="image-container">
+                            <img src="images/${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150?text=${encodeURIComponent(item.name)}'">
+                        </div>
+                        <div class="info">
+                            <div class="name">${item.name}</div>
+                            <div class="price-tag">${item.price.toLocaleString()}฿</div>
+                            <div class="action-container">
+                                ${sel
+                                    ? `<div class="count-controls">
+                                            <button onclick="changeCount(event,'${item.sku}',-1)">-</button>
+                                            <span class="count-display" id="count-${item.sku}">${sel.count}</span>
+                                            <button onclick="changeCount(event,'${item.sku}',1)">+</button>
+                                       </div>`
+                                    : `<button class="select-btn">เลือก</button>`
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            html += `</div></div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function selectItem(sku) {
+        if (selectedItems[sku]) {
+            // ป้องกันการเผลอกดโดนตัวการ์ดแล้วจำนวนหายไป (UX ที่ดีขึ้นคือถ้าเลือกแล้ว ให้ใช้ปุ่มบวก-ลบ แทน)
+            return;
+        } else {
+            const item = ITEMS_DATA.find(i => i.sku === sku);
+            if (!item) return;
+            selectedItems[sku] = { ...item, count: 1 };
+        }
+        renderItems();
+        updateFooter();
+    }
+
+    function changeCount(event, sku, delta) {
+        event.stopPropagation(); // หยุดการกดขยายไปยัง Card ชั้นนอก
+        if (!selectedItems[sku]) return;
+        const newCount = selectedItems[sku].count + delta;
+        if (newCount <= 0) {
+            delete selectedItems[sku];
+            renderItems();
+        } else {
+            selectedItems[sku].count = newCount;
+            document.getElementById(`count-${sku}`).innerText = newCount;
+        }
+        updateFooter();
+    }
+
+    function updateFooter() {
+        const items = Object.values(selectedItems);
+        const totalCount = items.reduce((sum, i) => sum + i.count, 0);
+        const totalPrice = items.reduce((sum, i) => sum + i.count * i.price, 0);
+        const btn = document.getElementById('order-footer');
+        document.getElementById('order-total').innerText = `${totalPrice.toLocaleString()} บาท`;
+        if (totalCount > 0) {
+            btn.classList.remove('disabled');
+        } else {
+            btn.classList.add('disabled');
+        }
+    }
+
+    function placeOrder() {
+        const items = Object.values(selectedItems);
+        if (items.length === 0) return;
+
+        const orderItems = items.map(item => ({
+            sku: item.sku,
+            name: item.name,
+            price: item.price,
+            count: item.count,
+            type: 'Topping'
+        }));
+
+        const totalCount = items.reduce((sum, i) => sum + i.count, 0);
+        const totalPrice = items.reduce((sum, i) => sum + i.count * i.price, 0);
+
+        const finalOrderSet = {
+            name: `วัตถุดิบชาบูหม่าล่า (${totalCount} รายการ)`,
+            price: totalPrice,
+            count: 1,
+            details: orderItems,
+            isSidesOnly: true
+        };
+
+        let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+        cartItems.push(finalOrderSet);
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+        window.location.href = 'summary.html';
+    }
+
+    // ฟังก์ชันช่วยเปลี่ยนสถานะแถบเมนูด้านบนอัตโนมัติเมื่อผู้ใช้งานเลื่อนหน้าจอ (Scroll Spy)
+    window.addEventListener('scroll', () => {
+        let currentSectionIndex = 0;
+        let minDistance = Infinity;
+
+        categories.forEach((cat, index) => {
+            const el = document.getElementById(`section-${cat}`);
+            if (el) {
+                const rect = el.getBoundingClientRect();
+                // ห่างจากขอบบนใกล้เคียงแนว Header
+                const dist = Math.abs(rect.top - 140);
+                if (rect.top <= 150 && dist < minDistance) {
+                    minDistance = dist;
+                    currentSectionIndex = index;
+                }
+            }
+        });
+
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        const activeTab = document.getElementById(`tab-${currentSectionIndex}`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            // เลื่อนแถบตัวเลือกอัตโนมัติเพื่อให้เห็นปุ่มที่เลือกอยู่เสมอ
+            activeTab.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTabs();
+        renderItems();
+        updateFooter();
+    });
+</script>
 
 </body>
 </html>
