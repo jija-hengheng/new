@@ -3,132 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สรุปรายการอาหารทั้งหมด</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+    <title>สรุปออเดอร์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
-        body { padding-bottom: 130px; }
-
-        .screenshot-instruction { border: 2px solid var(--gold); background-color: #fff8e6; color: var(--primary-red); padding: 14px; margin: 14px 4px 20px; border-radius: 14px; text-align: left; font-weight: 400; font-size: 0.86rem; line-height: 1.5; }
-
-        .customer-form-box { background: #fff; border: 1.5px solid rgba(148,1,9,0.15); border-radius: 16px; padding: 18px; margin: 0 4px 22px; box-shadow: 0 6px 16px rgba(43,28,18,0.06); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--ink); font-size: 0.9rem; }
-        .form-group input { width: 100%; padding: 10px 12px; border: 1.5px solid #e0d7c6; border-radius: 10px; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
-        .form-group input:focus { outline: none; border-color: var(--primary-red); }
-
-        .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .radio-group input[type="radio"] { display: none; }
-        .radio-group label { padding: 10px 14px; border: 1.5px solid #e0d7c6; border-radius: 10px; cursor: pointer; transition: 0.2s; flex-grow: 1; text-align: center; background: #fff; font-size: 0.88rem; }
-        .radio-group input[type="radio"]:checked + label { background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft); border-color: var(--primary-red); font-weight: 600; }
-
-        .location-box { display: none; margin-top: 15px; padding: 12px; border: 1px dashed var(--primary-red); border-radius: 12px; background-color: #fff5f5; text-align: center; }
-        .location-btn { background: linear-gradient(135deg, var(--gold), #b8902e); color: #3a2a00; border: none; padding: 10px 15px; border-radius: 10px; font-family: 'Kanit', sans-serif; font-weight: 700; cursor: pointer; width: 100%; font-size: 0.92rem; }
-        .location-status { margin-top: 8px; font-size: 0.83rem; font-weight: 600; }
-
-        #payment-section { display: none; margin-top: 15px; border-top: 1px dashed #e0d7c6; padding-top: 15px; }
-
-        .logo-mini { height: 22px; vertical-align: middle; margin-left: 5px; margin-top: -3px; }
-
-        #delivery-status { margin: 0 4px 15px; font-weight: 600; text-align: center; border-radius: 10px; color: var(--primary-red); }
-
-        .cart-item { background: #fff; border-radius: 14px; padding: 14px; margin: 0 4px 13px; box-shadow: 0 5px 14px rgba(43,28,18,0.07); }
-        .item-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary-red); border-bottom: 1px dashed rgba(148,1,9,0.2); padding-bottom: 6px; }
-        .details-box { background: var(--cream-soft); padding: 8px 10px; border-radius: 8px; margin-top: 8px; font-size: 0.86rem; }
-        .details-box ul { list-style: none; padding: 0; margin: 0; }
-        .details-box li { display: flex; justify-content: space-between; border-bottom: 1px dotted #e5dbc9; padding: 2px 0; color: var(--ink-soft); }
-        .remove-btn { background: #c0392b; color: white; border: none; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.76rem; }
-
-        .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 14px calc(12px + env(safe-area-inset-bottom)); z-index: 100; background: var(--cream-soft); border-top: 2px solid var(--gold); box-shadow: 0 -6px 20px rgba(0,0,0,0.1); }
-        .summary-bar { max-width: 500px; margin: auto; display: flex; gap: 10px; }
-        .summary-bar button, .total-block {
-            flex: 1; height: 62px; border-radius: 14px; border: 2px solid var(--gold-soft);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer;
+        /* ============ Design tokens — เหมือนหน้าเลือกเมนู ============ */
+        :root {
+            --primary-red: #940109;
+            --red-deep: #6d0107;
+            --gold: #c99a3d;
+            --gold-soft: #e3c07c;
+            --bg-cream: #f7f1e5;
+            --card-white: #fffdf9;
+            --ink: #2b1c12;
+            --ink-soft: #8c7a6a;
+            --border-cream: #ecdfc6;
+            --glass-bg: rgba(255, 253, 249, 0.72);
+            --success-green: #1f7a3d;
+            --radius-lg: 24px;
+            --radius-md: 20px;
+            --radius-sm: 14px;
         }
-        .add-more-btn { background: linear-gradient(135deg, #2b6cb0, #1a4d80); color: white; border: none; }
-        .total-block { background: linear-gradient(155deg, var(--primary-red), var(--dark-red)); color: var(--cream-soft); }
-        .checkout-btn { background: linear-gradient(135deg, var(--success-green), #124d21); color: white; border: none; }
-        .btn-label { font-size: 0.68rem; }
-        .btn-value { font-size: 0.98rem; font-weight: 700; }
 
-        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,28,18,0.6); display:none; justify-content:center; align-items:center; z-index:1000; }
-        .popup { background: var(--cream-soft); padding:20px; border-radius:18px; width:90%; max-width:400px; border-top: 3px solid var(--gold); }
-        .popup h3 { color: var(--primary-red); font-family: 'Noto Serif Thai', serif; margin-top: 0; }
-        textarea { width:100%; height:200px; margin:10px 0; padding:10px; box-sizing:border-box; font-family: 'Kanit', sans-serif; font-size: 14px; border-radius: 10px; border: 1.5px solid #e0d7c6; }
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Anuphan', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--ink);
+            margin: 0;
+            padding-top: 110px;
+            padding-bottom: 168px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ============ Header (ใช้ระบบเดียวกับหน้าเลือกเมนู) ============ */
+        .header-fixed-container {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background-color: var(--bg-cream);
+        }
+        .mini-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px 20px;
+            background: linear-gradient(155deg, var(--primary-red) 0%, var(--red-deep) 100%);
+            color: var(--bg-cream);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            box-shadow: 0 10px 24px rgba(148, 1, 9, 0.22);
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.14);
+            color: var(--bg-cream);
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .back-btn:active { transform: scale(0.88); background: rgba(255,255,255,0.26); }
+        .back-btn svg { width: 18px; height: 18px; }
+        .mini-logo {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.55);
+        }
+        .mini-title { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .mini-title .count-pill {
+            font-size: 0.66rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 9px;
+            border-radius: 999px;
+        }
+        .mini-sub { font-size: 0.72rem; font-weight: 300; opacity: 0.82; margin-top: 3px; }
+
+        .t-container { max-width: 560px; margin: 0 auto; padding: 0 12px; }
+
+        /* ============ Accordion ทั่วไป (ประกาศ / รายการอาหาร) ============ */
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .chevron {
+            width: 16px; height: 16px;
+            flex-shrink: 0;
+            color: var(--ink-soft);
+            transition: transform 0.25s ease;
+        }
+        .chevron.open { transform: rotate(180deg); }
+
+        /* ============ ประกาศเงื่อนไข ============ */
+        .announcement {
+            background: #fff8e9;
+            border: 1.5px solid var(--gold-soft);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin: 14px 4px 18px;
+            box-shadow: 0 4px 12px rgba(43,28,18,0.05);
+        }
+        .announcement .accordion-header { color: var(--primary-red); font-weight: 600; font-size: 0.86rem; justify-content: space-between; }
+        .announcement .accordion-header .label { display: flex; align-items: center; gap: 8px; }
+        .announcement-body {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+            font-size: 0.83rem;
+            line-height: 1.6;
+            color: var(--ink-soft);
+        }
+        .announcement-body.open { max-height: 260px; opacity: 1; margin-top: 12px; }
+        .announcement-body b { color: var(--ink); }
+
+        /* ============ Section label เหนือการ์ด ============ */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 22px 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary-red); flex-shrink: 0; }
+        .section-label::after { content: ""; height: 1px; background: var(--border-cream); flex-grow: 1; }
+
+        /* ============ การ์ดกลุ่ม (แยกสีตามหน้าที่) ============ */
+        .panel { border-radius: var(--radius-lg); margin: 0 4px 4px; box-shadow: 0 6px 16px rgba(43,28,18,0.06); }
+        .panel-white { background: var(--card-white); border: 1.5px solid var(--border-cream); padding: 18px; }
+        .panel-cream { background: transparent; padding: 0; box-shadow: none; }
+
+        /* ============ รายการอาหาร ============ */
+        .cart-item {
+            position: relative;
+            background: var(--bg-cream);
+            border: 1.5px solid var(--border-cream);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(43,28,18,0.05);
+        }
+        .cart-item-trash {
+            position: absolute;
+            top: 10px; right: 10px;
+            width: 30px; height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(148,1,9,0.08);
+            color: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .cart-item-trash:active { transform: scale(0.85); background: rgba(148,1,9,0.18); }
+        .cart-item-trash svg { width: 15px; height: 15px; }
+
+        .cart-item-head { display: flex; align-items: center; gap: 12px; padding-right: 34px; }
+        .cart-item-icon {
+            width: 42px; height: 42px;
+            border-radius: 14px;
+            background: var(--card-white);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 0 1.5px var(--border-cream);
+        }
+        .cart-item-main { flex-grow: 1; min-width: 0; }
+        .cart-item-name { font-weight: 600; font-size: 0.92rem; color: var(--ink); margin-bottom: 3px; }
+        .cart-item-meta { font-size: 0.78rem; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; }
+        .cart-item-meta .price { color: var(--primary-red); font-weight: 700; font-size: 0.85rem; }
+        .cart-item-meta .qty-badge {
+            background: rgba(148,1,9,0.08);
+            color: var(--primary-red);
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .cart-item-body {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+        }
+        .cart-item-body.open { max-height: 600px; opacity: 1; margin-top: 12px; }
+        .detail-divider {
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--gold), var(--gold-soft) 60%, transparent);
+            margin-bottom: 10px;
+        }
+        .checklist { list-style: none; margin: 0; padding: 0; }
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--ink);
+            padding: 5px 0;
+            border-bottom: 1px dotted var(--border-cream);
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist .check {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .checklist .check svg { width: 10px; height: 10px; }
+        .checklist .d-name { flex-grow: 1; }
+        .checklist .d-price { color: var(--ink-soft); font-size: 0.76rem; }
+
+        .empty-cart { text-align: center; color: var(--ink-soft); padding: 30px 10px; font-size: 0.88rem; }
+
+        /* ============ ข้อมูลลูกค้า — Floating label ============ */
+        .form-field { position: relative; margin-bottom: 16px; }
+        .form-field input {
+            width: 100%;
+            padding: 19px 14px 8px;
+            border: 1.5px solid var(--border-cream);
+            border-radius: var(--radius-sm);
+            font-family: 'Anuphan', sans-serif;
+            font-size: 0.92rem;
+            background: #fff;
+            color: var(--ink);
+            transition: border-color 0.2s ease;
+        }
+        .form-field input:focus { outline: none; border-color: var(--primary-red); }
+        .form-field label {
+            position: absolute;
+            left: 14px; top: 15px;
+            color: var(--ink-soft);
+            font-size: 0.92rem;
+            pointer-events: none;
+            transition: all 0.16s ease;
+        }
+        .form-field input:focus + label,
+        .form-field input:not(:placeholder-shown) + label {
+            top: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--primary-red);
+        }
+        .form-field .req { color: var(--primary-red); }
+
+        /* ============ ตัวเลือกแบบการ์ด (แทน Radio) ============ */
+        .field-title { font-weight: 600; font-size: 0.85rem; color: var(--ink); margin: 4px 0 10px; }
+        .option-cards { display: flex; gap: 10px; }
+        .option-cards input[type="radio"] { display: none; }
+        .option-cards label {
+            flex: 1;
+            min-height: 78px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 1.5px solid var(--border-cream);
+            border-radius: var(--radius-sm);
+            background: #fff;
+            cursor: pointer;
+            padding: 8px 4px;
+            text-align: center;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .option-cards label:active { transform: scale(0.95); }
+        .option-cards .opt-icon { font-size: 1.4rem; line-height: 1; }
+        .option-cards .opt-label { font-size: 0.74rem; font-weight: 500; color: var(--ink); }
+        .option-cards input:checked + label {
+            background: linear-gradient(155deg, var(--primary-red), var(--red-deep));
+            border-color: var(--primary-red);
+            box-shadow: 0 6px 14px rgba(148,1,9,0.25);
+        }
+        .option-cards input:checked + label .opt-label { color: #fff; font-weight: 600; }
+        .option-cards input:disabled + label { opacity: 0.4; pointer-events: none; }
+
+        #hotpot-lock-note { font-size: 0.74rem; color: var(--primary-red); margin-top: 10px; display: none; background: rgba(148,1,9,0.06); padding: 8px 10px; border-radius: 10px; }
+
+        .location-box { display: none; margin-top: 14px; padding: 12px; border: 1px dashed var(--primary-red); border-radius: var(--radius-sm); background: #fff5f5; text-align: center; }
+        .location-btn {
+            background: linear-gradient(135deg, var(--gold), #b8902e);
+            color: #3a2a00;
+            border: none;
+            padding: 11px 15px;
+            border-radius: var(--radius-sm);
+            font-family: 'Anuphan', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.88rem;
+            transition: transform 0.15s ease;
+        }
+        .location-btn:active { transform: scale(0.97); }
+        .location-status { margin-top: 8px; font-size: 0.8rem; font-weight: 600; }
+
+        #payment-section { display: none; margin-top: 18px; }
+
+        .logo-mini { height: 20px; vertical-align: middle; margin-left: 5px; margin-top: -3px; }
+
+        #delivery-status { margin: 14px 6px 0; font-weight: 600; text-align: center; font-size: 0.82rem; color: var(--primary-red); }
+
+        /* ============ Glass footer — CTA เดียว ============ */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px 14px calc(14px + env(safe-area-inset-bottom));
+            z-index: 100;
+            background: linear-gradient(to top, var(--bg-cream) 60%, transparent);
+        }
+        .footer-glass {
+            max-width: 560px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px 12px;
+            box-shadow: 0 12px 30px rgba(43,28,18,0.16);
+        }
+        .footer-total-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; padding: 0 2px; }
+        .footer-total-row .amount { font-size: 1.35rem; font-weight: 800; color: var(--primary-red); }
+        .footer-total-row .amount small { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); margin-left: 4px; }
+        .footer-total-row .count { font-size: 0.76rem; font-weight: 600; color: var(--ink-soft); background: rgba(148,1,9,0.07); padding: 4px 10px; border-radius: 999px; }
+
+        .footer-btn-row { display: flex; gap: 10px; align-items: stretch; }
+        .footer-btn-row .t-btn-primary { flex: 1; }
+        .footer-secondary-btn {
+            flex: 0 0 100px;
+            background: #fff;
+            color: var(--primary-red);
+            border: 1.5px solid var(--primary-red);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-family: 'Anuphan', sans-serif;
+            font-weight: 700;
+            font-size: 0.64rem;
+            line-height: 1.25;
+            cursor: pointer;
+            padding: 6px 4px;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .footer-secondary-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+        .footer-secondary-btn:active { transform: scale(0.95); background: #fff5f5; }
+
+        .t-btn-primary {
+            background: var(--primary-red);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 15px 20px;
+            font-family: 'Anuphan', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 16px rgba(148,1,9,0.3);
+        }
+        .t-btn-primary:active { transform: scale(0.98); }
+        .t-btn-primary svg { width: 18px; height: 18px; }
+        .footer-caption { text-align: center; font-size: 0.68rem; color: var(--ink-soft); margin-top: 8px; }
+        .popup-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 30px; height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(43,28,18,0.06);
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .popup-close:active { transform: scale(0.88); background: rgba(43,28,18,0.12); }
+        .popup-close svg { width: 15px; height: 15px; }
+
+        /* ============ Popup คัดลอกข้อความ ============ */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,28,18,0.55); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .popup { background: var(--card-white); padding: 22px; border-radius: var(--radius-lg); width: 100%; max-width: 400px; border-top: 4px solid var(--gold); box-shadow: 0 20px 50px rgba(0,0,0,0.25); position: relative; }
+        .popup h3 { color: var(--primary-red); margin: 0 24px 12px 0; font-size: 1.05rem; }
+        textarea { width: 100%; height: 190px; margin: 6px 0 14px; padding: 12px; box-sizing: border-box; font-family: 'Anuphan', sans-serif; font-size: 0.82rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border-cream); resize: none; }
     </style>
 </head>
-<body class="themed">
+<body>
 
-    <div class="mini-header">
-        <a href="index.html" class="back-btn">←</a>
-        <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
-        <div>
-            <div class="mini-title">🛒 สรุปรายการ</div>
-            <div class="mini-sub">ตรวจสอบออเดอร์ก่อนส่ง</div>
+    <div class="header-fixed-container">
+        <div class="mini-header">
+            <a href="index.html" class="back-btn" aria-label="เพิ่มเมนู / ย้อนกลับ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </a>
+            <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
+            <div>
+                <div class="mini-title">สรุปออเดอร์ <span class="count-pill" id="header-count">0 รายการ</span></div>
+                <div class="mini-sub">ตรวจสอบออเดอร์ก่อนส่ง</div>
+            </div>
         </div>
     </div>
 
-    <div class="t-container" style="padding-top:14px;">
-        <div class="screenshot-instruction">
-            ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
-            • สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>
-            • เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>
-            • งดแถมช้อนพลาสติก<br>
-            <small><i>เริ่มใช้ตั้งแต่ 18 มีนาคม เป็นต้นไป</i></small>
+    <div class="t-container">
+
+        <div class="announcement">
+            <div class="accordion-header" onclick="toggleAnnouncement()">
+                <span class="label">⚠️ แจ้งเงื่อนไขการจัดส่ง</span>
+                <svg class="chevron" id="announcement-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="announcement-body" id="announcement-body">
+                ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
+                • สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>
+                • เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>
+                • งดแถมช้อนพลาสติก<br>
+                <small><i>เริ่มใช้ตั้งแต่ 18 มีนาคม เป็นต้นไป</i></small>
+            </div>
         </div>
 
-        <div class="customer-form-box">
-            <div class="form-group"><label>ชื่อผู้รับ <span style="color:red">*</span></label><input type="text" id="cust-name" placeholder="ชื่อเล่น"></div>
-            <div class="form-group"><label>เบอร์โทร <span style="color:red">*</span></label><input type="tel" id="cust-phone" placeholder="08xxxxxxxx" maxlength="10"></div>
-            <div class="form-group">
-                <label>วิธีการรับสินค้า <span style="color:red">* (กรุณาเลือก)</span></label>
-                <div class="radio-group">
-                    <input type="radio" id="r1" name="stype" value="❌" onchange="toggleLocationField(); loadCart();"><label for="r1">❌</label>
-                    <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();"><label for="r2">🥡 กลับบ้าน</label>
-                    <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();"><label for="r3">🛵 ส่งเดลิเวอรี่</label>
-                </div>
-                <div id="hotpot-lock-note" style="display:none; font-size:0.75rem; color: var(--primary-red); margin-top:6px;">
-                    🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้
-                </div>
+        <div class="section-label"><span class="dot"></span>รายการอาหาร</div>
+        <div class="panel panel-cream">
+            <div id="cart-list"></div>
+        </div>
+
+        <div class="section-label"><span class="dot"></span>วิธีชำระ</div>
+        <div class="panel panel-white">
+            <div class="field-title">ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span class="req">*</span></div>
+            <div class="option-cards">
+                <input type="radio" id="p1" name="ptype" value="ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();">
+                <label for="p1"><span class="opt-icon">✅</span><span class="opt-label">ใช้สิทธิ</span></label>
+
+                <input type="radio" id="p2" name="ptype" value="ไม่ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();">
+                <label for="p2"><span class="opt-icon">🚫</span><span class="opt-label">ไม่ใช้สิทธิ</span></label>
             </div>
-            <div class="location-box" id="location-section">
-                <button type="button" class="location-btn" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
-                <div id="location-text" class="location-status" style="color: red;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
-            </div>
-            <div class="form-group" style="margin-top: 20px;">
-                <label>ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span style="color:red">*</span></label>
-                <div class="radio-group">
-                    <input type="radio" id="p1" name="ptype" value="ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();"><label for="p1">ใช้สิทธิ</label>
-                    <input type="radio" id="p2" name="ptype" value="ไม่ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();"><label for="p2">ไม่ใช้สิทธิ</label>
-                </div>
-            </div>
-            <div class="form-group" id="payment-section">
-                <label>วิธีชำระเงิน <span style="color:red">*</span></label>
-                <div class="radio-group">
-                    <input type="radio" id="pay1" name="paymentType" value="💵 เงินสด"><label for="pay1">💵 เงินสด</label>
-                    <input type="radio" id="pay2" name="paymentType" value="📱 สแกนชำระ"><label for="pay2">📱 สแกนจ่าย</label>
+            <div id="payment-section">
+                <div class="field-title">วิธีชำระเงิน <span class="req">*</span></div>
+                <div class="option-cards">
+                    <input type="radio" id="pay1" name="paymentType" value="💵 เงินสด">
+                    <label for="pay1"><span class="opt-icon">💵</span><span class="opt-label">เงินสด</span></label>
+
+                    <input type="radio" id="pay2" name="paymentType" value="📱 สแกนชำระ">
+                    <label for="pay2"><span class="opt-icon">📱</span><span class="opt-label">QR สแกนจ่าย</span></label>
                 </div>
             </div>
         </div>
+
+        <div class="section-label"><span class="dot"></span>ข้อมูลลูกค้า</div>
+        <div class="panel panel-white">
+            <div class="form-field">
+                <input type="text" id="cust-name" placeholder=" ">
+                <label>ชื่อผู้รับ <span class="req">*</span></label>
+            </div>
+            <div class="form-field" style="margin-bottom:0;">
+                <input type="tel" id="cust-phone" placeholder=" " maxlength="10">
+                <label>เบอร์โทร <span class="req">*</span></label>
+            </div>
+        </div>
+
+        <div class="section-label"><span class="dot"></span>วิธีรับสินค้า</div>
+        <div class="panel panel-white">
+            <div class="option-cards">
+                <input type="radio" id="r1" name="stype" value="🪭" onchange="toggleLocationField(); loadCart();">
+                <label for="r1"><span class="opt-icon">🪭</span><span class="opt-label">🪭</span></label>
+
+                <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();">
+                <label for="r2"><span class="opt-icon">🥡</span><span class="opt-label">กลับบ้าน</span></label>
+
+                <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();">
+                <label for="r3"><span class="opt-icon">🛵</span><span class="opt-label">Delivery</span></label>
+            </div>
+            <div id="hotpot-lock-note">🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้</div>
+            <div class="location-box" id="location-section">
+                <button type="button" class="location-btn" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
+                <div id="location-text" class="location-status" style="color:#c0392b;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
+            </div>
+        </div>
+
         <div id="delivery-status"></div>
-        <div id="cart-list"></div>
     </div>
 
     <div class="footer-fixed">
-        <div class="summary-bar">
-            <button class="add-more-btn" onclick="location.href='index.html'"><span class="btn-label">➕ เพิ่มเมนู</span><span class="btn-value">เลือกต่อ</span></button>
-            <div class="total-block"><span class="btn-label">ยอดรวม</span><span class="btn-value"><span id="grand-total">0</span> บ.</span></div>
-            <button class="checkout-btn" onclick="checkout()"><span class="btn-label">🛒 พร้อมสั่ง</span><span class="btn-value">สรุปแชท</span></button>
+        <div class="footer-glass">
+            <div class="footer-total-row">
+                <div class="amount"><span id="grand-total">0</span><small>บาท</small></div>
+                <div class="count" id="footer-count">0 รายการ</div>
+            </div>
+            <div class="footer-btn-row">
+                <button class="footer-secondary-btn" onclick="addMoreOrder()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>เพิ่มออเดอร์<br>เลือกต่อ</span>
+                </button>
+                <button class="t-btn-primary" onclick="checkout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                    <span>ส่งออเดอร์</span>
+                </button>
+            </div>
+            <div class="footer-caption">คัดลอกข้อความไป Messenger</div>
         </div>
     </div>
 
     <div id="overlay">
         <div class="popup">
+            <button class="popup-close" onclick="document.getElementById('overlay').style.display='none'" aria-label="ปิดหน้าต่างนี้">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
             <h3>✅ คัดลอกไปวางในแชท</h3>
             <textarea id="order-text" readonly></textarea>
-            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); border-color: var(--gold-soft);">คัดลอกและไปที่แชท</button>
-            <button onclick="document.getElementById('overlay').style.display='none'" class="t-btn-ghost" style="width:100%; margin-top:10px;">ปิดหน้าต่างนี้</button>
+            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21);">คัดลอกและไปที่แชท</button>
         </div>
     </div>
 
@@ -140,6 +542,26 @@
     let cartItems = [];
     let googleMapsLink = "";
     let currentOrderData = null; // เก็บข้อมูลออเดอร์ปัจจุบัน ใช้ตอนกด "คัดลอกและไปที่แชท"
+    let expandedItems = new Set(); // เก็บสถานะเปิด/ปิดของแต่ละการ์ดรายการอาหาร
+
+    const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+    const ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg>';
+
+    // ===== Accordion: ประกาศ =====
+    function toggleAnnouncement() {
+        document.getElementById('announcement-body').classList.toggle('open');
+        document.getElementById('announcement-chevron').classList.toggle('open');
+    }
+
+    // ===== Accordion: รายการอาหารแต่ละชิ้น =====
+    function toggleCartItem(idx) {
+        const body = document.getElementById(`cart-body-${idx}`);
+        const chevron = document.getElementById(`cart-chevron-${idx}`);
+        if (!body) return;
+        const isOpen = body.classList.toggle('open');
+        if (chevron) chevron.classList.toggle('open', isOpen);
+        if (isOpen) expandedItems.add(idx); else expandedItems.delete(idx);
+    }
 
     // ป้องกันลูกค้าเปลี่ยนวิธีรับสินค้า เมื่อมาจาก flow หม้อไฟ (ทานที่ร้านเท่านั้น)
     function applyHotpotOrderTypeLock() {
@@ -193,20 +615,46 @@
         list.innerHTML = '';
         deliveryStatus.innerHTML = '';
 
+        const headerCount = document.getElementById('header-count');
+        const footerCount = document.getElementById('footer-count');
+        headerCount.innerText = `${cartItems.length} รายการ`;
+        footerCount.innerText = `${cartItems.length} รายการ`;
+
         if (cartItems.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">ไม่มีรายการอาหารในตะกร้า</p>';
+            list.innerHTML = '<div class="empty-cart">ไม่มีรายการอาหารในตะกร้า</div>';
             document.getElementById('grand-total').innerText = 0;
             return;
         }
 
         cartItems.forEach((item, idx) => {
             totalFood += item.price;
-            let html = `<div class="cart-item"><div class="item-header"><span>${item.name}</span><span>${item.price} บ. <button class="remove-btn" onclick="remove(${idx})">ลบ</button></span></div>`;
-            if (item.details && item.details.length > 0) {
-                html += `<div class="details-box"><ul>`;
-                item.details.forEach(d => { html += `<li><span>- ${d.name} x${d.count}</span><span>${d.price * d.count} บ.</span></li>`; });
+            const hasDetails = item.details && item.details.length > 0;
+            const isOpen = expandedItems.has(idx);
+
+            let html = `<div class="cart-item">
+                <button class="cart-item-trash" onclick="remove(${idx})" aria-label="ลบ ${item.name}">${ICON_TRASH}</button>
+                <div class="cart-item-head" ${hasDetails ? `onclick="toggleCartItem(${idx})"` : ''} style="${hasDetails ? 'cursor:pointer;' : ''}">
+                    <div class="cart-item-icon">🍲</div>
+                    <div class="cart-item-main">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-meta">
+                            <span class="price">${item.price} บาท</span>
+                            ${hasDetails ? `<span class="qty-badge">${item.details.length} รายการ</span>` : ''}
+                        </div>
+                    </div>
+                    ${hasDetails ? `<svg class="chevron ${isOpen ? 'open' : ''}" id="cart-chevron-${idx}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>` : ''}
+                </div>`;
+
+            if (hasDetails) {
+                html += `<div class="cart-item-body ${isOpen ? 'open' : ''}" id="cart-body-${idx}">
+                    <div class="detail-divider"></div>
+                    <ul class="checklist">`;
+                item.details.forEach(d => {
+                    html += `<li><span class="check">${ICON_CHECK}</span><span class="d-name">${d.name} × ${d.count}</span><span class="d-price">${d.price * d.count} บ.</span></li>`;
+                });
                 html += `</ul></div>`;
             }
+
             html += `</div>`;
             list.innerHTML += html;
         });
@@ -217,12 +665,17 @@
         const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
         if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && totalFood < 80) deliveryFee = 10;
         if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && privilegeTypeEl && privilegeTypeEl.value === 'ใช้สิทธิ') extraServiceFee = 5;
+
+        if (deliveryFee > 0) deliveryStatus.innerHTML += `🛵 ค่าบริการ Delivery +${deliveryFee} บ. `;
+        if (extraServiceFee > 0) deliveryStatus.innerHTML += `✨ ค่าบริการระบบ +${extraServiceFee} บ.`;
+
         document.getElementById('grand-total').innerText = totalFood + deliveryFee + extraServiceFee;
     }
 
     function remove(idx) {
         cartItems.splice(idx, 1);
         sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        expandedItems = new Set(); // index เปลี่ยนหลังลบ จึงรีเซ็ตสถานะเปิด/ปิด
         loadCart();
     }
 
@@ -316,6 +769,12 @@
 
         document.getElementById('order-text').value = txt;
         document.getElementById('overlay').style.display = 'flex';
+    }
+
+    function addMoreOrder() {
+        // ปิด popup แล้วพากลับไปหน้าเมนูเพื่อเลือกเพิ่ม โดยไม่แตะต้องตะกร้าเดิม
+        document.getElementById('overlay').style.display = 'none';
+        window.location.href = 'index.html';
     }
 
     let orderAlreadySent = false;
