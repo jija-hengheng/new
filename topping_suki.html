@@ -9,6 +9,39 @@
     <style>
         body { padding-bottom: 120px; }
 
+        /* ============ LANGUAGE TOGGLE ============ */
+        .lang-toggle {
+            position: fixed;
+            top: calc(12px + var(--safe-top, 0px));
+            right: 12px;
+            z-index: 1000;
+            display: flex;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 50px;
+            padding: 4px;
+            box-shadow: 0 6px 16px rgba(43,28,18,0.16);
+            border: 1px solid rgba(148,0,8,0.12);
+        }
+        .lang-btn {
+            border: none;
+            background: transparent;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            padding: 7px 13px;
+            border-radius: 50px;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+            min-width: 42px;
+        }
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: #fff;
+            box-shadow: 0 3px 8px rgba(148,0,8,0.35);
+        }
+
         .topping-category { margin-bottom: 22px; }
         .category-title {
             position: sticky; top: 58px;
@@ -79,12 +112,17 @@
 </head>
 <body class="themed">
 
+    <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" data-lang="th" onclick="setLang('th')">TH</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+
     <div class="mini-header">
         <a href="suki_type.html" class="back-btn">←</a>
         <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
         <div>
-            <div class="mini-title">🧺 เลือกท็อปปิ้ง</div>
-            <div class="mini-sub">เลือกได้อย่างน้อย 3 ไม้</div>
+            <div class="mini-title i18n" data-th="🧺 เลือกท็อปปิ้ง" data-en="🧺 Choose Toppings">🧺 เลือกท็อปปิ้ง</div>
+            <div class="mini-sub i18n" data-th="เลือกได้อย่างน้อย 3 ไม้" data-en="Choose at least 3 pieces">เลือกได้อย่างน้อย 3 ไม้</div>
         </div>
     </div>
 
@@ -101,24 +139,24 @@
 
     <div id="sauce-modal">
         <div class="sauce-modal-content">
-            <h2 style="color: var(--primary-red); margin-top: 0; font-family:'Noto Serif Thai',serif;">เลือกน้ำจิ้มแถม</h2>
-            <p style="font-size: 0.9em; color: #666;">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
+            <h2 style="color: var(--primary-red); margin-top: 0; font-family:'Noto Serif Thai',serif;" class="i18n" data-th="เลือกน้ำจิ้มแถม" data-en="Choose Your Free Sauce">เลือกน้ำจิ้มแถม</h2>
+            <p style="font-size: 0.9em; color: #666;" class="i18n" data-th="เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ" data-en="Your order comes with 1 free dipping sauce.">เมนูของคุณรับน้ำจิ้มฟรีได้ 1 ที่ครับ</p>
             <div class="sauce-option-grid" id="sauce-choice-grid">
-                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า" data-img="f11.png" data-sku="NJ001" onclick="handleSauceClick(this)">
+                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มงาคั่วหม่าล่า" data-name-en="🥢(Free) Roasted Sesame Mala Sauce" data-img="f11.png" data-sku="NJ001" onclick="handleSauceClick(this)">
                     <img src="images/f11.png" alt="หม่าล่า">
-                    <div class="sauce-card-name">น้ำจิ้มงาคั่วหม่าล่า</div>
+                    <div class="sauce-card-name i18n" data-th="น้ำจิ้มงาคั่วหม่าล่า" data-en="Roasted Sesame Mala Sauce">น้ำจิ้มงาคั่วหม่าล่า</div>
                 </div>
-                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง" data-img="sk.png" data-sku="NJ003" onclick="handleSauceClick(this)">
+                <div class="sauce-card" data-name="🥢(แถม)น้ำจิ้มสุกี้กวางตุ้ง" data-name-en="🥢(Free) Cantonese Suki Sauce" data-img="sk.png" data-sku="NJ003" onclick="handleSauceClick(this)">
                     <img src="images/sk.png" alt="สุกี้">
-                    <div class="sauce-card-name">น้ำจิ้มสุกี้กวางตุ้ง</div>
+                    <div class="sauce-card-name i18n" data-th="น้ำจิ้มสุกี้กวางตุ้ง" data-en="Cantonese Suki Sauce">น้ำจิ้มสุกี้กวางตุ้ง</div>
                 </div>
             </div>
 
             <div id="serve-format-section">
-                <h2 id="hotpot-modal-title">เลือกรูปแบบการเสิร์ฟ</h2>
-                <p style="font-size: 0.8em; color: #666; margin: 2px 0 0 0;">เลือกได้ 1 แบบ</p>
+                <h2 id="hotpot-modal-title" class="i18n" data-th="เลือกรูปแบบการเสิร์ฟ" data-en="Choose Serving Style">เลือกรูปแบบการเสิร์ฟ</h2>
+                <p style="font-size: 0.8em; color: #666; margin: 2px 0 0 0;" class="i18n" data-th="เลือกได้ 1 แบบ" data-en="Choose 1 option">เลือกได้ 1 แบบ</p>
                 <div class="serve-option-grid" id="serve-choice-grid"></div>
-                <button type="button" class="add-more-topping-btn" onclick="closeSauceModal()">🧺เลือกท็อปปิ้งเพิ่ม</button>
+                <button type="button" class="add-more-topping-btn i18n" data-th="🧺เลือกท็อปปิ้งเพิ่ม" data-en="🧺Choose more toppings" onclick="closeSauceModal()">🧺เลือกท็อปปิ้งเพิ่ม</button>
                 <button class="t-btn-primary disabled" id="modalConfirmBtn" style="width:100%; margin-top:14px;" onclick="confirmHotpotOrder()" disabled>
                     เลือกน้ำจิ้มและรูปแบบเสิร์ฟให้ครบ
                 </button>
@@ -128,65 +166,65 @@
 
 <script>
     const TOPPING_DATA = [
-        { sku: 'TP003', category: 'หมวดข้าว', name: 'ข้าวสวย', image: 'khao.jpg', price: 10 },
-        { sku: 'TP025', category: 'หมวดพิเศษ', name: 'ชีสอาบ', image: 'cheeses.png', price: 20 },
-        { sku: 'TP022', category: 'หมวดเนื้อหมู', name: 'หมูหมักนุ่ม', image: 'moomuk-noom.png', price: 10 },
-        { sku: 'TP019', category: 'หมวดเนื้อหมู', name: 'หมูบะช่อ', image: 'bacho.png', price: 10 },
-        { sku: 'TP028', category: 'หมวดเนื้อหมู', name: 'สามชั้นเสียบไม้', image: 'moo3mai.png', price: 10 },
-        { sku: 'TP020', category: 'หมวดเนื้อหมู', name: 'สันคอสไลซ์', image: 'sunko.png', price: 10 },
-        { sku: 'TP021', category: 'หมวดเนื้อหมู', name: 'สามชั้นสไลซ์', image: '3chun.png', price: 10 },
-        { sku: '10058', category: 'หมวดเนื้อหมู', name: 'หมูเสียบไม้', image: 'moomai.png', price: 10 },
-        { sku: 'TP030', category: 'หมวดเนื้อหมู', name: 'เบคอนพันไส้กรอก', image: 'beconpun.png', price: 10 },
-        { sku: 'TP027', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้รูปปลา', image: 'rooppla.png', price: 10 },
-        { sku: 'TP045', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกชีสยาว', image: 'cheeseyaww.png', price: 10 },
-        { sku: 'TP046', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ไส้กรอกหนังกรอบจัมโบ้', image: 'nunggroobchhet.png', price: 10 },
-        { sku: 'TP016', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'มินิคอกเทล', image: 'mini.png', price: 10 },
-        { sku: 'TP032', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เปาไข่กุ้ง', image: 'paokaigung.png', price: 10 },
-        { sku: 'TP008', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ปลาดอลลี่', image: 'dolly.png', price: 10 },
-        { sku: 'TP026', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'เต้าหู้ชีส', image: 'paochese.png', price: 10 },
-        { sku: 'TP012', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ซีฟู้ด', image: 'fongZ-fod.png', price: 10 },
-        { sku: 'แมงกะพรุน', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'แมงกะพรุน', image: 'manggapun.png', price: 10 },
-        { sku: 'TP024', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ออมุก', image: 'plapan.png', price: 10 },
-        { sku: '10049', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'หมึกกรอบ', image: 'meukgrop.png', price: 10 },
-        { sku: 'TP001', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ฟองเต้าหู้ข้าวโพด', image: 'fongkao.png', price: 10, isNew: true },
-        { sku: 'TP005', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', name: 'ชิกุวะญี่ปุ่น', image: 'chigo.png', price: 10, isNew: true },
-        { sku: 'TP029', category: 'หมวดเต้าหู้', name: 'เต้าหู้ไข่', image: 'taohooegg.png', price: 10 },
-        { sku: 'TP014', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ม้วน', image: 'fongmauon.png', price: 10 },
-        { sku: 'TP034', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้เล็ก', image: 'zenfonglek.png', price: 10 },
-        { sku: 'TP042', category: 'หมวดเต้าหู้', name: 'เส้นฟองเต้าหู้ใหญ่', image: 'Zenfongyai.png', price: 10 },
-        { sku: 'TP015', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้สาหร่าย', image: 'fongsarai.png', price: 10 },
-        { sku: 'TP013', category: 'หมวดเต้าหู้', name: 'ฟองเต้าหู้ดูดซุป', image: 'fongdoodsup.png', price: 10 },
-        { sku: 'TP040', category: 'หมวดผัก – เส้น', name: 'เห็ดเข็มทอง', image: '3chunpunhed.png', price: 10 },
-        { sku: 'TP036', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กจีน', image: 'zenlek.png', price: 10 }, 
-        { sku: 'TP037', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันม่วง', image: 'zenmunmung.png', price: 10 },
-        { sku: 'TP035', category: 'หมวดผัก – เส้น', name: 'เส้นมันหนึบ', image: 'zenmunneub.png', price: 10 },
-        { sku: 'TP038', category: 'หมวดผัก – เส้น', name: 'เส้นเล็กมันหนึบ', image: 'zenlek-mun.png', price: 10 },
-        { sku: 'TP007', category: 'หมวดผัก – เส้น', name: 'บะหมี่ผัก', image: 'bamheepuk.png', price: 10 },
-        { sku: 'TP004', category: 'หมวดผัก – เส้น', name: 'ข้าวโพด', image: 'kaopod.png', price: 10 },
-        { sku: 'TP011', category: 'หมวดผัก – เส้น', name: 'ผักกาด', image: 'pukgad.png', price: 10 },
-        { sku: 'TP017', category: 'หมวดผัก – เส้น', name: 'วากาเมะ', image: 'wakame.png', price: 10 },
-        { sku: 'TP033', category: 'หมวดผัก – เส้น', name: 'เส้นบุกหม่าล่า', image: 'zenbuk.png', price: 10 },
-        { sku: 'TP031', category: 'หมวดผัก – เส้น', name: 'เบบี้กวางตุ้ง', image: 'babygwangtung.png', price: 10 },
-        { sku: 'TP018', category: 'หมวดผัก – เส้น', name: 'วุ้นเส้น', image: 'woonzen.png', price: 10 },
-        { sku: 'TP039', category: 'หมวดผัก – เส้น', name: 'เห็ดออรินจิ', image: 'hedaurinji.png', price: 10 },
-        { sku: 'TP006', category: 'หมวดผัก – เส้น', name: 'ชุดผัก', image: 'chodpuk.png', price: 10 },
-        { sku: 'TP047', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ต๊อกบกกีไส้ชีส', image: 'tokcheese.png', price: 10 },         
-                { sku: 'TP043', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่นกกระทา', image: 'nokgataegg.png', price: 10 },
-        { sku: 'TP044', category: 'หมวดไข่ – เมนูพิเศษ', name: 'ไข่ไก่', image: 'egg.png', price: 10 },
-        { sku: 'Z0F001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ทอด – ยกแพ็ค', image: 'fong-pack.png', price: 59 }, 
-        { sku: 'Z0F002', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้สาหร่าย-ยกแพ็ค', image: 'seaweed_tofu.jpg', price: 99 }, 
-        { sku: 'Z0F005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'ฟองเต้าหู้ดูดซุป-แพ็ค', image: 'fong-29.jpg', price: 29 }, 
-        { sku: 'Z0M001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบหน้ากากแดง', image: 'zenred-pack.png', price: 29 },
-        { sku: 'Z0M005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – เผือก', image: 'zen-p.png', price: 29 }, 
-        { sku: 'Z0M008', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – ผัก', image: 'zen-u.png', price: 29 },
-        { sku: 'Z0M004', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – มันม่วง', image: 'zen-m.png', price: 29 }, 
-        { sku: 'Z0M003', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ – ฟักทอง', image: 'zen-f.png', price: 29 },
-        { sku: 'Z0M006', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นมันหนึบ-เล็ก', image: 'zen-l.png', price: 29 },
-        { sku: 'Z0M007', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', name: 'เส้นเล็ก-ซันเย่า', image: 'zunyao.png', price: 29 },
-        { sku: 'NJ003', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', image: 'N-suki.png', price: 15 }, 
-        { sku: 'NJ001', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', image: 'N-mala.png', price: 29 },
-        { sku: 'NJ002', category: 'หมวดน้ำจิ้ม 100 ml', name: 'น้ำจิ้มงาคั่วหอม', image: 'N-vha.png', price: 25 }, 
-        { sku: 'NJ004', category: 'หมวดน้ำจิ้ม 220 ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', image: 'mala_sauce.png', price: 69 },
+        { sku: 'TP003', category: 'หมวดข้าว', categoryEn: 'Rice', name: 'ข้าวสวย', nameEn: 'Steamed Rice', image: 'khao.jpg', price: 10 },
+        { sku: 'TP025', category: 'หมวดพิเศษ', categoryEn: 'Special', name: 'ชีสอาบ', nameEn: 'Cheese Topping', image: 'cheeses.png', price: 20 },
+        { sku: 'TP022', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'หมูหมักนุ่ม', nameEn: 'Marinated Tender Pork', image: 'moomuk-noom.png', price: 10 },
+        { sku: 'TP019', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'หมูบะช่อ', nameEn: 'Pork Balls (Ba Cho)', image: 'bacho.png', price: 10 },
+        { sku: 'TP028', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'สามชั้นเสียบไม้', nameEn: 'Skewered Pork Belly', image: 'moo3mai.png', price: 10 },
+        { sku: 'TP020', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'สันคอสไลซ์', nameEn: 'Sliced Pork Collar', image: 'sunko.png', price: 10 },
+        { sku: 'TP021', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'สามชั้นสไลซ์', nameEn: 'Sliced Pork Belly', image: '3chun.png', price: 10 },
+        { sku: '10058', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'หมูเสียบไม้', nameEn: 'Skewered Pork', image: 'moomai.png', price: 10 },
+        { sku: 'TP030', category: 'หมวดเนื้อหมู', categoryEn: 'Pork', name: 'เบคอนพันไส้กรอก', nameEn: 'Bacon-Wrapped Sausage', image: 'beconpun.png', price: 10 },
+        { sku: 'TP027', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'เต้าหู้รูปปลา', nameEn: 'Fish-Shaped Tofu', image: 'rooppla.png', price: 10 },
+        { sku: 'TP045', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ไส้กรอกชีสยาว', nameEn: 'Long Cheese Sausage', image: 'cheeseyaww.png', price: 10 },
+        { sku: 'TP046', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ไส้กรอกหนังกรอบจัมโบ้', nameEn: 'Jumbo Crispy Skin Sausage', image: 'nunggroobchhet.png', price: 10 },
+        { sku: 'TP016', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'มินิคอกเทล', nameEn: 'Mini Cocktail Sausage', image: 'mini.png', price: 10 },
+        { sku: 'TP032', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'เปาไข่กุ้ง', nameEn: 'Shrimp Egg Bao Balls', image: 'paokaigung.png', price: 10 },
+        { sku: 'TP008', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ปลาดอลลี่', nameEn: 'Dolly Fish', image: 'dolly.png', price: 10 },
+        { sku: 'TP026', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'เต้าหู้ชีส', nameEn: 'Cheese Tofu', image: 'paochese.png', price: 10 },
+        { sku: 'TP012', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ฟองเต้าหู้ซีฟู้ด', nameEn: 'Seafood Tofu Skin', image: 'fongZ-fod.png', price: 10 },
+        { sku: 'แมงกะพรุน', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'แมงกะพรุน', nameEn: 'Jellyfish', image: 'manggapun.png', price: 10 },
+        { sku: 'TP024', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ออมุก', nameEn: 'Squid Roe Ball', image: 'plapan.png', price: 10 },
+        { sku: '10049', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'หมึกกรอบ', nameEn: 'Crispy Squid', image: 'meukgrop.png', price: 10 },
+        { sku: 'TP001', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ฟองเต้าหู้ข้าวโพด', nameEn: 'Corn Tofu Skin', image: 'fongkao.png', price: 10, isNew: true },
+        { sku: 'TP005', category: 'หมวดลูกชิ้น – ไส้กรอก – ทะเล', categoryEn: 'Meatballs – Sausage – Seafood', name: 'ชิกุวะญี่ปุ่น', nameEn: 'Japanese Chikuwa', image: 'chigo.png', price: 10, isNew: true },
+        { sku: 'TP029', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'เต้าหู้ไข่', nameEn: 'Egg Tofu', image: 'taohooegg.png', price: 10 },
+        { sku: 'TP014', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'ฟองเต้าหู้ม้วน', nameEn: 'Rolled Tofu Skin', image: 'fongmauon.png', price: 10 },
+        { sku: 'TP034', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'เส้นฟองเต้าหู้เล็ก', nameEn: 'Thin Tofu Skin Noodles', image: 'zenfonglek.png', price: 10 },
+        { sku: 'TP042', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'เส้นฟองเต้าหู้ใหญ่', nameEn: 'Thick Tofu Skin Noodles', image: 'Zenfongyai.png', price: 10 },
+        { sku: 'TP015', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'ฟองเต้าหู้สาหร่าย', nameEn: 'Seaweed Tofu Skin', image: 'fongsarai.png', price: 10 },
+        { sku: 'TP013', category: 'หมวดเต้าหู้', categoryEn: 'Tofu', name: 'ฟองเต้าหู้ดูดซุป', nameEn: 'Soup-Absorbing Tofu Skin', image: 'fongdoodsup.png', price: 10 },
+        { sku: 'TP040', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เห็ดเข็มทอง', nameEn: 'Enoki Mushroom', image: '3chunpunhed.png', price: 10 },
+        { sku: 'TP036', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เส้นเล็กจีน', nameEn: 'Thin Chinese Noodles', image: 'zenlek.png', price: 10 }, 
+        { sku: 'TP037', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เส้นเล็กมันม่วง', nameEn: 'Thin Purple Yam Noodles', image: 'zenmunmung.png', price: 10 },
+        { sku: 'TP035', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เส้นมันหนึบ', nameEn: 'Chewy Yam Noodles', image: 'zenmunneub.png', price: 10 },
+        { sku: 'TP038', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เส้นเล็กมันหนึบ', nameEn: 'Thin Chewy Yam Noodles', image: 'zenlek-mun.png', price: 10 },
+        { sku: 'TP007', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'บะหมี่ผัก', nameEn: 'Vegetable Noodles', image: 'bamheepuk.png', price: 10 },
+        { sku: 'TP004', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'ข้าวโพด', nameEn: 'Corn', image: 'kaopod.png', price: 10 },
+        { sku: 'TP011', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'ผักกาด', nameEn: 'Napa Cabbage', image: 'pukgad.png', price: 10 },
+        { sku: 'TP017', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'วากาเมะ', nameEn: 'Wakame Seaweed', image: 'wakame.png', price: 10 },
+        { sku: 'TP033', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เส้นบุกหม่าล่า', nameEn: 'Mala Konjac Noodles', image: 'zenbuk.png', price: 10 },
+        { sku: 'TP031', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เบบี้กวางตุ้ง', nameEn: 'Baby Bok Choy', image: 'babygwangtung.png', price: 10 },
+        { sku: 'TP018', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'วุ้นเส้น', nameEn: 'Glass Noodles', image: 'woonzen.png', price: 10 },
+        { sku: 'TP039', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'เห็ดออรินจิ', nameEn: 'Eryngii Mushroom', image: 'hedaurinji.png', price: 10 },
+        { sku: 'TP006', category: 'หมวดผัก – เส้น', categoryEn: 'Vegetables – Noodles', name: 'ชุดผัก', nameEn: 'Vegetable Set', image: 'chodpuk.png', price: 10 },
+        { sku: 'TP047', category: 'หมวดไข่ – เมนูพิเศษ', categoryEn: 'Eggs – Specials', name: 'ต๊อกบกกีไส้ชีส', nameEn: 'Cheese-Filled Rice Cake', image: 'tokcheese.png', price: 10 },         
+                { sku: 'TP043', category: 'หมวดไข่ – เมนูพิเศษ', categoryEn: 'Eggs – Specials', name: 'ไข่นกกระทา', nameEn: 'Quail Egg', image: 'nokgataegg.png', price: 10 },
+        { sku: 'TP044', category: 'หมวดไข่ – เมนูพิเศษ', categoryEn: 'Eggs – Specials', name: 'ไข่ไก่', nameEn: 'Chicken Egg', image: 'egg.png', price: 10 },
+        { sku: 'Z0F001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'ฟองเต้าหู้ทอด – ยกแพ็ค', nameEn: 'Fried Tofu Skin - Pack', image: 'fong-pack.png', price: 59 }, 
+        { sku: 'Z0F002', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'ฟองเต้าหู้สาหร่าย-ยกแพ็ค', nameEn: 'Seaweed Tofu Skin - Pack', image: 'seaweed_tofu.jpg', price: 99 }, 
+        { sku: 'Z0F005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'ฟองเต้าหู้ดูดซุป-แพ็ค', nameEn: 'Soup-Absorbing Tofu Skin - Pack', image: 'fong-29.jpg', price: 29 }, 
+        { sku: 'Z0M001', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบหน้ากากแดง', nameEn: 'Chewy Yam Noodles (Red Mask)', image: 'zenred-pack.png', price: 29 },
+        { sku: 'Z0M005', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบ – เผือก', nameEn: 'Chewy Yam Noodles - Taro', image: 'zen-p.png', price: 29 }, 
+        { sku: 'Z0M008', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบ – ผัก', nameEn: 'Chewy Yam Noodles - Vegetable', image: 'zen-u.png', price: 29 },
+        { sku: 'Z0M004', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบ – มันม่วง', nameEn: 'Chewy Yam Noodles - Purple Yam', image: 'zen-m.png', price: 29 }, 
+        { sku: 'Z0M003', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบ – ฟักทอง', nameEn: 'Chewy Yam Noodles - Pumpkin', image: 'zen-f.png', price: 29 },
+        { sku: 'Z0M006', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นมันหนึบ-เล็ก', nameEn: 'Chewy Yam Noodles - Small', image: 'zen-l.png', price: 29 },
+        { sku: 'Z0M007', category: 'หมวดเมนูพิเศษ – ยกแพ็ค', categoryEn: 'Special Items – Packs', name: 'เส้นเล็ก-ซันเย่า', nameEn: 'Thin Noodles - Sunyao', image: 'zunyao.png', price: 29 },
+        { sku: 'NJ003', category: 'หมวดน้ำจิ้ม 100 ml', categoryEn: 'Dipping Sauce 100ml', name: 'น้ำจิ้มสุกี้กวางตุ้ง', nameEn: 'Cantonese Suki Sauce', image: 'N-suki.png', price: 15 }, 
+        { sku: 'NJ001', category: 'หมวดน้ำจิ้ม 100 ml', categoryEn: 'Dipping Sauce 100ml', name: 'น้ำจิ้มงาคั่วหม่าล่า', nameEn: 'Roasted Sesame Mala Sauce', image: 'N-mala.png', price: 29 },
+        { sku: 'NJ002', category: 'หมวดน้ำจิ้ม 100 ml', categoryEn: 'Dipping Sauce 100ml', name: 'น้ำจิ้มงาคั่วหอม', nameEn: 'Roasted Sesame Sauce', image: 'N-vha.png', price: 25 }, 
+        { sku: 'NJ004', category: 'หมวดน้ำจิ้ม 220 ml', categoryEn: 'Dipping Sauce 220ml', name: 'น้ำจิ้มงาคั่วหม่าล่าแบบขวด', nameEn: 'Roasted Sesame Mala Sauce (Bottle)', image: 'mala_sauce.png', price: 69 },
     ];
     
     let selectedToppings = {}; 
@@ -199,10 +237,13 @@
         if (storedDetails) {
             mainItemDetails = JSON.parse(storedDetails);
             const infoElement = document.getElementById('main-item-info');
-            infoElement.innerHTML = `รายการหลัก: 
+            const mainLabel = currentLang === 'en' ? 'Main item:' : 'รายการหลัก:';
+            const unit = currentLang === 'en' ? 'Baht' : 'บาท';
+            const spiceLabel = currentLang === 'en' ? ' - Spice level:' : ' - เผ็ดระดับ:';
+            infoElement.innerHTML = `${mainLabel} 
                 <strong>${mainItemDetails.name}</strong> 
-                (${mainItemDetails.price.toLocaleString()} บาท)
-                ${mainItemDetails.spice ? ` - เผ็ดระดับ: ${mainItemDetails.spice}` : ''}
+                (${mainItemDetails.price.toLocaleString()} ${unit})
+                ${mainItemDetails.spice ? `${spiceLabel} ${mainItemDetails.spice}` : ''}
             `;
         } else {
              window.location.href = 'suki_type.html';
@@ -217,17 +258,20 @@
             return acc;
         }, {});
 
+        const unit = currentLang === 'en' ? 'Baht' : 'บาท';
         let html = '';
         for (const category in groupedToppings) {
-            html += `<div class="topping-category"><h2 class="category-title">${category}</h2><div class="topping-grid">`;
+            const catLabel = currentLang === 'en' ? groupedToppings[category][0].categoryEn : category;
+            html += `<div class="topping-category"><h2 class="category-title">${catLabel}</h2><div class="topping-grid">`;
             groupedToppings[category].forEach(item => {
+                const itemName = currentLang === 'en' ? item.nameEn : item.name;
                 html += `
                     <div class="topping-card" data-sku="${item.sku}" onclick="updateToppingSelection('${item.sku}')" id="card-${item.sku}">
                         ${item.isNew ? `<span class="badge-new">New</span>` : ''}
-                        <img src="images/${item.image}" alt="${item.name}">
-                        <div class="topping-name">${item.name}</div>
+                        <img src="images/${item.image}" alt="${itemName}">
+                        <div class="topping-name">${itemName}</div>
                         ${item.note ? `<div class="topping-note">${item.note}</div>` : ''}
-                        <div class="topping-price">${item.price.toLocaleString()} บาท</div>
+                        <div class="topping-price">${item.price.toLocaleString()} ${unit}</div>
                         <div class="count-controls">
                             <button onclick="changeCount(event, '${item.sku}', -1)">-</button>
                             <span class="count-display" id="count-${item.sku}">1</span>
@@ -238,6 +282,17 @@
             html += `</div></div>`;
         }
         container.innerHTML = html;
+
+        // คงสถานะที่เลือกไว้ (กรณีสลับภาษาแล้ว re-render)
+        Object.keys(selectedToppings).forEach(sku => {
+            const cardEl = document.getElementById(`card-${sku}`);
+            if (cardEl) {
+                cardEl.classList.add('selected');
+                const countEl = document.getElementById(`count-${sku}`);
+                if (countEl) countEl.innerText = selectedToppings[sku].count;
+            }
+        });
+
         updateTotalDisplay();
     }
 
@@ -277,17 +332,23 @@
 
         const totalDisplayElement = document.getElementById('grand-total-display');
         const nextButton = document.getElementById('next-btn');
+        const unit = currentLang === 'en' ? 'Baht' : 'บาท';
 
-        if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} บาท`;
+        if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} ${unit}`;
         
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
             nextButton.classList.add('disabled');
             nextButton.disabled = true; 
-            nextButton.innerHTML = `📌 เลือกท็อปปิ้งเพิ่มอีก ${MIN_TOPPINGS_COUNT - totalToppingCount} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
+            const remaining = MIN_TOPPINGS_COUNT - totalToppingCount;
+            nextButton.innerHTML = currentLang === 'en'
+                ? `📌 Choose ${remaining} more piece(s) <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`
+                : `📌 เลือกท็อปปิ้งเพิ่มอีก ${remaining} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`;
         } else {
             nextButton.classList.remove('disabled');
             nextButton.disabled = false; 
-            nextButton.innerHTML = `✅ยืนยันออเดอร์ <span class="total-amount">${grandTotal.toLocaleString()} บาท</span>`;
+            nextButton.innerHTML = currentLang === 'en'
+                ? `✅ Confirm Order <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`
+                : `✅ยืนยันออเดอร์ <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`;
         }
     }
 
@@ -295,9 +356,9 @@
 
     // ตัวเลือกรูปแบบการเสิร์ฟ (เฉพาะ flow HOTPOT) — ราคา 0 บาท เป็นแค่ SKU บอกรูปแบบการเสิร์ฟ
     const SERVE_OPTIONS = [
-        { id: 'cup', sku: 'HP001', name: 'เสิร์ฟถ้วยพร้อมทาน (ชุดแก้ว + ตะเกียบ 1 คน)', img: 'Hotpot-0.png', minAmount: 0 },
-        { id: 'pot1', sku: 'HP002', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 1 คน)', img: 'Hotpot-1.png', minAmount: 80 },
-        { id: 'pot2', sku: 'HP003', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 2 คน)', img: 'Hotpot-2.png', minAmount: 140 }
+        { id: 'cup', sku: 'HP001', name: 'เสิร์ฟถ้วยพร้อมทาน (ชุดแก้ว + ตะเกียบ 1 คน)', nameEn: 'Ready-to-Eat Cup (Cutlery Set for 1)', img: 'Hotpot-0.png', minAmount: 0 },
+        { id: 'pot1', sku: 'HP002', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 1 คน)', nameEn: 'Hot Pot (Cutlery Set for 1)', img: 'Hotpot-1.png', minAmount: 80 },
+        { id: 'pot2', sku: 'HP003', name: 'หม้อไฟ (ชุดแก้ว + ตะเกียบ 2 คน)', nameEn: 'Hot Pot (Cutlery Set for 2)', img: 'Hotpot-2.png', minAmount: 140 }
     ];
     let selectedSauce = null;
     let selectedServe = null;
@@ -311,16 +372,21 @@
     function renderServeOptions() {
         const grid = document.getElementById('serve-choice-grid');
         const totalSoFar = getCartTotalSoFar();
+        const unit = currentLang === 'en' ? 'Baht' : 'บาท';
         let html = '';
         SERVE_OPTIONS.forEach(opt => {
             const unlocked = totalSoFar >= opt.minAmount;
             const isSelected = selectedServe && selectedServe.id === opt.id;
+            const optName = currentLang === 'en' ? opt.nameEn : opt.name;
+            const lockNote = currentLang === 'en'
+                ? `Order at least ${opt.minAmount} Baht to unlock`
+                : `สั่งซื้อครบ ${opt.minAmount} บาท จึงเลือกได้`;
             html += `
                 <div class="sauce-card serve-card ${isSelected ? 'selected' : ''} ${unlocked ? '' : 'locked'}"
                      onclick="${unlocked ? `selectServe('${opt.id}')` : ''}">
-                    <div class="serve-img-ph"><img src="images/${opt.img}" alt="${opt.name}"></div>
-                    <div class="serve-card-name">${opt.name}</div>
-                    ${!unlocked ? `<div id="serve-lock-note">สั่งซื้อครบ ${opt.minAmount} บาท จึงเลือกได้</div>` : ''}
+                    <div class="serve-img-ph"><img src="images/${opt.img}" alt="${optName}"></div>
+                    <div class="serve-card-name">${optName}</div>
+                    ${!unlocked ? `<div id="serve-lock-note">${lockNote}</div>` : ''}
                 </div>`;
         });
         grid.innerHTML = html;
@@ -351,11 +417,13 @@
         if (selectedSauce && selectedServe) {
             btn.disabled = false;
             btn.classList.remove('disabled');
-            btn.innerText = '✅ ยืนยันออเดอร์';
+            btn.innerText = currentLang === 'en' ? '✅ Confirm Order' : '✅ ยืนยันออเดอร์';
         } else {
             btn.disabled = true;
             btn.classList.add('disabled');
-            btn.innerText = 'เลือกน้ำจิ้มและรูปแบบเสิร์ฟให้ครบ';
+            btn.innerText = currentLang === 'en'
+                ? 'Choose sauce and serving style to continue'
+                : 'เลือกน้ำจิ้มและรูปแบบเสิร์ฟให้ครบ';
         }
     }
 
@@ -372,7 +440,9 @@
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
         
         if (totalToppingCount < MIN_TOPPINGS_COUNT) {
-            alert(`⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${MIN_TOPPINGS_COUNT} ไม้`);
+            alert(currentLang === 'en'
+                ? `⚠️ Please choose at least ${MIN_TOPPINGS_COUNT} toppings`
+                : `⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${MIN_TOPPINGS_COUNT} ไม้`);
             return;
         }
 
@@ -438,9 +508,39 @@
         window.location.href = 'summary.html';
     }
 
+    // ============ ภาษา / LANGUAGE ============
+    // อ่านค่าภาษาที่ตั้งไว้จากหน้า index.html (sessionStorage) เพื่อให้ภาษาตรงกันทันทีโดยไม่ต้องกดเลือกใหม่
+    let currentLang = sessionStorage.getItem('lang') || 'th';
+
+    function setLang(lang) {
+        currentLang = lang;
+        sessionStorage.setItem('lang', lang);
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll('.i18n').forEach(function (el) {
+            el.textContent = el.getAttribute('data-' + lang);
+        });
+
+        document.querySelectorAll('#langToggle .lang-btn').forEach(function (btn) {
+            btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        });
+
+        // แสดงผลข้อมูลหลักและรายการท็อปปิ้งใหม่ตามภาษาที่เลือก (เฉพาะกรณีข้อมูลโหลดแล้ว)
+        if (mainItemDetails && mainItemDetails.name) {
+            loadSukiDetails();
+            renderToppings();
+        }
+
+        // อัปเดต modal น้ำจิ้ม/รูปแบบเสิร์ฟถ้าเปิดอยู่
+        if (document.getElementById('sauce-modal').style.display === 'flex') {
+            renderServeOptions();
+            updateHotpotConfirmState();
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         loadSukiDetails();
-        renderToppings();
+        setLang(currentLang);
     });
 </script>
 </body>

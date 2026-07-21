@@ -415,13 +415,13 @@
 
     <div class="header-fixed-container">
         <div class="mini-header">
-            <a href="index.html" class="back-btn" aria-label="เพิ่มเมนู / ย้อนกลับ">
+            <a href="index.html" class="back-btn i18n-attr" data-attr="aria-label" data-th="เพิ่มเมนู / ย้อนกลับ" data-en="Add menu / Back" aria-label="เพิ่มเมนู / ย้อนกลับ">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </a>
             <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
             <div>
-                <div class="mini-title">สรุปออเดอร์ <span class="count-pill" id="header-count">0 รายการ</span></div>
-                <div class="mini-sub">ตรวจสอบออเดอร์ก่อนส่ง</div>
+                <div class="mini-title"><span class="i18n" data-th="สรุปออเดอร์" data-en="Order Summary">สรุปออเดอร์</span> <span class="count-pill" id="header-count">0 รายการ</span></div>
+                <div class="mini-sub i18n" data-th="ตรวจสอบออเดอร์ก่อนส่ง" data-en="Please review your order before sending">ตรวจสอบออเดอร์ก่อนส่ง</div>
             </div>
         </div>
     </div>
@@ -430,11 +430,13 @@
 
         <div class="announcement">
             <div class="accordion-header" onclick="toggleAnnouncement()">
-                <span class="label">⚠️ แจ้งเงื่อนไขการจัดส่ง</span>
+                <span class="label i18n" data-th="⚠️ แจ้งเงื่อนไขการจัดส่ง" data-en="⚠️ Delivery Terms & Conditions">⚠️ แจ้งเงื่อนไขการจัดส่ง</span>
                 <svg class="chevron" id="announcement-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             </div>
-            <div class="announcement-body" id="announcement-body">
-                ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
+            <div class="announcement-body i18n" id="announcement-body"
+                data-th="ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>• สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>• เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>• งดแถมช้อนพลาสติก<br><small><i>เริ่มใช้ตั้งแต่ 18 มีนาคม เป็นต้นไป</i></small>"
+                data-en="Fuel, ingredient, and packaging costs have recently gone up. To keep <b>the same portion sizes and food quality</b>, we've made a few small adjustments to our ordering terms:<br>• Free delivery with a minimum order of 80 Baht<br>• Orders under 80 Baht for delivery have an extra 10 Baht service fee<br>• Plastic spoons are no longer included by default<br><small><i>Effective from March 18 onward</i></small>"
+                >ช่วงนี้ ราคาน้ำมัน วัตถุดิบ และบรรจุภัณฑ์ มีการปรับตัวราคาสูงขึ้น เพื่อให้ทางร้านยังคง <b>รักษาปริมาณและคุณภาพอาหาร เหมือนเดิม</b> จึงขอปรับเงื่อนไขการสั่งเล็กน้อย:<br>
                 • สั่งเดลิเวอรี่ ฟรี มีขั้นต่ำ 80 บาท<br>
                 • เดลิเวอรี่ยอดต่ำกว่า 80 บาท มีค่าบริการเพิ่ม 10 บาท<br>
                 • งดแถมช้อนพลาสติก<br>
@@ -442,61 +444,61 @@
             </div>
         </div>
 
-        <div class="section-label"><span class="dot"></span>รายการอาหาร</div>
+        <div class="section-label"><span class="dot"></span><span class="i18n" data-th="รายการอาหาร" data-en="Food Items">รายการอาหาร</span></div>
         <div class="panel panel-cream">
             <div id="cart-list"></div>
         </div>
 
-        <div class="section-label"><span class="dot"></span>วิธีชำระ</div>
+        <div class="section-label"><span class="dot"></span><span class="i18n" data-th="วิธีชำระ" data-en="Payment Method">วิธีชำระ</span></div>
         <div class="panel panel-white">
-            <div class="field-title">ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span class="req">*</span></div>
+            <div class="field-title"><span class="i18n" data-th="ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม" data-en="Using the Thai Chuay Thai Plus 60/40 program?">ใช้สิทธิ ไทยช่วยไทย พลัส 60/40 ไหม</span> <img src="images/image_5f0464.png" class="logo-mini" alt="โลโก้ไทยช่วยไทย"> <span class="req">*</span></div>
             <div class="option-cards">
                 <input type="radio" id="p1" name="ptype" value="ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();">
-                <label for="p1"><span class="opt-icon">✅</span><span class="opt-label">ใช้สิทธิ</span></label>
+                <label for="p1"><span class="opt-icon">✅</span><span class="opt-label i18n" data-th="ใช้สิทธิ" data-en="Use it">ใช้สิทธิ</span></label>
 
                 <input type="radio" id="p2" name="ptype" value="ไม่ใช้สิทธิ" onchange="togglePaymentSection(); loadCart();">
-                <label for="p2"><span class="opt-icon">🚫</span><span class="opt-label">ไม่ใช้สิทธิ</span></label>
+                <label for="p2"><span class="opt-icon">🚫</span><span class="opt-label i18n" data-th="ไม่ใช้สิทธิ" data-en="Don't use it">ไม่ใช้สิทธิ</span></label>
             </div>
             <div id="payment-section">
-                <div class="field-title">วิธีชำระเงิน <span class="req">*</span></div>
+                <div class="field-title"><span class="i18n" data-th="วิธีชำระเงิน" data-en="Payment Method">วิธีชำระเงิน</span> <span class="req">*</span></div>
                 <div class="option-cards">
                     <input type="radio" id="pay1" name="paymentType" value="💵 เงินสด">
-                    <label for="pay1"><span class="opt-icon">💵</span><span class="opt-label">เงินสด</span></label>
+                    <label for="pay1"><span class="opt-icon">💵</span><span class="opt-label i18n" data-th="เงินสด" data-en="Cash">เงินสด</span></label>
 
                     <input type="radio" id="pay2" name="paymentType" value="📱 สแกนชำระ">
-                    <label for="pay2"><span class="opt-icon">📱</span><span class="opt-label">QR สแกนจ่าย</span></label>
+                    <label for="pay2"><span class="opt-icon">📱</span><span class="opt-label i18n" data-th="QR สแกนจ่าย" data-en="QR Payment">QR สแกนจ่าย</span></label>
                 </div>
             </div>
         </div>
 
-        <div class="section-label"><span class="dot"></span>ข้อมูลลูกค้า</div>
+        <div class="section-label"><span class="dot"></span><span class="i18n" data-th="ข้อมูลลูกค้า" data-en="Customer Information">ข้อมูลลูกค้า</span></div>
         <div class="panel panel-white">
             <div class="form-field">
                 <input type="text" id="cust-name" placeholder=" ">
-                <label>ชื่อผู้รับ <span class="req">*</span></label>
+                <label><span class="i18n" data-th="ชื่อผู้รับ" data-en="Recipient Name">ชื่อผู้รับ</span> <span class="req">*</span></label>
             </div>
             <div class="form-field" style="margin-bottom:0;">
                 <input type="tel" id="cust-phone" placeholder=" " maxlength="10">
-                <label>เบอร์โทร <span class="req">*</span></label>
+                <label><span class="i18n" data-th="เบอร์โทร" data-en="Phone Number">เบอร์โทร</span> <span class="req">*</span></label>
             </div>
         </div>
 
-        <div class="section-label"><span class="dot"></span>วิธีรับสินค้า</div>
+        <div class="section-label"><span class="dot"></span><span class="i18n" data-th="วิธีรับสินค้า" data-en="Delivery Method">วิธีรับสินค้า</span></div>
         <div class="panel panel-white">
             <div class="option-cards">
                 <input type="radio" id="r1" name="stype" value="🪭" onchange="toggleLocationField(); loadCart();">
                 <label for="r1"><span class="opt-icon">🪭</span><span class="opt-label">🪭</span></label>
 
                 <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();">
-                <label for="r2"><span class="opt-icon">🥡</span><span class="opt-label">กลับบ้าน</span></label>
+                <label for="r2"><span class="opt-icon">🥡</span><span class="opt-label i18n" data-th="กลับบ้าน" data-en="Takeaway">กลับบ้าน</span></label>
 
                 <input type="radio" id="r3" name="stype" value="🛵 Delivery (ระบุที่อยู่ทางแชท)" onchange="toggleLocationField(); loadCart();">
                 <label for="r3"><span class="opt-icon">🛵</span><span class="opt-label">Delivery</span></label>
             </div>
-            <div id="hotpot-lock-note">🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้</div>
+            <div id="hotpot-lock-note" class="i18n" data-th="🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้" data-en="🔒 Hot Pot orders are dine-in only, so the delivery method is locked">🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้</div>
             <div class="location-box" id="location-section">
-                <button type="button" class="location-btn" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
-                <div id="location-text" class="location-status" style="color:#c0392b;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
+                <button type="button" class="location-btn i18n" data-th="📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ" data-en="📍 Tap to share your delivery location" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
+                <div id="location-text" class="location-status i18n" data-th="⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง" data-en="⚠️ Delivery location not shared yet" style="color:#c0392b;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
             </div>
         </div>
 
@@ -506,31 +508,31 @@
     <div class="footer-fixed">
         <div class="footer-glass">
             <div class="footer-total-row">
-                <div class="amount"><span id="grand-total">0</span><small>บาท</small></div>
+                <div class="amount"><span id="grand-total">0</span><small id="grand-total-unit">บาท</small></div>
                 <div class="count" id="footer-count">0 รายการ</div>
             </div>
             <div class="footer-btn-row">
                 <button class="footer-secondary-btn" onclick="addMoreOrder()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                    <span>เพิ่มออเดอร์<br>เลือกต่อ</span>
+                    <span class="i18n" data-th="เพิ่มออเดอร์<br>เลือกต่อ" data-en="Add More<br>Items">เพิ่มออเดอร์<br>เลือกต่อ</span>
                 </button>
                 <button class="t-btn-primary" onclick="checkout()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                    <span>ส่งออเดอร์</span>
+                    <span class="i18n" data-th="ส่งออเดอร์" data-en="Send Order">ส่งออเดอร์</span>
                 </button>
             </div>
-            <div class="footer-caption">คัดลอกข้อความไป Messenger</div>
+            <div class="footer-caption i18n" data-th="คัดลอกข้อความไป Messenger" data-en="Copy the message to Messenger">คัดลอกข้อความไป Messenger</div>
         </div>
     </div>
 
     <div id="overlay">
         <div class="popup">
-            <button class="popup-close" onclick="document.getElementById('overlay').style.display='none'" aria-label="ปิดหน้าต่างนี้">
+            <button class="popup-close i18n-attr" data-attr="aria-label" data-th="ปิดหน้าต่างนี้" data-en="Close this window" onclick="document.getElementById('overlay').style.display='none'" aria-label="ปิดหน้าต่างนี้">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
-            <h3>✅ คัดลอกไปวางในแชท</h3>
+            <h3 class="i18n" data-th="✅ คัดลอกไปวางในแชท" data-en="✅ Copy and paste into chat">✅ คัดลอกไปวางในแชท</h3>
             <textarea id="order-text" readonly></textarea>
-            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21);">คัดลอกและไปที่แชท</button>
+            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary i18n" data-th="คัดลอกและไปที่แชท" data-en="Copy and Go to Chat" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21);">คัดลอกและไปที่แชท</button>
         </div>
     </div>
 
@@ -546,6 +548,27 @@
 
     const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
     const ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg>';
+
+    // ============ ภาษา / LANGUAGE ============
+    // หน้านี้ไม่มีปุ่มเลือกภาษา อ่านค่าที่ลูกค้าเลือกไว้จากหน้า index.html เท่านั้น
+    let currentLang = sessionStorage.getItem('lang') || 'th';
+
+    function applyStaticI18n() {
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll('.i18n').forEach(function (el) {
+            el.innerHTML = el.getAttribute('data-' + currentLang);
+        });
+        document.querySelectorAll('.i18n-attr').forEach(function (el) {
+            const attrName = el.getAttribute('data-attr');
+            el.setAttribute(attrName, el.getAttribute('data-' + currentLang));
+        });
+        const unitEl = document.getElementById('grand-total-unit');
+        if (unitEl) unitEl.innerText = currentLang === 'en' ? 'Baht' : 'บาท';
+    }
+
+    function t(th, en) {
+        return currentLang === 'en' ? en : th;
+    }
 
     // ===== Accordion: ประกาศ =====
     function toggleAnnouncement() {
@@ -598,12 +621,12 @@
     function getLocation() {
         const statusText = document.getElementById('location-text');
         if (navigator.geolocation) {
-            statusText.innerHTML = "⏳ กำลังดึงตำแหน่ง...";
+            statusText.innerHTML = t("⏳ กำลังดึงตำแหน่ง...", "⏳ Getting your location...");
             navigator.geolocation.getCurrentPosition(pos => {
                 googleMapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                statusText.innerHTML = `✅ แชร์ตำแหน่งสำเร็จ!`;
+                statusText.innerHTML = t(`✅ แชร์ตำแหน่งสำเร็จ!`, `✅ Location shared successfully!`);
                 statusText.style.color = "green";
-            }, () => { statusText.innerHTML = "❌ ไม่สามารถดึงตำแหน่งได้"; statusText.style.color = "red"; });
+            }, () => { statusText.innerHTML = t("❌ ไม่สามารถดึงตำแหน่งได้", "❌ Unable to get your location"); statusText.style.color = "red"; });
         }
     }
 
@@ -615,13 +638,16 @@
         list.innerHTML = '';
         deliveryStatus.innerHTML = '';
 
+        const unit = t('บาท', 'Baht');
+        const itemsLabel = t('รายการ', 'items');
+
         const headerCount = document.getElementById('header-count');
         const footerCount = document.getElementById('footer-count');
-        headerCount.innerText = `${cartItems.length} รายการ`;
-        footerCount.innerText = `${cartItems.length} รายการ`;
+        headerCount.innerText = `${cartItems.length} ${itemsLabel}`;
+        footerCount.innerText = `${cartItems.length} ${itemsLabel}`;
 
         if (cartItems.length === 0) {
-            list.innerHTML = '<div class="empty-cart">ไม่มีรายการอาหารในตะกร้า</div>';
+            list.innerHTML = `<div class="empty-cart">${t('ไม่มีรายการอาหารในตะกร้า', 'No items in your cart')}</div>`;
             document.getElementById('grand-total').innerText = 0;
             return;
         }
@@ -630,16 +656,17 @@
             totalFood += item.price;
             const hasDetails = item.details && item.details.length > 0;
             const isOpen = expandedItems.has(idx);
+            const removeLabel = t('ลบ', 'Remove');
 
             let html = `<div class="cart-item">
-                <button class="cart-item-trash" onclick="remove(${idx})" aria-label="ลบ ${item.name}">${ICON_TRASH}</button>
+                <button class="cart-item-trash" onclick="remove(${idx})" aria-label="${removeLabel} ${item.name}">${ICON_TRASH}</button>
                 <div class="cart-item-head" ${hasDetails ? `onclick="toggleCartItem(${idx})"` : ''} style="${hasDetails ? 'cursor:pointer;' : ''}">
                     <div class="cart-item-icon">🍲</div>
                     <div class="cart-item-main">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-meta">
-                            <span class="price">${item.price} บาท</span>
-                            ${hasDetails ? `<span class="qty-badge">${item.details.length} รายการ</span>` : ''}
+                            <span class="price">${item.price} ${unit}</span>
+                            ${hasDetails ? `<span class="qty-badge">${item.details.length} ${itemsLabel}</span>` : ''}
                         </div>
                     </div>
                     ${hasDetails ? `<svg class="chevron ${isOpen ? 'open' : ''}" id="cart-chevron-${idx}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>` : ''}
@@ -650,7 +677,7 @@
                     <div class="detail-divider"></div>
                     <ul class="checklist">`;
                 item.details.forEach(d => {
-                    html += `<li><span class="check">${ICON_CHECK}</span><span class="d-name">${d.name} × ${d.count}</span><span class="d-price">${d.price * d.count} บ.</span></li>`;
+                    html += `<li><span class="check">${ICON_CHECK}</span><span class="d-name">${d.name} × ${d.count}</span><span class="d-price">${d.price * d.count} ${unit}</span></li>`;
                 });
                 html += `</ul></div>`;
             }
@@ -666,8 +693,8 @@
         if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && totalFood < 80) deliveryFee = 10;
         if (serviceTypeEl && serviceTypeEl.value.includes('Delivery') && privilegeTypeEl && privilegeTypeEl.value === 'ใช้สิทธิ') extraServiceFee = 5;
 
-        if (deliveryFee > 0) deliveryStatus.innerHTML += `🛵 ค่าบริการ Delivery +${deliveryFee} บ. `;
-        if (extraServiceFee > 0) deliveryStatus.innerHTML += `✨ ค่าบริการระบบ +${extraServiceFee} บ.`;
+        if (deliveryFee > 0) deliveryStatus.innerHTML += t(`🛵 ค่าบริการ Delivery +${deliveryFee} บ. `, `🛵 Delivery fee +${deliveryFee} Baht `);
+        if (extraServiceFee > 0) deliveryStatus.innerHTML += t(`✨ ค่าบริการระบบ +${extraServiceFee} บ.`, `✨ System fee +${extraServiceFee} Baht`);
 
         document.getElementById('grand-total').innerText = totalFood + deliveryFee + extraServiceFee;
     }
@@ -686,12 +713,12 @@
         const privilegeTypeEl = document.querySelector('input[name="ptype"]:checked');
         const paymentTypeEl = document.querySelector('input[name="paymentType"]:checked');
 
-        if (!name) return alert('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ');
-        if (phone.length !== 10 || isNaN(phone)) return alert('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ');
-        if (!serviceTypeEl) return alert('❌ กรุณาเลือกวิธีรับสินค้า');
-        if (!privilegeTypeEl) return alert('❌ กรุณาเลือกการใช้สิทธิโครงการ');
-        if (privilegeTypeEl.value === 'ไม่ใช้สิทธิ' && !paymentTypeEl) return alert('❌ กรุณาเลือกวิธีชำระเงิน');
-        if (cartItems.length === 0) return alert('❌ ยังไม่มีเมนูในตะกร้าค่ะ');
+        if (!name) return alert(t('❌ กรุณาระบุชื่อผู้รับด้วยนะคะ', '❌ Please enter the recipient name'));
+        if (phone.length !== 10 || isNaN(phone)) return alert(t('❌ กรุณากรอกเบอร์โทรให้ครบ 10 หลักค่ะ', '❌ Please enter a valid 10-digit phone number'));
+        if (!serviceTypeEl) return alert(t('❌ กรุณาเลือกวิธีรับสินค้า', '❌ Please select a delivery method'));
+        if (!privilegeTypeEl) return alert(t('❌ กรุณาเลือกการใช้สิทธิโครงการ', '❌ Please select whether you are using the program'));
+        if (privilegeTypeEl.value === 'ไม่ใช้สิทธิ' && !paymentTypeEl) return alert(t('❌ กรุณาเลือกวิธีชำระเงิน', '❌ Please select a payment method'));
+        if (cartItems.length === 0) return alert(t('❌ ยังไม่มีเมนูในตะกร้าค่ะ', '❌ Your cart is empty'));
 
         const serviceType = serviceTypeEl.value;
         const privilegeType = privilegeTypeEl.value;
@@ -707,7 +734,7 @@
         const orderId = Math.floor(100000 + Math.random() * 900000).toString();
         const paymentType = (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) ? paymentTypeEl.value : '';
 
-        // ===== สร้างข้อความสรุปสำหรับวางในแชท (เหมือนเดิมทุกอย่าง) =====
+        // ===== สร้างข้อความสรุปสำหรับวางในแชท (คงเป็นภาษาไทยเสมอ เพื่อให้ทางร้าน/แอดมินอ่านออเดอร์ตรงกัน ไม่ว่าลูกค้าจะดูหน้าเว็บเป็นภาษาใด) =====
         let txt = '========================\n';
         txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
         txt += '========================\n';
@@ -796,7 +823,7 @@
         orderAlreadySent = true;
 
         const btn = document.getElementById('checkoutBtn');
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = 'กำลังส่งออเดอร์...'; }
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = t('กำลังส่งออเดอร์...', 'Sending order...'); }
 
         // กันหน้าเว็บถูกปิด/เปลี่ยนหน้าไปก่อนที่ fetch จะส่งข้อมูลสำเร็จ
         // (ตัวการหลักที่ทำให้บางออเดอร์ "หาย" ไม่เข้า Google Sheets)
@@ -827,7 +854,13 @@
         });
     }
 
-    window.onload = function() { toggleLocationField(); togglePaymentSection(); loadCart(); applyHotpotOrderTypeLock(); };
+    window.onload = function() {
+        applyStaticI18n();
+        toggleLocationField();
+        togglePaymentSection();
+        loadCart();
+        applyHotpotOrderTypeLock();
+    };
 </script>
 </body>
 </html>

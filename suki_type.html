@@ -39,7 +39,7 @@
 
         .soup-card.locked { opacity: 0.45; filter: grayscale(70%); pointer-events: none; position: relative; }
         .soup-card.locked::after {
-            content: "ไม่รองรับหม้อไฟ";
+            content: attr(data-lock-label);
             position: absolute; top: 6px; left: 6px;
             background: rgba(44,28,18,0.8); color: #fff;
             font-size: 0.6rem; font-weight: 600;
@@ -53,8 +53,8 @@
         <a href="index.html" class="back-btn">←</a>
         <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
         <div>
-            <div class="mini-title">🌶️ ชาบูหม่าล่า</div>
-            <div class="mini-sub">เลือกน้ำซุปหรือรูปแบบที่ต้องการ</div>
+            <div class="mini-title i18n" data-th="🌶️ ชาบูหม่าล่า" data-en="🌶️ Mala Shabu">🌶️ ชาบูหม่าล่า</div>
+            <div class="mini-sub i18n" data-th="เลือกน้ำซุปหรือรูปแบบที่ต้องการ" data-en="Choose your soup base or style">เลือกน้ำซุปหรือรูปแบบที่ต้องการ</div>
         </div>
     </div>
 
@@ -64,16 +64,16 @@
                 <input type="radio" name="soup" id="s9" value="หม่าล่าผัดแห้ง" data-sku="S0MH2">
                 <img src="images/mala-h.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Dry+Stir-fry'">
                 <div class="item-info">
-                    <div class="item-name">หม่าล่าผัดแห้ง</div>
+                    <div class="item-name i18n" data-th="หม่าล่าผัดแห้ง" data-en="Dry Stir-Fried Mala">หม่าล่าผัดแห้ง</div>
                     <div class="item-price">+19฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s9" id="s9_l1" value="เผ็ดน้อย" data-sku="S0MH1" style="display:none">
-                        <label for="s9_l1" class="spicy-option">น้อย</label>
+                        <label for="s9_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s9" id="s9_l2" value="เผ็ดกลาง" data-sku="S0MH2" style="display:none" checked>
-                        <label for="s9_l2" class="spicy-option">กลาง</label>
+                        <label for="s9_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s9" id="s9_l3" value="เผ็ดมาก" data-sku="S0MH3" style="display:none">
-                        <label for="s9_l3" class="spicy-option">มาก</label>
+                        <label for="s9_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -82,16 +82,16 @@
                 <input type="radio" name="soup" id="s7" value="ซุปหม่าล่ากระดูกหมู" data-sku="S0MG2">
                 <img src="images/Zgml.png" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Pork'">
                 <div class="item-info">
-                    <div class="item-name">ซุปหม่าล่ากระดูกหมู</div>
+                    <div class="item-name i18n" data-th="ซุปหม่าล่ากระดูกหมู" data-en="Mala Pork Bone Soup">ซุปหม่าล่ากระดูกหมู</div>
                     <div class="item-price">+29฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s7" id="s7_l1" value="เผ็ดน้อย" data-sku="S0MG1" style="display:none">
-                        <label for="s7_l1" class="spicy-option">น้อย</label>
+                        <label for="s7_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s7" id="s7_l2" value="เผ็ดกลาง" data-sku="S0MG2" style="display:none" checked>
-                        <label for="s7_l2" class="spicy-option">กลาง</label>
+                        <label for="s7_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s7" id="s7_l3" value="เผ็ดมาก" data-sku="S0MG3" style="display:none">
-                        <label for="s7_l3" class="spicy-option">มาก</label>
+                        <label for="s7_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -100,7 +100,7 @@
                 <input type="radio" name="soup" id="s8" value="ซุปกระดูกหมูน้ำดำ" data-sku="S0GD">
                 <img src="images/zgnd.png" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Pork+Black'">
                 <div class="item-info">
-                    <div class="item-name">ซุปกระดูกหมูน้ำดำ</div>
+                    <div class="item-name i18n" data-th="ซุปกระดูกหมูน้ำดำ" data-en="Black Pork Bone Soup">ซุปกระดูกหมูน้ำดำ</div>
                     <div class="item-price">+29฿</div>
                 </div>
             </label>
@@ -109,16 +109,16 @@
                 <input type="radio" name="soup" id="s1" value="ซุปหม่าล่าน้ำข้น" data-sku="S0ML2">
                 <img src="images/soup_mala_milk.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Milk'">
                 <div class="item-info">
-                    <div class="item-name">ซุปหม่าล่าน้ำข้น</div>
+                    <div class="item-name i18n" data-th="ซุปหม่าล่าน้ำข้น" data-en="Creamy Mala Soup">ซุปหม่าล่าน้ำข้น</div>
                     <div class="item-price">+29฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s1" id="s1_l1" value="เผ็ดน้อย" data-sku="S0ML1" style="display:none">
-                        <label for="s1_l1" class="spicy-option">น้อย</label>
+                        <label for="s1_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s1" id="s1_l2" value="เผ็ดกลาง" data-sku="S0ML2" style="display:none" checked>
-                        <label for="s1_l2" class="spicy-option">กลาง</label>
+                        <label for="s1_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s1" id="s1_l3" value="เผ็ดมาก" data-sku="S0ML3" style="display:none">
-                        <label for="s1_l3" class="spicy-option">มาก</label>
+                        <label for="s1_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -127,16 +127,16 @@
                 <input type="radio" name="soup" id="s2" value="ซุปหม่าล่าน้ำดำ" data-sku="S2ML2">
                 <img src="images/soup_mala_black.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Black'">
                 <div class="item-info">
-                    <div class="item-name">ซุปหม่าล่าน้ำดำ</div>
+                    <div class="item-name i18n" data-th="ซุปหม่าล่าน้ำดำ" data-en="Black Mala Soup">ซุปหม่าล่าน้ำดำ</div>
                     <div class="item-price">+29฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s2" id="s2_l1" value="เผ็ดน้อย" data-sku="S2ML1" style="display:none">
-                        <label for="s2_l1" class="spicy-option">น้อย</label>
+                        <label for="s2_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s2" id="s2_l2" value="เผ็ดกลาง" data-sku="S2ML2" style="display:none" checked>
-                        <label for="s2_l2" class="spicy-option">กลาง</label>
+                        <label for="s2_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s2" id="s2_l3" value="เผ็ดมาก" data-sku="S2ML3" style="display:none">
-                        <label for="s2_l3" class="spicy-option">มาก</label>
+                        <label for="s2_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -145,16 +145,16 @@
                 <input type="radio" name="soup" id="s3" value="ซุปหม่าล่าดั้งเดิม" data-sku="S1ML2">
                 <img src="images/soup_mala_orig.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Original'">
                 <div class="item-info">
-                    <div class="item-name">ซุปหม่าล่าดั้งเดิม</div>
+                    <div class="item-name i18n" data-th="ซุปหม่าล่าดั้งเดิม" data-en="Original Mala Soup">ซุปหม่าล่าดั้งเดิม</div>
                     <div class="item-price">+19฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s3" id="s3_l1" value="เผ็ดน้อย" data-sku="S1ML1" style="display:none">
-                        <label for="s3_l1" class="spicy-option">น้อย</label>
+                        <label for="s3_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s3" id="s3_l2" value="เผ็ดกลาง" data-sku="S1ML2" style="display:none" checked>
-                        <label for="s3_l2" class="spicy-option">กลาง</label>
+                        <label for="s3_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s3" id="s3_l3" value="เผ็ดมาก" data-sku="S1ML3" style="display:none">
-                        <label for="s3_l3" class="spicy-option">มาก</label>
+                        <label for="s3_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -163,7 +163,7 @@
                 <input type="radio" name="soup" id="s4" value="ซุปน้ำดำ" data-sku="S0ND1">
                 <img src="images/soup_black.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Black+Soup'">
                 <div class="item-info">
-                    <div class="item-name">ซุปน้ำดำ</div>
+                    <div class="item-name i18n" data-th="ซุปน้ำดำ" data-en="Black Soup">ซุปน้ำดำ</div>
                     <div class="item-price">+19฿</div>
                 </div>
             </label>
@@ -172,7 +172,7 @@
                 <input type="radio" name="soup" id="s5" value="ซุปกระดูกหมู" data-sku="S0GM">
                 <img src="images/soup_pork.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Pork+Bone+Soup'">
                 <div class="item-info">
-                    <div class="item-name">ซุปกระดูกหมู</div>
+                    <div class="item-name i18n" data-th="ซุปกระดูกหมู" data-en="Pork Bone Soup">ซุปกระดูกหมู</div>
                     <div class="item-price">+19฿</div>
                 </div>
             </label>
@@ -181,7 +181,7 @@
                 <input type="radio" name="soup" id="s6" value="สุกี้แห้ง" data-sku="S0SK1">
                 <img src="images/hang.png" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Suki+Dry'">
                 <div class="item-info">
-                    <div class="item-name">สุกี้แห้ง</div>
+                    <div class="item-name i18n" data-th="สุกี้แห้ง" data-en="Dry Suki">สุกี้แห้ง</div>
                     <div class="item-price">+10฿</div>
                 </div>
             </label>
@@ -190,16 +190,16 @@
                 <input type="radio" name="soup" id="s10" value="หม่าล่าปั้น (ย่าง)" data-sku="S0MP2">
                 <img src="images/mala-grill.jpg" class="item-image" onerror="this.src='https://via.placeholder.com/150?text=Mala+Grill'">
                 <div class="item-info">
-                    <div class="item-name">หม่าล่าปั้น (ย่าง)</div>
+                    <div class="item-name i18n" data-th="หม่าล่าปั้น (ย่าง)" data-en="Grilled Mala Balls">หม่าล่าปั้น (ย่าง)</div>
                     <div class="item-price">+19฿</div>
                     <div class="spicy-container">
-                        <div class="spicy-title">🌶️ เลือกระดับความเผ็ด</div>
+                        <div class="spicy-title i18n" data-th="🌶️ เลือกระดับความเผ็ด" data-en="🌶️ Choose Spice Level">🌶️ เลือกระดับความเผ็ด</div>
                         <input type="radio" name="spice_s10" id="s10_l1" value="เผ็ดน้อย" data-sku="S0MP1" style="display:none">
-                        <label for="s10_l1" class="spicy-option">น้อย</label>
+                        <label for="s10_l1" class="spicy-option i18n" data-th="น้อย" data-en="Mild">น้อย</label>
                         <input type="radio" name="spice_s10" id="s10_l2" value="เผ็ดกลาง" data-sku="S0MP2" style="display:none" checked>
-                        <label for="s10_l2" class="spicy-option">กลาง</label>
+                        <label for="s10_l2" class="spicy-option i18n" data-th="กลาง" data-en="Medium">กลาง</label>
                         <input type="radio" name="spice_s10" id="s10_l3" value="เผ็ดมาก" data-sku="S0MP3" style="display:none">
-                        <label for="s10_l3" class="spicy-option">มาก</label>
+                        <label for="s10_l3" class="spicy-option i18n" data-th="มาก" data-en="Hot">มาก</label>
                     </div>
                 </div>
             </label>
@@ -207,10 +207,28 @@
     </div>
 
     <div class="footer-fixed">
-        <button class="t-btn-primary" style="width:100%;" onclick="goToToppings()">เลือกท็อปปิ้งต่อ ➡️</button>
+        <button class="t-btn-primary i18n" data-th="เลือกท็อปปิ้งต่อ ➡️" data-en="Continue to Toppings ➡️" style="width:100%;" onclick="goToToppings()">เลือกท็อปปิ้งต่อ ➡️</button>
     </div>
 
     <script>
+        // ============ ภาษา / LANGUAGE ============
+        // อ่านค่าภาษาที่ตั้งไว้จากหน้า index.html เท่านั้น ไม่มีปุ่มสลับภาษาในหน้านี้
+        let currentLang = sessionStorage.getItem('lang') || 'th';
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('.i18n').forEach(function (el) {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
+
+            const lockLabel = lang === 'en' ? 'Not available for Hot Pot' : 'ไม่รองรับหม้อไฟ';
+            document.querySelectorAll('.soup-card').forEach(function (card) {
+                card.setAttribute('data-lock-label', lockLabel);
+            });
+        }
+
         // ถ้ามาจาก Flow หม้อไฟ (ทานที่ร้าน) ให้ปิดการใช้งานเมนูที่ไม่เหมาะกับการต้ม/ลวกเอง
         // (หม่าล่าผัดแห้ง, สุกี้แห้ง, หม่าล่าปั้น (ย่าง)) โดยแสดงเป็นสีเทา กดไม่ได้
         function applyHotpotLocks() {
@@ -226,7 +244,7 @@
 
         function goToToppings() {
             const selected = document.querySelector('input[name="soup"]:checked');
-            if (!selected) return alert('กรุณาเลือกเมนู');
+            if (!selected) return alert(currentLang === 'en' ? 'Please select a menu item' : 'กรุณาเลือกเมนู');
 
             const soupId = selected.id;
             const soupName = selected.value;
@@ -248,7 +266,10 @@
             window.location.href = 'topping_suki.html';
         }
 
-        document.addEventListener('DOMContentLoaded', applyHotpotLocks);
+        document.addEventListener('DOMContentLoaded', () => {
+            applyHotpotLocks();
+            setLang(currentLang);
+        });
     </script>
 </body>
 </html>
