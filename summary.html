@@ -532,7 +532,9 @@
             </button>
             <h3 class="i18n" data-th="✅ คัดลอกไปวางในแชท" data-en="✅ Copy and paste into chat">✅ คัดลอกไปวางในแชท</h3>
             <textarea id="order-text" readonly></textarea>
-            <button id="checkoutBtn" onclick="copyAndChat()" class="t-btn-primary i18n" data-th="คัดลอกและไปที่แชท" data-en="Copy and Go to Chat" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21);">คัดลอกและไปที่แชท</button>
+            <a id="checkoutBtn" href="https://m.me/727234960462724" onclick="return copyAndChat(event)" class="t-btn-primary i18n" data-th="คัดลอกและไปที่แชท" data-en="Copy and Go to Chat" style="width:100%; background: linear-gradient(135deg, var(--success-green), #124d21); display:block; text-align:center; text-decoration:none;">คัดลอกและไปที่แชท</a>
+            <button id="manualCopyBtn" type="button" onclick="manualCopyFallback()" class="i18n" data-th="คัดลอกข้อความด้วยตัวเอง" data-en="Copy text manually" style="display:none; width:100%; margin-top:8px; background:transparent; border:1.5px solid var(--border-cream); border-radius: var(--radius-sm); padding:10px; color: var(--ink-soft); font-family:inherit; font-size:0.82rem;">คัดลอกข้อความด้วยตัวเอง</button>
+            <div id="copyToast" class="i18n" data-th="คัดลอกข้อความแล้ว ✅" data-en="Copied ✅" style="display:none; text-align:center; font-size:0.78rem; color: var(--success-green); margin-top:8px; font-weight:600;">คัดลอกข้อความแล้ว ✅</div>
         </div>
     </div>
 
@@ -806,52 +808,111 @@
 
     let orderAlreadySent = false;
 
-    function goToChat() {
-        // คัดลอกข้อความ แล้วค่อยเด้งไปแชท (เรียกหลังจากส่ง Sheets เสร็จ/timeout แล้วเท่านั้น)
-        const textToCopy = document.getElementById('order-text').value;
+    // คัดลอกข้อความแบบมี Fallback: ลอง Clipboard API ก่อน ถ้าใช้ไม่ได้ (เช่น In-App Browser
+    // ของ LINE/Facebook Messenger หรือ Safari iOS บางเวอร์ชัน) ให้ตกไปใช้ document.execCommand('copy') แทน
+    // คืนค่า true/false ว่าคัดลอกสำเร็จหรือไม่ เพื่อเอาไปตัดสินใจว่าจะแสดงปุ่ม fallback ให้ลูกค้าเองหรือเปล่า
+    function copyText(text) {
         try {
-            navigator.clipboard.writeText(textToCopy);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+                return true;
+            }
         } catch (err) {
-            console.error('คัดลอกข้อความไม่สำเร็จ:', err);
+            console.error('Clipboard API คัดลอกไม่สำเร็จ:', err);
         }
-        window.location.href = 'https://m.me/727234960462724';
+
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            // วางไว้นอกจอ ไม่ให้กระทบ layout และไม่ให้คีย์บอร์ดเด้งขึ้นมา
+            ta.style.position = 'fixed';
+            ta.style.top = '-9999px';
+            ta.style.left = '-9999px';
+            ta.setAttribute('readonly', '');
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            ta.setSelectionRange(0, ta.value.length);
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return ok;
+        } catch (err) {
+            console.error('Fallback copy (execCommand) ไม่สำเร็จ:', err);
+            return false;
+        }
     }
 
-    function copyAndChat() {
-        if (!currentOrderData) return;
-        if (orderAlreadySent) return; // กันกดซ้ำ/ดับเบิลแทป ทำให้ออเดอร์เดียวกันถูกส่งซ้ำเข้าระบบ
+    // ส่งข้อมูลออเดอร์เข้า Google Sheets แบบไม่รอผลลัพธ์ (fire-and-forget)
+    // ใช้ sendBeacon เป็นหลัก เพราะถูกออกแบบมาสำหรับส่งข้อมูลตอนหน้าเว็บกำลังจะถูกปิด/เปลี่ยนหน้าโดยเฉพาะ
+    // เบราว์เซอร์รับประกันว่าจะพยายามส่งต่อให้จบแม้หน้าเว็บถูกทำลายไปแล้ว เสถียรกว่า fetch ในสถานการณ์นี้
+    // ถ้า sendBeacon ใช้ไม่ได้ (เบราว์เซอร์เก่ามาก) จึงตกไปใช้ fetch + keepalive เป็น fallback
+    function sendOrderData() {
+        const body = JSON.stringify(currentOrderData);
+        try {
+            if (navigator.sendBeacon) {
+                const blob = new Blob([body], { type: 'application/json' });
+                const ok = navigator.sendBeacon(WEB_APP_URL, blob);
+                if (ok) return;
+            }
+        } catch (err) {
+            console.error('sendBeacon ไม่สำเร็จ:', err);
+        }
+        try {
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                keepalive: true,
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            }).catch(err => console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err));
+        } catch (err) {
+            console.error('เรียก fetch ไป Sheets ไม่สำเร็จ:', err);
+        }
+    }
+
+    // เลือกข้อความในกล่องให้พร้อมกด Cmd/Ctrl+C เอง ใช้เมื่อระบบคัดลอกอัตโนมัติล้มเหลว
+    function manualCopyFallback() {
+        const ta = document.getElementById('order-text');
+        ta.focus();
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+    }
+
+    // ปุ่ม "คัดลอกและไปที่แชท" เป็น <a href="m.me/..."> จริงๆ (ไม่ใช่ปุ่มที่สั่ง navigate ด้วย JS)
+    // เพื่อให้การเปลี่ยนหน้าเกิดขึ้น "ในจังหวะ user gesture เดียวกัน" กับการแตะของลูกค้า
+    // ไม่มี setTimeout คั่นกลาง จึงไม่เสี่ยงโดน Safari iOS/In-App Browser มองว่าเป็น synthetic navigation แล้วบล็อก
+    function copyAndChat(e) {
+        if (!currentOrderData || orderAlreadySent) {
+            e.preventDefault();
+            return false;
+        }
         orderAlreadySent = true;
 
         const btn = document.getElementById('checkoutBtn');
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = t('กำลังส่งออเดอร์...', 'Sending order...'); }
+        if (btn) { btn.style.opacity = '0.6'; btn.innerText = t('กำลังส่งออเดอร์...', 'Sending order...'); }
 
-        // กันหน้าเว็บถูกปิด/เปลี่ยนหน้าไปก่อนที่ fetch จะส่งข้อมูลสำเร็จ
-        // (ตัวการหลักที่ทำให้บางออเดอร์ "หาย" ไม่เข้า Google Sheets)
-        let settled = false;
+        // 1) คัดลอกข้อความก่อนอย่างอื่นทั้งหมด แบบ Synchronous ในจังหวะแตะปุ่มเป๊ะๆ
+        const copied = copyText(document.getElementById('order-text').value);
 
-        // ตั้ง timeout กันเน็ตช้า/ค้าง ไม่ให้ลูกค้าต้องรอนานเกินไป (สูงสุด 4 วิ)
-        const timeoutId = setTimeout(() => {
-            if (settled) return;
-            settled = true;
-            console.warn('ส่งข้อมูลไป Sheets ไม่ทันเวลา (timeout) แต่จะพาไปแชทต่อ');
-            goToChat();
-        }, 4000);
+        // 2) ส่งข้อมูลออเดอร์ไป Sheets (ไม่บล็อกการเปลี่ยนหน้า ปล่อยให้ทำงานคู่ขนานไปเบื้องหลัง)
+        sendOrderData();
 
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(currentOrderData)
-        })
-        .catch(err => {
-            console.error('บันทึกออเดอร์ไป Sheets ไม่สำเร็จ:', err);
-        })
-        .finally(() => {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeoutId);
-            goToChat();
-        });
+        // 3) ถ้าคัดลอกไม่สำเร็จจริงๆ ให้ยกเลิกการเปลี่ยนหน้า แล้วโชว์ปุ่มให้ลูกค้าคัดลอกเอง
+        //    (ไม่เก็บข้อมูลอะไรไว้ในเครื่อง — แค่ปรับ UI ให้ลูกค้าทำต่อเองได้ทันที)
+        if (!copied) {
+            e.preventDefault();
+            orderAlreadySent = false;
+            if (btn) { btn.style.opacity = '1'; btn.innerText = t('คัดลอกและไปที่แชท', 'Copy and Go to Chat'); }
+            const manualBtn = document.getElementById('manualCopyBtn');
+            if (manualBtn) manualBtn.style.display = 'block';
+            manualCopyFallback();
+            return false;
+        }
+
+        // 4) คัดลอกสำเร็จ — โชว์ toast สั้นๆ ให้อุ่นใจ แล้วปล่อยให้ <a href> นำทางไป Messenger ต่อทันที (native)
+        const toast = document.getElementById('copyToast');
+        if (toast) toast.style.display = 'block';
+        return true; // ไม่เรียก preventDefault() ปล่อยให้ browser navigate ตาม href ทันที
     }
 
     window.onload = function() {
