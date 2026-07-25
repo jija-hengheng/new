@@ -374,6 +374,46 @@
             outline-offset: 2px;
         }
 
+        /* ============ CLOSED MODAL ============ */
+        .closed-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+        .closed-modal-overlay.show {
+            display: flex;
+        }
+        .closed-modal-content {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            padding: 60px 40px;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(148, 0, 8, 0.6);
+            max-width: 90vw;
+        }
+        .closed-modal-text {
+            font-size: 6rem;
+            font-weight: 900;
+            color: white;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            font-family: 'Noto Serif Thai', serif;
+            line-height: 1;
+        }
+        .closed-modal-subtitle {
+            font-size: 1.3rem;
+            color: var(--gold-soft);
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .menu-card, .status-pill.open .status-dot { animation: none !important; opacity: 1 !important; transform: none !important; }
         }
@@ -384,10 +424,19 @@
             .menu-card.wide .menu-title-strip,
             .menu-card.wide .card-details,
             .menu-card.wide .menu-details-text { text-align: center; }
+            .closed-modal-content { padding: 40px 30px; }
+            .closed-modal-text { font-size: 4rem; }
         }
     </style>
 </head>
 <body class="themed">
+
+    <div class="closed-modal-overlay" id="closedModal">
+        <div class="closed-modal-content">
+            <p class="closed-modal-text">ปิด</p>
+            <p class="closed-modal-subtitle" id="closedSubtitle">ร้านปิดอยู่ในขณะนี้ โปรดกลับมาใหม่ในเวลาทำการ</p>
+        </div>
+    </div>
 
     <div class="lang-toggle" id="langToggle">
         <button class="lang-btn active" data-lang="th" onclick="setLang('th')">TH</button>
@@ -569,10 +618,13 @@
 
             const pill = document.getElementById('statusPill');
             const text = document.getElementById('statusText');
+            const closedModal = document.getElementById('closedModal');
+            const closedSubtitle = document.getElementById('closedSubtitle');
 
             if (isOpen) {
                 pill.classList.add('open');
                 pill.classList.remove('closed');
+                closedModal.classList.remove('show');
                 const closeH = String(Math.floor(closeMin / 60)).padStart(2, '0');
                 text.innerText = currentLang === 'en'
                     ? `Open now • Closes ${closeH}:00`
@@ -580,9 +632,16 @@
             } else {
                 pill.classList.add('closed');
                 pill.classList.remove('open');
+                closedModal.classList.add('show');
                 text.innerText = currentLang === 'en'
                     ? 'Closed now • See hours below'
                     : 'ปิดอยู่ในขณะนี้ • ดูเวลาทำการด้านล่าง';
+                    
+                if (currentLang === 'en') {
+                    closedSubtitle.innerText = 'The restaurant is currently closed. Please visit us during opening hours.';
+                } else {
+                    closedSubtitle.innerText = 'ร้านปิดอยู่ในขณะนี้ โปรดกลับมาใหม่ในเวลาทำการ';
+                }
             }
         }
 
