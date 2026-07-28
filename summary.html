@@ -771,7 +771,7 @@
         txt += `━━━━━━━━━━━━\n━━ขอบพระคุณค่ะ 🙏✨━━`;
         txt += `\n\n(เลขที่ออเดอร์: ${orderId})`;
 
-        // ===== เก็บข้อมูลแบบมีโครงสร้าง ไว้ส่งเข้า Sheets ตอนกดคัดลอก =====
+        // ===== เก็บข้อมูลแบบมีโครงสร้าง ไว้ส่งเข้า Sheets =====
         currentOrderData = {
             orderID: orderId,
             name: name,
@@ -794,6 +794,10 @@
             paymentType: paymentType
         };
 
+        // ✅ ส่งเข้าชีตทันทีตอนกด "ส่งออเดอร์" (ปุ่มแดง) — ไม่ต้องรอกดปุ่มเขียวอีกที
+        // แยกออกจากขั้นตอนคัดลอก/ไปแชท ทำให้แต่ละปุ่มทำหน้าที่เดียวจบ ไม่ชนกัน เสถียรขึ้น
+        sendOrderToSheets(currentOrderData);
+
         document.getElementById('order-text').value = txt;
         document.getElementById('overlay').style.display = 'flex';
     }
@@ -804,7 +808,6 @@
         window.location.href = 'index.html';
     }
 
-    let orderAlreadySent = false;
     const PENDING_ORDERS_KEY = 'pendingSheetOrders'; // ใช้ localStorage (ไม่ใช่ sessionStorage) เพราะต้องอยู่รอดข้ามการปิดแท็บ/แอป เพื่อส่งซ้ำได้ภายหลัง
 
     // ===== คัดลอกข้อความ: ต้องเรียกทันทีในจังหวะที่ลูกค้าแตะปุ่ม (user gesture) =====
@@ -888,25 +891,22 @@
         } catch (e) { /* ไม่มีคิวค้าง หรืออ่านไม่ได้ ก็ข้ามไป */ }
     }
 
+    // ✅ ตอนนี้ปุ่มเขียวทำหน้าที่เดียว: คัดลอกข้อความ + ไปแชท (ไม่ยิงเข้าชีตซ้ำ เพราะยิงไปแล้วตอนกดปุ่มแดง)
     async function copyAndChat() {
         if (!currentOrderData) return;
-        if (orderAlreadySent) return; // กันกดซ้ำ/ดับเบิลแทป ทำให้ออเดอร์เดียวกันถูกส่งซ้ำเข้าระบบ
-        orderAlreadySent = true;
 
         const btn = document.getElementById('checkoutBtn');
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = t('กำลังส่งออเดอร์...', 'Sending order...'); }
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerText = t('กำลังคัดลอก...', 'Copying...'); }
 
-        // ขั้นแรกสุด: คัดลอกข้อความก่อนเลย ขณะที่ยังอยู่ในจังหวะ user gesture
         const textToCopy = document.getElementById('order-text').value;
         const copied = await copyTextToClipboard(textToCopy);
         if (!copied) {
             alert(t('⚠️ คัดลอกข้อความอัตโนมัติไม่สำเร็จ กรุณากดค้างที่ข้อความในกล่องแล้วคัดลอกเองก่อนวางในแชทนะคะ', '⚠️ Auto-copy failed. Please long-press the text box to copy it manually before pasting into chat.'));
         }
 
-        // ส่งเข้า Sheets แบบไม่บล็อกการไปแชท (มี retry + สำรองคิวรองรับอยู่แล้ว)
-        sendOrderToSheets(currentOrderData);
-
         goToChat();
+
+        if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.innerText = t('คัดลอกและไปที่แชท', 'Copy and Go to Chat'); }
     }
 
     window.onload = function() {
