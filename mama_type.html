@@ -25,8 +25,20 @@
             justify-content: space-between;
         }
         .mama-card.selected { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(148,1,9,0.12); }
-        .mama-card img { max-width: 78%; height: auto; margin: 0 auto 8px auto; object-fit: contain; max-height: 90px; }
-        .mama-name { font-size: 0.92em; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+        .mama-img-wrap {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f4ece2;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mama-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mama-img-wrap .img-fallback { font-size: 1.8em; opacity: 0.35; }
+        .mama-name { font-size: 0.88em; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
         .mama-price { font-size: 0.92em; color: var(--primary-red); font-weight: 700; }
 
         .order-info-group { display: flex; flex-direction: column; color: var(--primary-red); }
@@ -59,39 +71,130 @@
 
     <div class="t-container">
         <div class="mama-grid">
-            <div class="mama-card" data-id="MM003" data-name="มาม่า เย็นตาโฟ" data-price="10" onclick="selectMama(this)">
-                <img src="images/yentafo.png" alt="มาม่า เย็นตาโฟ">
-                <div class="mama-name">มาม่า เย็นตาโฟ</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama013" data-name="OK คาโบนาร่าเบคอน" data-price="20" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama013.png" alt="OK คาโบนาร่าเบคอน" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">OK คาโบนาร่าเบคอน</div>
+                <div class="mama-price">20 บ.</div>
             </div>
-            <div class="mama-card" data-id="MM005" data-name="มาม่า หมูสับ" data-price="10" onclick="selectMama(this)">
-                <img src="images/moosub.png" alt="มาม่า หมูสับ">
-                <div class="mama-name">มาม่า หมูสับ</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama015" data-name="OK ไข่เค็ม" data-price="20" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama015.png" alt="OK ไข่เค็ม" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">OK ไข่เค็ม</div>
+                <div class="mama-price">20 บ.</div>
             </div>
-            <div class="mama-card" data-id="MM002" data-name="มาม่า ต้มยำกุ้งน้ำข้น" data-price="10" onclick="selectMama(this)">
-                <img src="images/tomyumZom.png" alt="มาม่า ต้มยำกุ้งน้ำข้น">
-                <div class="mama-name">มาม่า ต้มยำกุ้งน้ำข้น</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama006" data-name="Samyang Creamy Carbonara" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama006.png" alt="Samyang Creamy Carbonara" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Creamy Carbonara</div>
+                <div class="mama-price">55 บ.</div>
             </div>
-            <div class="mama-card" data-id="MM004" data-name="มาม่า ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
-                <img src="images/tomyumkung.png" alt="มาม่า ต้มยำกุ้ง">
-                <div class="mama-name">มาม่า ต้มยำกุ้ง</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama005" data-name="Samyang Hot Chicken Jjajang Ramen" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama005.png" alt="Samyang Hot Chicken Jjajang Ramen" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Hot Chicken Jjajang Ramen</div>
+                <div class="mama-price">55 บ.</div>
             </div>
-            <div class="mama-card" data-id="MM001" data-name="ยำยำ ต้มยำกุ้ง" data-price="10" onclick="selectMama(this)">
-                <img src="images/yumyumred.png" alt="ยำยำ ต้มยำกุ้ง">
-                <div class="mama-name">ยำยำ ต้มยำกุ้ง</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama007" data-name="Samyang Quattro Cheese" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama007.png" alt="Samyang Quattro Cheese" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Quattro Cheese</div>
+                <div class="mama-price">55 บ.</div>
             </div>
-           <div class="mama-card" data-id="MM007" data-name="ยำยำ ต้มยำน้ำข้น" data-price="10" onclick="selectMama(this)">
-                <img src="images/yumyumzom.png" alt="ยำยำ ต้มยำน้ำข้น (สีส้ม)">
-                <div class="mama-name">ยำยำ ต้มยำน้ำข้น</div>
-                <div class="mama-price">10 บ.</div>
+            <div class="mama-card" data-id="Mama004" data-name="Samyang Ramen Carbonara" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama004.png" alt="Samyang Ramen Carbonara" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Ramen Carbonara</div>
+                <div class="mama-price">55 บ.</div>
             </div>
-            <div class="mama-card" data-id="MM006" data-name="ไวไว ต้มยำหมูสับ" data-price="10" onclick="selectMama(this)">
-                <img src="images/vvmoosub.png" alt="ไวไว ต้มยำหมูสับ">
-                <div class="mama-name">ไวไว ต้มยำหมูสับ</div>
+            <div class="mama-card" data-id="Mama003" data-name="Samyang Ramen Cheese" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama003.png" alt="Samyang Ramen Cheese" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Ramen Cheese</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama002" data-name="Samyang Ramen Original" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama002.png" alt="Samyang Ramen Original" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Ramen Original</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama008" data-name="Samyang Swicy" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama008.png" alt="Samyang Swicy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang Swicy</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama010" data-name="Samyang ครีมซอสโคชูจัง" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama010.png" alt="Samyang ครีมซอสโคชูจัง" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang ครีมซอสโคชูจัง</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama019" data-name="Samyang สูตรเผ็ดมาก" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama019.png" alt="Samyang สูตรเผ็ดมาก" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Samyang สูตรเผ็ดมาก</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama001" data-name="Shin Rumyun" data-price="45" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama001.png" alt="Shin Rumyun" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">Shin Rumyun</div>
+                <div class="mama-price">45 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama018" data-name="จินรามยอน เผ็ด" data-price="50" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama018.png" alt="จินรามยอน เผ็ด" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">จินรามยอน เผ็ด</div>
+                <div class="mama-price">50 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama009" data-name="ซัมยัง ราเมง ออริจิ นอล" data-price="45" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama009.png" alt="ซัมยัง ราเมง ออริจิ นอล" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">ซัมยัง ราเมง ออริจิ นอล</div>
+                <div class="mama-price">45 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama020" data-name="นงชิม กิมจิสไปซี่" data-price="45" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama020.png" alt="นงชิม กิมจิสไปซี่" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">นงชิม กิมจิสไปซี่</div>
+                <div class="mama-price">45 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama011" data-name="นงชิม รามยอน ทูมบ้า" data-price="55" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama011.png" alt="นงชิม รามยอน ทูมบ้า" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">นงชิม รามยอน ทูมบ้า</div>
+                <div class="mama-price">55 บ.</div>
+            </div>
+            <div class="mama-card" data-id="Mama014" data-name="นิชชิน ชีส" data-price="15" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/Mama014.png" alt="นิชชิน ชีส" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">นิชชิน ชีส</div>
+                <div class="mama-price">15 บ.</div>
+            </div>
+            <div class="mama-card" data-id="MM007" data-name="ยํายํา ต้มยํากุ้ง สีส้ม" data-price="10" onclick="selectMama(this)">
+                <div class="mama-img-wrap">
+                    <img src="images/yumyumzom.png" alt="ยํายํา ต้มยํากุ้ง สีส้ม" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍜'}))">
+                </div>
+                <div class="mama-name">ยํายํา ต้มยํากุ้ง สีส้ม</div>
                 <div class="mama-price">10 บ.</div>
             </div>
         </div>

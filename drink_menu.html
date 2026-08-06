@@ -17,6 +17,14 @@
         .menu-name { font-weight: 500; font-size: 0.88rem; height: 2.4em; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; color: var(--ink); }
         .menu-price { color: var(--primary-red); font-weight: 700; font-size: 1.02rem; margin-bottom: 8px; }
         
+        .flavor-picker { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 9px; }
+        .flavor-chip {
+            padding: 5px 10px; border-radius: 20px; border: 1.5px solid var(--primary-red);
+            background: #fff; color: var(--primary-red); font-family: inherit; font-size: 0.7rem;
+            font-weight: 500; cursor: pointer; transition: 0.15s;
+        }
+        .flavor-chip.active { background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: #fff; box-shadow: 0 3px 8px rgba(148,1,9,0.3); }
+
         .qty-control { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
         .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--primary-red); background: #fdfdfd; cursor: pointer; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; color: var(--primary-red); }
         .qty-val { font-weight: 700; min-width: 20px; font-size: 1.05rem; }
@@ -74,7 +82,12 @@
             { name: 'น้ำเก๊กฮวย + แก้วน้ำแข็ง', price: 25, img: 'images/gek.png', sku: 'D0004' },
             { name: 'น้ำจับเลี้ยง + แก้วน้ำแข็ง', price: 25, img: 'images/jup.png', sku: 'D0005' },
             { name: 'น้ำลำไย + แก้วน้ำแข็ง', price: 25, img: 'images/lum.png', sku: 'D0006' },
-            { name: 'น้ำดื่มขวด', price: 10, img: 'images/water.png', sku: 'D0002' } // อย่าลืมเตรียมไฟล์ water.png ในโฟลเดอร์ images นะครับ
+            { name: 'น้ำดื่มขวด', price: 10, img: 'images/water.png', sku: 'D0002' }, // อย่าลืมเตรียมไฟล์ water.png ในโฟลเดอร์ images นะครับ
+            { name: 'Loveza', price: 25, img: 'images/Loveza.png', options: [
+                { label: 'ลิ้นจี่', sku: 'Love01' },
+                { label: 'องุ่นเคียวโฮ', sku: 'Love03' },
+                { label: 'ฮันนี่เลม่อน', sku: 'Love02' }
+            ] }
         ];
 
         let cart = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
@@ -87,16 +100,26 @@
                     <div class="menu-info">
                         <div class="menu-name">${item.name}</div>
                         <div class="menu-price">${item.price} บ.</div>
+                        ${item.options ? `
+                        <div class="flavor-picker" id="flavor-${idx}">
+                            ${item.options.map((opt, oi) => `<button type="button" class="flavor-chip${oi === 0 ? ' active' : ''}" data-sku="${opt.sku}" data-label="${opt.label}" onclick="selectFlavor(${idx}, this)">${opt.label}</button>`).join('')}
+                        </div>` : ''}
                         <div class="qty-control">
                             <button class="btn-qty" onclick="changeQty('qty-${idx}', -1)">-</button>
                             <span class="qty-val" id="qty-${idx}">1</span>
                             <button class="btn-qty" onclick="changeQty('qty-${idx}', 1)">+</button>
                         </div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, 'qty-${idx}', '${item.sku}')">เพิ่มลงตะกร้า</button>
+                    <button class="add-btn" onclick="addToCart(${idx})">เพิ่มลงตะกร้า</button>
                 </div>
             `).join('');
             updateCartCount();
+        }
+
+        function selectFlavor(idx, chipEl) {
+            const wrap = document.getElementById(`flavor-${idx}`);
+            wrap.querySelectorAll('.flavor-chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
         }
 
         function changeQty(id, delta) {
@@ -106,13 +129,25 @@
             el.innerText = val;
         }
 
-        function addToCart(name, price, qtyId, sku) {
+        function addToCart(idx) {
+            const item = drinks[idx];
+            const qtyId = `qty-${idx}`;
             const quantity = parseInt(document.getElementById(qtyId).innerText);
-            
+
+            let name = item.name;
+            let sku = item.sku;
+
+            if (item.options) {
+                const wrap = document.getElementById(`flavor-${idx}`);
+                const activeChip = wrap.querySelector('.flavor-chip.active');
+                name = `${item.name} - ${activeChip.dataset.label}`;
+                sku = activeChip.dataset.sku;
+            }
+
             for (let i = 0; i < quantity; i++) {
                 cart.push({
                     name: name,
-                    price: price,
+                    price: item.price,
                     sku: sku,
                     details: []
                 });
