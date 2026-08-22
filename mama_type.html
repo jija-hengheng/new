@@ -260,15 +260,21 @@
 
     function goToToppings() {
         if (!selectedMama) return;
-        const totalMamaPrice = selectedMama.price * selectedMama.count;
+
+        // 🔧 FIX: เดิมยัดราคารวม (price x count) ลงในฟิลด์ price แต่ตั้ง count ไว้คงที่ที่ 1
+        // ทำให้ราคาต่อหน่วยที่ส่งไปไม่ตรงกับราคา SKU ในระบบ POS/Sheets (เช่น Mama013 = 20 บ./ห่อ)
+        // เมื่อสั่งมากกว่า 1 ห่อ ราคาต่อหน่วยที่คำนวณได้เลยไม่ตรงกับแคตตาล็อก ทำให้รายการนี้
+        // ไม่ถูกบันทึก/จับคู่เหมือนรายการอื่นที่ price เป็นราคาต่อหน่วยจริงเสมอ (เช่น ท็อปปิ้ง)
+        // ✅ ตอนนี้ส่ง "ราคาต่อหน่วย" (price) และ "จำนวนจริง" (count) แยกกัน ให้ตรงรูปแบบเดียวกับ
+        // ทุกรายการอื่นในระบบ (topping_suki.html จะเป็นคนคูณ price x count เอง)
         const mainItemData = {
             mainId: selectedMama.id,
             sku: selectedMama.id,
-            name: `${selectedMama.name} x ${selectedMama.count} ห่อ`, 
-            price: totalMamaPrice, 
+            name: selectedMama.name,      // ไม่ต่อ "x N ห่อ" ในชื่อแล้ว ให้หน้าถัดไปจัดการแสดงจำนวนเอง
+            price: selectedMama.price,    // ราคาต่อห่อ (unit price)
+            count: selectedMama.count,    // จำนวนห่อจริงที่ลูกค้าสั่ง
             spice: 'มาม่า',
-            isNoodleSet: true, 
-            originalCount: selectedMama.count 
+            isNoodleSet: true
         };
         sessionStorage.setItem('sukiMainItem', JSON.stringify(mainItemData));
         window.location.href = 'topping_suki.html'; 

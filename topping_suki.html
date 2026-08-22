@@ -240,13 +240,18 @@
         const storedDetails = sessionStorage.getItem('sukiMainItem');
         if (storedDetails) {
             mainItemDetails = JSON.parse(storedDetails);
+            // 🔧 FIX: เผื่อรายการเก่าที่ยังไม่มี count (ข้อมูลจากก่อนแก้บั๊ก) ให้ถือว่าเป็น 1 ห่อ
+            if (!mainItemDetails.count) mainItemDetails.count = 1;
             const infoElement = document.getElementById('main-item-info');
             const mainLabel = currentLang === 'en' ? 'Main item:' : 'รายการหลัก:';
             const unit = currentLang === 'en' ? 'Baht' : 'บาท';
             const spiceLabel = currentLang === 'en' ? ' - Spice level:' : ' - เผ็ดระดับ:';
+            const qtyLabel = mainItemDetails.count > 1 ? ` x ${mainItemDetails.count}` : '';
+            // 🔧 FIX: price ตอนนี้เป็นราคาต่อหน่วย ต้องคูณ count ก่อนแสดงยอดรวม
+            const lineTotal = mainItemDetails.price * mainItemDetails.count;
             infoElement.innerHTML = `${mainLabel} 
-                <strong>${mainItemDetails.name}</strong> 
-                (${mainItemDetails.price.toLocaleString()} ${unit})
+                <strong>${mainItemDetails.name}${qtyLabel}</strong> 
+                (${lineTotal.toLocaleString()} ${unit})
                 ${mainItemDetails.spice ? `${spiceLabel} ${mainItemDetails.spice}` : ''}
             `;
         } else {
@@ -331,7 +336,9 @@
         let toppingTotal = Object.values(selectedToppings).reduce((total, item) => total + (item.price * item.count), 0);
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
 
-        const mainPrice = mainItemDetails.price || 0;
+        // 🔧 FIX: mainItemDetails.price คือ "ราคาต่อหน่วย" แล้ว ต้องคูณด้วยจำนวน (count) ถึงจะได้ยอดรวมของเมนูหลักจริง
+        // เดิมใช้ mainItemDetails.price ตรงๆ ซึ่งใช้ได้ก็ต่อเมื่อ count = 1 เท่านั้น (บั๊กตอนสั่งมาม่ามากกว่า 1 ห่อ)
+        const mainPrice = (mainItemDetails.price || 0) * (mainItemDetails.count || 1);
         grandTotal = mainPrice + toppingTotal;
 
         const totalDisplayElement = document.getElementById('grand-total-display');
@@ -473,14 +480,18 @@
     function processOrder(sauceName, sauceImg, sauceSku, serveOption) {
         let orderItems = [];
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
+        const mainCount = mainItemDetails.count || 1;
 
         // รูปแบบการเสิร์ฟ (HOTPOT) ต้องอยู่บรรทัดแรกของใบเสร็จ
         if (serveOption) {
             orderItems.push({ sku: serveOption.sku, name: serveOption.name, price: 0, count: 1, type: 'ServeFormat' });
         }
 
+        // 🔧 FIX: ก่อนหน้านี้ count ของเมนูหลักถูกล็อกไว้ที่ 1 เสมอ และ price เป็นราคารวมทั้งหมดที่คูณมาแล้ว
+        // ทำให้ price ต่อหน่วยไม่ตรงกับ SKU ในระบบ (เช่น มาม่า 2 ห่อ ราคาต่อห่อ 20 บ. แต่ price ถูกส่งเป็น 40 กับ count 1)
+        // ตอนนี้ price เป็นราคาต่อหน่วยจริง และ count เป็นจำนวนจริง เหมือนกับท็อปปิ้งทุกตัว
         const mainName = mainItemDetails.name + (mainItemDetails.spice ? ` (เผ็ด${mainItemDetails.spice})` : '');
-        orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainName, price: mainItemDetails.price, count: 1, type: 'Main' });
+        orderItems.push({ sku: mainItemDetails.sku || 'M1', name: mainName, price: mainItemDetails.price, count: mainCount, type: 'Main' });
 
         if (sauceName) {
             orderItems.push({ sku: sauceSku || '', name: sauceName, price: 0, count: 1, type: 'Sauce' });
@@ -497,7 +508,8 @@
         });
 
         const finalOrderSet = {
-            name: mainItemDetails.name + (totalToppingCount > 0 ? ` (+${totalToppingCount} รายการ)` : ''), 
+            // 🔧 FIX: เติมจำนวนห่อ (mainCount) ไว้ในชื่อรายการบนบัตรสรุป เพราะย้ายออกจาก mainItemDetails.name แล้ว
+            name: mainItemDetails.name + (mainCount > 1 ? ` x${mainCount} ห่อ` : '') + (totalToppingCount > 0 ? ` (+${totalToppingCount} รายการ)` : ''), 
             price: grandTotal,
             count: 1, 
             details: orderItems,
