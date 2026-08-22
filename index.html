@@ -200,9 +200,17 @@
         }
         .section-label::after { content: ""; flex-grow: 1; height: 1px; background: linear-gradient(to right, rgba(148,0,8,0.35), transparent); }
 
-        .menu-grid {
+        .menu-grid-top {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
+            gap: 13px;
+            padding: 0 4px;
+            margin-bottom: 13px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 13px;
             padding: 0 4px;
         }
@@ -227,10 +235,45 @@
         .menu-card:nth-child(5) { animation-delay: 0.22s; }
         .menu-card:nth-child(6) { animation-delay: 0.27s; }
         .menu-card:nth-child(7) { animation-delay: 0.32s; }
+        .menu-card:nth-child(8) { animation-delay: 0.37s; }
 
         @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
 
         .menu-card:active { transform: scale(0.96); }
+
+        /* ============ การ์ดยังไม่เปิดใช้งาน (Coming..) ============ */
+        .menu-card.coming-soon {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .menu-card.coming-soon .card-top-content {
+            filter: grayscale(1);
+        }
+        .menu-card.coming-soon .menu-title-strip,
+        .menu-card.coming-soon .card-details {
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
+        .menu-card.coming-soon .click-here-button-overlay,
+        .menu-card.coming-soon .badge-pick {
+            display: none;
+        }
+        .menu-card.coming-soon .coming-soon-badge {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(43,28,18,0.72);
+            color: #fff;
+            font-family: 'Noto Serif Thai', serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            padding: 7px 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 3;
+            white-space: nowrap;
+        }
 
         .card-top-content {
             width: 100%;
@@ -287,27 +330,6 @@
             line-height: 1.35;
         }
 
-        /* Signature closing card: drinks, shown as a wide banner */
-        .menu-card.wide {
-            grid-column: span 2;
-            flex-direction: row;
-        }
-        .menu-card.wide .card-top-content {
-            aspect-ratio: auto;
-            width: 42%;
-            flex-shrink: 0;
-        }
-        .menu-card.wide .card-body {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            min-width: 0;
-        }
-        .menu-card.wide .menu-title-strip { text-align: left; padding-left: 16px; }
-        .menu-card.wide .card-details { justify-content: flex-start; text-align: left; }
-        .menu-card.wide .menu-details-text { text-align: left; }
-        .menu-card.wide .click-here-button-overlay { text-align: center; }
-
         /* ============ FLOATING CART ============ */
         .fab-cart {
             position: fixed;
@@ -342,13 +364,6 @@
             .menu-card, .status-pill.open .status-dot { animation: none !important; opacity: 1 !important; transform: none !important; }
         }
 
-        @media (max-width: 360px) {
-            .menu-card.wide { flex-direction: column; }
-            .menu-card.wide .card-top-content { width: 100%; aspect-ratio: 16 / 9; }
-            .menu-card.wide .menu-title-strip,
-            .menu-card.wide .card-details,
-            .menu-card.wide .menu-details-text { text-align: center; }
-        }
     </style>
 </head>
 <body class="themed">
@@ -395,7 +410,7 @@
 
         <div class="section-label i18n" data-th="เลือกหมวดเมนู" data-en="Choose a Category">เลือกหมวดเมนู</div>
 
-        <div class="menu-grid">
+        <div class="menu-grid-top">
 
             <div class="menu-card" onclick="goDirect('suki_type.html');" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/suki.png');">
@@ -414,30 +429,16 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="มาม่ารสเด็ด เครื่องแน่นจัดเต็ม" data-en="Instant noodles loaded with toppings">มาม่ารสเด็ด เครื่องแน่นจัดเต็ม</p></div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='mala_sides_menu.html';" tabindex="0">
-                <div class="card-top-content" style="background-image: url('images/mala_side.png');">
-                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
-                </div>
-                <div class="menu-title-strip i18n" data-th="วัตถุดิบชาบูหม่าล่า" data-en="Mala Ingredients">วัตถุดิบชาบูหม่าล่า</div>
-                <div class="card-details"><p class="menu-details-text i18n" data-th="วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน" data-en="Quality ingredients to cook at home">วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน</p></div>
-            </div>
+        </div>
 
-            <div class="menu-card" onclick="window.location.href='noodle.html';" tabindex="0">
-                <div class="card-top-content" style="background-image: url('images/mheekaicheak.png');">
-                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
-                </div>
-                <div class="menu-title-strip i18n" data-th="อาหารจานเดี่ยว" data-en="Single Dishes">อาหารจานเดี่ยว</div>
-                <div class="card-details"><p class="menu-details-text i18n" data-th="เมนูจานเดียว ทานง่าย อิ่มอร่อย" data-en="Easy one-plate meals, always satisfying">เมนูจานเดียว ทานง่าย อิ่มอร่อย</p></div>
-            </div>
+        <div class="menu-grid">
 
-            <div class="menu-card" onclick="window.location.href='hotpot.html';" tabindex="0">
-                <!-- TODO: images/hotpot.png เป็น placeholder ชั่วคราว รอเปลี่ยนเป็นรูปจริงภายหลัง -->
-                <div class="card-top-content" style="background-image: url('images/hotpot.png');">
-                    <div class="badge-pick i18n" data-th="ทานที่ร้าน" data-en="Dine-in Only">ทานที่ร้าน</div>
-                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
+            <div class="menu-card coming-soon" tabindex="-1" aria-disabled="true">
+                <div class="card-top-content" style="background-image: url('images/mala-tod.png');">
+                    <div class="coming-soon-badge i18n" data-th="Coming.." data-en="Coming..">Coming..</div>
                 </div>
-                <div class="menu-title-strip i18n" data-th="หม้อไฟ" data-en="Hot Pot">หม้อไฟ</div>
-                <div class="card-details"><p class="menu-details-text i18n" data-th="ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส" data-en="Cook it yourself at the table">ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส</p></div>
+                <div class="menu-title-strip i18n" data-th="หม่าล่าทอด" data-en="Fried Mala">หม่าล่าทอด</div>
+                <div class="card-details"><p class="menu-details-text i18n" data-th="กรอบนอกนุ่มใน เลือกไม้เองได้ตามใจชอบ" data-en="Crispy outside, tender inside — pick your own skewers">กรอบฟันแตก เลือกเองได้ตามใจชอบ</p></div>
             </div>
 
             <div class="menu-card" onclick="window.location.href='set.html';" tabindex="0">
@@ -450,14 +451,38 @@
                 </div>
             </div>
 
-            <div class="menu-card wide" onclick="window.location.href='drink_menu.html';" tabindex="0">
+            <div class="menu-card" onclick="window.location.href='noodle.html';" tabindex="0">
+                <div class="card-top-content" style="background-image: url('images/mheekaicheak.png');">
+                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
+                </div>
+                <div class="menu-title-strip i18n" data-th="อาหารจานเดี่ยว" data-en="Single Dishes">อาหารจานเดี่ยว</div>
+                <div class="card-details"><p class="menu-details-text i18n" data-th="เมนูจานเดียว ทานง่าย อิ่มอร่อย" data-en="Easy one-plate meals, always satisfying">เมนูจานเดียว ทานง่าย อิ่มอร่อย</p></div>
+            </div>
+
+            <div class="menu-card" onclick="window.location.href='mala_sides_menu.html';" tabindex="0">
+                <div class="card-top-content" style="background-image: url('images/mala_side.png');">
+                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
+                </div>
+                <div class="menu-title-strip i18n" data-th="วัตถุดิบชาบูหม่าล่า" data-en="Mala Ingredients">วัตถุดิบชาบูหม่าล่า</div>
+                <div class="card-details"><p class="menu-details-text i18n" data-th="วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน" data-en="Quality ingredients to cook at home">วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน</p></div>
+            </div>
+
+            <div class="menu-card" onclick="window.location.href='hotpot.html';" tabindex="0">
+                <!-- TODO: images/hotpot.png เป็น placeholder ชั่วคราว รอเปลี่ยนเป็นรูปจริงภายหลัง -->
+                <div class="card-top-content" style="background-image: url('images/hotpot.png');">
+                    <div class="badge-pick i18n" data-th="ทานที่ร้าน" data-en="Dine-in Only">ทานที่ร้าน</div>
+                    <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
+                </div>
+                <div class="menu-title-strip i18n" data-th="หม้อไฟ" data-en="Hot Pot">หม้อไฟ</div>
+                <div class="card-details"><p class="menu-details-text i18n" data-th="ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส" data-en="Cook it yourself at the table">ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส</p></div>
+            </div>
+
+            <div class="menu-card" onclick="window.location.href='drink_menu.html';" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/drink.png');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
-                <div class="card-body">
-                    <div class="menu-title-strip i18n" data-th="เมนูเครื่องดื่ม" data-en="Drinks">เมนูเครื่องดื่ม</div>
-                    <div class="card-details"><p class="menu-details-text i18n" data-th="สดชื่น ดับกระหาย คลายเผ็ด" data-en="Refreshing drinks to cool the heat">สดชื่น ดับกระหาย คลายเผ็ด</p></div>
-                </div>
+                <div class="menu-title-strip i18n" data-th="เมนูเครื่องดื่ม" data-en="Drinks">เมนูเครื่องดื่ม</div>
+                <div class="card-details"><p class="menu-details-text i18n" data-th="สดชื่น ดับกระหาย คลายเผ็ด" data-en="Refreshing drinks to cool the heat">สดชื่น ดับกระหาย คลายเผ็ด</p></div>
             </div>
 
         </div>
