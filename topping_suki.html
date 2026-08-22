@@ -122,7 +122,7 @@
         <img src="images/2.png" class="mini-logo" alt="จิจะเฮงเฮง">
         <div>
             <div class="mini-title i18n" data-th="🧺 เลือกท็อปปิ้ง" data-en="🧺 Choose Toppings">🧺 เลือกท็อปปิ้ง</div>
-            <div class="mini-sub i18n" id="mini-sub-text" data-th="เลือกได้อย่างน้อย 3 ไม้" data-en="Choose at least 3 pieces">เลือกได้อย่างน้อย 3 ไม้</div>
+            <div class="mini-sub i18n" id="topping-mini-sub" data-th="เลือกได้อย่างน้อย 3 ไม้" data-en="Choose at least 3 pieces">เลือกได้อย่างน้อย 3 ไม้</div>
         </div>
     </div>
 
@@ -236,15 +236,6 @@
     let grandTotal = 0; 
     const MIN_TOPPINGS_COUNT = 3; 
 
-    // เมนู "ต้มมาม่า" ไม่บังคับขั้นต่ำจำนวนท็อปปิ้ง เลือกเท่าไหร่ก็กดยืนยันออเดอร์ได้
-    function isMamaMenu() {
-        return !!(mainItemDetails.name && mainItemDetails.name.includes('มาม่า'));
-    }
-
-    function getRequiredToppingCount() {
-        return isMamaMenu() ? 0 : MIN_TOPPINGS_COUNT;
-    }
-
     function loadSukiDetails() {
         const storedDetails = sessionStorage.getItem('sukiMainItem');
         if (storedDetails) {
@@ -264,15 +255,16 @@
                 ${mainItemDetails.spice ? `${spiceLabel} ${mainItemDetails.spice}` : ''}
             `;
 
-            // อัปเดตข้อความใต้หัวข้อ: เมนูมาม่าไม่บังคับขั้นต่ำ จึงเปลี่ยนข้อความให้ตรงกับความจริง
-            const subEl = document.getElementById('mini-sub-text');
-            if (subEl) {
-                if (isMamaMenu()) {
-                    subEl.textContent = currentLang === 'en' ? 'Choose any toppings you like' : 'เลือกท็อปปิ้งได้ตามใจชอบ';
-                } else {
-                    subEl.textContent = subEl.getAttribute('data-' + currentLang);
-                }
+            // ============ ต้มมาม่า (isNoodleSet): ไม่มีขั้นต่ำท็อปปิ้ง ไม่เลือกก็สั่งได้เลย ============
+            const miniSubEl = document.getElementById('topping-mini-sub');
+            if (mainItemDetails.isNoodleSet === true) {
+                miniSubEl.setAttribute('data-th', 'เลือกท็อปปิ้งเพิ่มได้ตามใจชอบ (ไม่บังคับ)');
+                miniSubEl.setAttribute('data-en', 'Add toppings if you like (optional)');
+            } else {
+                miniSubEl.setAttribute('data-th', 'เลือกได้อย่างน้อย 3 ไม้');
+                miniSubEl.setAttribute('data-en', 'Choose at least 3 pieces');
             }
+            miniSubEl.textContent = miniSubEl.getAttribute('data-' + currentLang);
         } else {
              window.location.href = 'suki_type.html';
         }
@@ -366,12 +358,13 @@
 
         if (totalDisplayElement) totalDisplayElement.innerText = `${grandTotal.toLocaleString()} ${unit}`;
 
-        const requiredCount = getRequiredToppingCount();
+        // ต้มมาม่า (isNoodleSet): ไม่มีขั้นต่ำท็อปปิ้ง เลือก 0 ไม้ก็ยืนยันออเดอร์ได้เลย
+        const effectiveMinToppings = mainItemDetails.isNoodleSet === true ? 0 : MIN_TOPPINGS_COUNT;
 
-        if (totalToppingCount < requiredCount) {
+        if (totalToppingCount < effectiveMinToppings) {
             nextButton.classList.add('disabled');
             nextButton.disabled = true; 
-            const remaining = requiredCount - totalToppingCount;
+            const remaining = effectiveMinToppings - totalToppingCount;
             nextButton.innerHTML = currentLang === 'en'
                 ? `📌 Choose ${remaining} more piece(s) <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`
                 : `📌 เลือกท็อปปิ้งเพิ่มอีก ${remaining} ไม้ <span class="total-amount">${grandTotal.toLocaleString()} ${unit}</span>`;
@@ -470,12 +463,14 @@
 
     function calculateAndSave() {
         let totalToppingCount = Object.values(selectedToppings).reduce((count, item) => count + item.count, 0);
-        const requiredCount = getRequiredToppingCount();
 
-        if (totalToppingCount < requiredCount) {
+        // ต้มมาม่า (isNoodleSet): ไม่มีขั้นต่ำท็อปปิ้ง ข้ามการเช็คนี้ไปเลย
+        const effectiveMinToppings = mainItemDetails.isNoodleSet === true ? 0 : MIN_TOPPINGS_COUNT;
+
+        if (totalToppingCount < effectiveMinToppings) {
             alert(currentLang === 'en'
-                ? `⚠️ Please choose at least ${requiredCount} toppings`
-                : `⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${requiredCount} ไม้`);
+                ? `⚠️ Please choose at least ${effectiveMinToppings} toppings`
+                : `⚠️ กรุณาเลือกท็อปปิ้งเสริมอย่างน้อย ${effectiveMinToppings} ไม้`);
             return;
         }
 

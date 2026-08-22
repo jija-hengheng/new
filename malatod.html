@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกเมนู: ท็อปปิ้งเพิ่มเติม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=stylesheet" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body { padding-bottom: 110px; }
+
+        .mama-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 13px; padding: 10px 4px 0 4px; }
+        .mama-card {
+            background-color: #fff;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 16px rgba(43,28,18,0.08);
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .mama-card.selected { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(148,1,9,0.12); }
+        .mama-img-wrap {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f4ece2;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mama-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mama-img-wrap .img-fallback { font-size: 1.8em; opacity: 0.35; }
+        .mama-name { font-size: 0.88em; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+        .mama-price { font-size: 0.92em; color: var(--primary-red); font-weight: 700; }
+
+        /* Multi-selection quantity counter adjustments inside card or footer */
+        .item-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .item-counter button {
+            background-color: var(--primary-red);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .item-counter span {
+            font-size: 0.95em;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* ============ ป๊อปอัพสรุปยอดแบบลอย (ย่อขนาดจากแถบเต็มความกว้างเดิม) ============ */
+        .t-footer-fixed {
+            position: fixed;
+            left: 50%;
+            bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            transform: translateX(-50%);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 8px 10px 8px 16px;
+            box-shadow: 0 10px 26px rgba(43,28,18,0.22);
+            width: max-content;
+            max-width: calc(100% - 24px);
+        }
+
+        .order-info-group { display: flex; flex-direction: column; color: var(--primary-red); white-space: nowrap; }
+        .order-summary { font-weight: 700; font-size: 0.76em; }
+        .order-summary span { color: var(--ink); }
+        .total-display { font-weight: 700; margin-left: 8px; color: var(--ink); }
+
+        .min-hint {
+            font-size: 0.68em;
+            font-weight: 600;
+            color: var(--primary-red);
+            margin-top: 2px;
+        }
+
+        .next-button {
+            font-size: 0.82em;
+            padding: 8px 14px;
+            white-space: nowrap;
+            opacity: 0.4;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .next-button.active { opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body class="themed">
+
+    <div class="mini-header">
+        <a href="index.html" class="back-btn">←</a>
+        <img src="images/2.png" class="mini-logo" alt="โลโก้ร้าน">
+        <div>
+            <div class="mini-title">🍢 เลือกท็อปปิ้งเพิ่มเติม</div>
+            <div class="mini-sub">เลือกรายการที่ต้องการได้เลย</div>
+        </div>
+    </div>
+
+    <div class="t-container">
+        <div class="mama-grid" id="topping-grid">
+            <!-- Items rendered dynamically or static HTML -->
+        </div>
+    </div>
+
+    <div class="t-footer-fixed" id="footer-summary" style="display:none;">
+        <div class="order-info-group">
+            <div class="order-summary">
+                เลือกแล้ว: <span id="selected-count">0</span> รายการ
+            </div>
+            <div style="font-weight: 700; margin-top: 3px;">
+                ราคารวมท็อปปิ้ง: <span id="current-total-price" style="color: var(--primary-red);">0</span> บ.
+            </div>
+            <div class="min-hint" id="min-hint" style="display:none;"></div>
+        </div>
+        <button class="t-btn-primary next-button" id="next-btn" onclick="submitToppings()">
+            ยืนยันการสั่งซื้อ 👉
+        </button>
+    </div>
+
+<script>
+    const toppings = [
+        { name: "สันคอหมู", png: "ZC", sku: "TP020", price: 10 },
+        { name: "สามชั้นสไลค์", png: "3C", sku: "TP021", price: 10 },
+        { name: "ไข่นกกระทา", png: "EG", sku: "TP043", price: 10 },
+        { name: "ฟองเต้าหู้ซีฟูด", png: "FT", sku: "TP012", price: 10 },
+        { name: "ข้าวโพด", png: "KP", sku: "TP004", price: 10 },
+        { name: "วากาเมะ", png: "wakame", sku: "TP017", price: 10 },
+        { name: "เปาไข่กุ้ง", png: "paokaigung", sku: "TP032", price: 10 },
+        { name: "เต้าหู้ชีส", png: "paochese", sku: "TP026", price: 10 },
+        { name: "ฟองเต้าหู้ข้าวโพด", png: "FK", sku: "TP001", price: 10 },
+        { name: "เบคอนพันไส้กรอก", png: "BC", sku: "TP030", price: 10 },
+        { name: "เต้าหู้ปลา", png: "TP", sku: "TP027", price: 10 },
+        { name: "มินิคอกเทล", png: "MN", sku: "TP016", price: 10 },
+        { name: "เห็ดเข็มทอง", png: "HK", sku: "TP040", price: 10 },
+        { name: "ต็อกบกกีชีส", png: "TG", sku: "TP047", price: 10 },
+        { name: "เห็ดออรินจิ", png: "AR", sku: "TP039", price: 10 },
+        { name: "ชิกุวะ", png: "chigo", sku: "TP005", price: 10 },
+        { name: "หมูหมักนุ่ม", png: "moomuk-noom", sku: "TP022", price: 10 }
+    ];
+
+    let selectedToppings = {};
+    const MIN_ITEMS = 3;
+
+    function renderGrid() {
+        const grid = document.getElementById('topping-grid');
+        grid.innerHTML = toppings.map(item => {
+            const count = selectedToppings[item.sku] ? selectedToppings[item.sku].count : 0;
+            const isSelected = count > 0;
+            return `
+                <div class="mama-card ${isSelected ? 'selected' : ''}" id="card-${item.sku}" onclick="handleCardClick(event, '${item.sku}')">
+                    <div>
+                        <div class="mama-img-wrap">
+                            <img src="images/${item.png}.png" alt="${item.name}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍢'}))">
+                        </div>
+                        <div class="mama-name">${item.name}</div>
+                        <div class="mama-price">${item.price} บ.</div>
+                    </div>
+                    <div class="item-counter" onclick="event.stopPropagation()">
+                        <button onclick="updateItemCount('${item.sku}', -1)">-</button>
+                        <span id="count-${item.sku}">${count}</span>
+                        <button onclick="updateItemCount('${item.sku}', 1)">+</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function handleCardClick(event, sku) {
+        if (!selectedToppings[sku] || selectedToppings[sku].count === 0) {
+            updateItemCount(sku, 1);
+        } else {
+            updateItemCount(sku, 1);
+        }
+    }
+
+    function updateItemCount(sku, change) {
+        const item = toppings.find(t => t.sku === sku);
+        if (!item) return;
+
+        if (!selectedToppings[sku]) {
+            selectedToppings[sku] = { ...item, count: 0 };
+        }
+
+        let newCount = selectedToppings[sku].count + change;
+        if (newCount < 0) newCount = 0;
+
+        if (newCount === 0) {
+            delete selectedToppings[sku];
+        } else {
+            selectedToppings[sku].count = newCount;
+        }
+
+        renderGrid();
+        updateFooter();
+    }
+
+    function updateFooter() {
+        let totalCount = 0;
+        let totalPrice = 0;
+
+        Object.values(selectedToppings).forEach(t => {
+            totalCount += t.count;
+            totalPrice += t.count * t.price;
+        });
+
+        document.getElementById('selected-count').innerText = totalCount;
+        document.getElementById('current-total-price').innerText = totalPrice.toLocaleString();
+
+        const footer = document.getElementById('footer-summary');
+        const nextBtn = document.getElementById('next-btn');
+        const minHint = document.getElementById('min-hint');
+
+        if (totalCount > 0) {
+            footer.style.display = 'flex';
+        } else {
+            footer.style.display = 'none';
+        }
+
+        if (totalCount < MIN_ITEMS) {
+            nextBtn.classList.remove('active');
+            const remaining = MIN_ITEMS - totalCount;
+            minHint.style.display = 'block';
+            minHint.innerText = `เลือกอีก ${remaining} ไม้ (ขั้นต่ำ ${MIN_ITEMS} ไม้)`;
+        } else {
+            nextBtn.classList.add('active');
+            minHint.style.display = 'none';
+        }
+    }
+
+    function submitToppings() {
+        let totalCount = 0;
+        let totalPrice = 0;
+        const detailsList = [];
+
+        Object.values(selectedToppings).forEach(t => {
+            totalCount += t.count;
+            totalPrice += t.count * t.price;
+            detailsList.push({ name: t.name, count: t.count, price: t.price });
+        });
+
+        if (totalCount < MIN_ITEMS) return; // กันไว้อีกชั้น ปกติปุ่มจะถูกปิดไว้ก่อนถึงขั้นต่ำอยู่แล้ว
+
+        const cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
+        cartItems.push({
+            name: 'หม่าล่าทอด',
+            sku: 'mala-tod',
+            price: totalPrice,
+            details: detailsList
+        });
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+        window.location.href = 'summary.html';
+    }
+
+    // Initial render
+    renderGrid();
+</script>
+</body>
+</html>
