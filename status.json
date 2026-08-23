@@ -15,9 +15,7 @@
   },
   "items": {
     "TP003": {
-      "soldOut": false,
-      "salePrice": 5,
-      "originalPrice": 10
+      "soldOut": true
     }
   }
 }
