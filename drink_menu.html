@@ -169,8 +169,7 @@
             document.getElementById('cart-count').innerText = cart.length;
         }
 
-        renderMenu();
-        RemoteStatus.init({ categoryKey: 'drink_menu' });
+        RemoteStatus.init({ categoryKey: 'drink_menu', catalogs: [{ items: drinks, keyFn: it => it.sku || (it.options && it.options[0].sku) }], renderFn: renderMenu });
     </script>
 </body>
 </html>

@@ -575,7 +575,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         loadSukiDetails();
         setLang(currentLang);
-        RemoteStatus.init({ categoryKey: 'suki_type' });
+        RemoteStatus.init({ categoryKey: 'suki_type', catalogs: [{ items: TOPPING_DATA, keyFn: 'sku' }], renderFn: renderToppings });
     });
 </script>
 </body>

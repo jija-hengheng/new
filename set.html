@@ -258,10 +258,15 @@
         }
 
         // Initialize
-        renderMain();
-        renderSauce();
         updateCartUI();
-        RemoteStatus.init({ categoryKey: 'set' });
+        RemoteStatus.init({
+            categoryKey: 'set',
+            catalogs: [
+                { items: mainItems, keyFn: it => 'SET-' + it.skuBase },
+                { items: sauceItems, keyFn: 'sku' }
+            ],
+            renderFn: () => { renderMain(); renderSauce(); }
+        });
     </script>
 </body>
 </html>

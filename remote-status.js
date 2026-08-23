@@ -211,15 +211,43 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
+  // ทำให้ "ราคาลด" มีผลจริงกับยอดตะกร้า/คำสั่งซื้อ ไม่ใช่แค่ป้ายสวยๆ
+  // เรียกก่อน render() ทุกครั้ง โดยส่ง array สินค้าจริงของหน้านั้นเข้ามา แก้ item.price ตรงๆ ในหน่วยความจำ
+  // เก็บราคาเดิมไว้ใน item.__origPrice เผื่อแอดมินยกเลิกส่วนลดทีหลังจะได้คืนราคาปกติได้
+  function applyPricesToCatalog(items, keyFn) {
+    if (!statusData || !statusData.items || !items) return;
+    items.forEach(function (it) {
+      const key = typeof keyFn === 'function' ? keyFn(it) : it[keyFn || 'sku'];
+      if (!key) return;
+      const info = statusData.items[key];
+      const hasSale = info && info.salePrice !== undefined && info.salePrice !== null && info.salePrice !== '';
+      if (hasSale) {
+        if (it.__origPrice === undefined) it.__origPrice = it.price;
+        it.price = info.salePrice;
+      } else if (it.__origPrice !== undefined) {
+        it.price = it.__origPrice;
+        delete it.__origPrice;
+      }
+    });
+  }
+
   async function init(opts) {
     opts = opts || {};
     injectStyles();
     await load();
+    if (opts.catalogs) {
+      opts.catalogs.forEach(function (c) { applyPricesToCatalog(c.items, c.keyFn); });
+    }
+    if (opts.renderFn) opts.renderFn();
     applyAll(opts);
     watchDom(opts);
     if (opts.poll !== false) {
       setInterval(async function () {
         await load();
+        if (opts.catalogs) {
+          opts.catalogs.forEach(function (c) { applyPricesToCatalog(c.items, c.keyFn); });
+        }
+        if (opts.renderFn) opts.renderFn();
         applyAll(opts);
       }, opts.pollMs || POLL_MS);
     }

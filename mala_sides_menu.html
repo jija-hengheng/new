@@ -547,9 +547,8 @@
   });
 
   document.addEventListener('DOMContentLoaded', () => {
-    renderItems();
     updateFooter();
-    RemoteStatus.init({ categoryKey: 'mala_sides_menu' });
+    RemoteStatus.init({ categoryKey: 'mala_sides_menu', catalogs: [{ items: ITEMS_DATA, keyFn: 'sku' }], renderFn: renderItems });
   });
 </script>
 

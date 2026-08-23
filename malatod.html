@@ -276,8 +276,7 @@
     }
 
     // Initial render
-    renderGrid();
-    RemoteStatus.init({ categoryKey: 'malatod' });
+    RemoteStatus.init({ categoryKey: 'malatod', catalogs: [{ items: toppings, keyFn: 'sku' }], renderFn: renderGrid });
 </script>
 </body>
 </html>
