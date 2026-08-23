@@ -241,14 +241,17 @@
         }
 
         function saveToCart(name, price, sku) {
-            cart.push({ name, price, sku: sku || '', details: [] });
+            // 🔧 FIX: เพิ่ม count: 1 เพื่อให้ items ทั้งหมดมี structure เดียวกัน
+            cart.push({ name, price, sku: sku || '', count: 1, details: [] });
             sessionStorage.setItem('cartItems', JSON.stringify(cart));
             updateCartUI();
             showToast();
         }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
+            // 🔧 FIX: นับจำนวนสินค้าจริง (รวม count ของแต่ละ item)
+            const totalItems = cart.reduce((sum, item) => sum + (item.count || 1), 0);
+            document.getElementById('cart-count').innerText = totalItems;
         }
 
         function showToast() {
@@ -258,8 +261,11 @@
         }
 
         // Initialize
+        renderMain();
+        renderSauce();
         updateCartUI();
-        RemoteStatus.init({
+        // 🔧 FIX: ส่ง catalogs ให้ RemoteStatus.init เพื่อให้ราคาลดมีผลจริง
+        RemoteStatus.init({ 
             categoryKey: 'set',
             catalogs: [
                 { items: mainItems, keyFn: it => 'SET-' + it.skuBase },

@@ -643,8 +643,10 @@
 
         const headerCount = document.getElementById('header-count');
         const footerCount = document.getElementById('footer-count');
-        headerCount.innerText = `${cartItems.length} ${itemsLabel}`;
-        footerCount.innerText = `${cartItems.length} ${itemsLabel}`;
+        // 🔧 FIX: นับจำนวน items จริง (รวม count)
+        const totalItemCount = cartItems.reduce((sum, item) => sum + (item.count || 1), 0);
+        headerCount.innerText = `${totalItemCount} ${itemsLabel}`;
+        footerCount.innerText = `${totalItemCount} ${itemsLabel}`;
 
         if (cartItems.length === 0) {
             list.innerHTML = `<div class="empty-cart">${t('ไม่มีรายการอาหารในตะกร้า', 'No items in your cart')}</div>`;
@@ -653,7 +655,8 @@
         }
 
         cartItems.forEach((item, idx) => {
-            totalFood += item.price;
+            // 🔧 FIX: คูณด้วย count เพื่อได้ยอดรวมจริง
+            totalFood += item.price * (item.count || 1);
             const hasDetails = item.details && item.details.length > 0;
             const isOpen = expandedItems.has(idx);
             const removeLabel = t('ลบ', 'Remove');
@@ -663,9 +666,10 @@
                 <div class="cart-item-head" ${hasDetails ? `onclick="toggleCartItem(${idx})"` : ''} style="${hasDetails ? 'cursor:pointer;' : ''}">
                     <div class="cart-item-icon">🍲</div>
                     <div class="cart-item-main">
-                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-name">${item.name}${item.count > 1 ? ` (x${item.count})` : ''}</div>
                         <div class="cart-item-meta">
-                            <span class="price">${item.price} ${unit}</span>
+                            <!-- 🔧 FIX: แสดงยอดรวม โดยคูณด้วย count -->
+                            <span class="price">${item.price * (item.count || 1)} ${unit}</span>
                             ${hasDetails ? `<span class="qty-badge">${item.details.length} ${itemsLabel}</span>` : ''}
                         </div>
                     </div>
@@ -723,7 +727,8 @@
         const serviceType = serviceTypeEl.value;
         const privilegeType = privilegeTypeEl.value;
         let totalFood = 0;
-        cartItems.forEach(item => totalFood += item.price);
+        // 🔧 FIX: คูณด้วย count เพื่อได้ยอดรวมจริง
+        cartItems.forEach(item => totalFood += item.price * (item.count || 1));
 
         let deliveryFee = 0;
         if (serviceType.includes('Delivery') && totalFood < 80) deliveryFee = 10;
@@ -753,11 +758,14 @@
             txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
         txt += `━━━━━━━━━━━━\n`;
 
-        txt += `🍴🥡 *รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
+        // 🔧 FIX: นับจำนวน items จริง (รวม count)
+        const totalItemsCount = cartItems.reduce((sum, item) => sum + (item.count || 1), 0);
+        txt += `🍴🥡 *รายการอาหารทั้งหมด:* ${totalItemsCount} รายการ\n━━━━━━━━━━━━\n`;
 
         cartItems.forEach((item, i) => {
             if (i > 0) txt += `\n`;
-            txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
+            // 🔧 FIX: แสดงจำนวน และยอดรวมต่อรายการ
+            txt += `${i + 1}. *${item.name}${item.count > 1 ? ` (x${item.count})` : ''}* (${item.price * (item.count || 1)} บ.)\n`;
             if (item.details && item.details.length > 0) {
                 item.details.forEach(d => {
                     txt += ` ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
@@ -779,10 +787,11 @@
             orderType: serviceType,
             mapLink: googleMapsLink || '',
             summaryText: txt,
+            // 🔧 FIX: เก็บจำนวน count จริง ไม่ใช่ 1 เสมอ
             items: cartItems.map(item => ({
                 name: item.name,
                 sku: item.sku || '',
-                qty: 1,
+                qty: item.count || 1,
                 price: item.price,
                 details: item.details || []
             })),
