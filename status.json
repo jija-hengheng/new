@@ -1,0 +1,16 @@
+{
+  "store": {
+    "open": false,
+    "message": ""
+  },
+  "categories": {
+    "hotpot": false,
+    "malatod": false,
+    "suki_type": false
+  },
+  "items": {
+    "TP003": {
+      "soldOut": true
+    }
+  }
+}
