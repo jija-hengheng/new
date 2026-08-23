@@ -1,20 +1,17 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": ""
   },
   "categories": {
-    "hotpot": false,
-    "malatod": false,
-    "suki_type": false
+    "suki_type": true,
+    "mama_type": true,
+    "malatod": true,
+    "set": true,
+    "noodle": true,
+    "mala_sides_menu": true,
+    "hotpot": true,
+    "drink_menu": true
   },
-  "items": {
-    "TP003": {
-      "soldOut": true
-    },
-    "TP025": {
-      "salePrice": 18,
-      "originalPrice": 20
-    }
-  }
+  "items": {}
 }

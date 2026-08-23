@@ -6,6 +6,7 @@
     <title>เลือกเมนู: บะหมี่กึ่งสำเร็จรูป</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         body { padding-bottom: 140px; }
 
@@ -277,8 +278,11 @@
             isNoodleSet: true
         };
         sessionStorage.setItem('sukiMainItem', JSON.stringify(mainItemData));
-        window.location.href = 'topping_suki.html'; 
+        window.location.href = 'topping_suki.html';
     }
-</script>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { RemoteStatus.init({ categoryKey: 'mama_type' }); });
+    </script>
 </body>
 </html>

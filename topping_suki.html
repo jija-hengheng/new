@@ -6,6 +6,7 @@
     <title>เลือกท็อปปิ้งสุกี้/หม่าล่า</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         body { padding-bottom: 120px; }
 
@@ -574,6 +575,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         loadSukiDetails();
         setLang(currentLang);
+        RemoteStatus.init({ categoryKey: 'suki_type' });
     });
 </script>
 </body>

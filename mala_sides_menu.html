@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ท็อปปิ้งชาบู | จิจะเฮงเฮง</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="remote-status.js"></script>
 <style>
   :root{
     --primary-red:#940109;
@@ -548,6 +549,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     renderItems();
     updateFooter();
+    RemoteStatus.init({ categoryKey: 'mala_sides_menu' });
   });
 </script>
 

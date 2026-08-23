@@ -6,6 +6,7 @@
     <title>🌶️ เลือกประเภทสุกี้/หม่าล่า</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         .soup-card {
             background: var(--card-white);
@@ -269,6 +270,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             applyHotpotLocks();
             setLang(currentLang);
+            RemoteStatus.init({ categoryKey: 'suki_type' });
         });
     </script>
 </body>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin • จิจะ เฮงเฮง</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary-red:#940008; --dark-red:#650005; --bright-red:#c40010;
+    --gold:#d4af37; --bg-cream:#f1e9d9; --ink:#2c1c12; --ink-soft:#6b5c4e;
+    --ok:#1a7a34; --card:#fff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:'Kanit',sans-serif;background:var(--bg-cream);color:var(--ink);padding-bottom:60px;}
+  .wrap{max-width:640px;margin:auto;padding:14px;}
+
+  /* ---------- gate screen ---------- */
+  #gate{position:fixed;inset:0;background:linear-gradient(160deg,var(--primary-red),var(--dark-red));
+    display:flex;align-items:center;justify-content:center;padding:24px;z-index:999;}
+  #gate .box{background:#fff;border-radius:18px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);}
+  #gate .box h1{font-size:1.05rem;color:var(--primary-red);margin:6px 0 18px;}
+  #gate input{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #ddd;font-family:inherit;font-size:1rem;text-align:center;letter-spacing:2px;}
+  #gate button{margin-top:14px;width:100%;padding:12px;border:none;border-radius:12px;background:var(--primary-red);color:#fff;font-weight:600;font-family:inherit;font-size:0.95rem;cursor:pointer;}
+  #gate .err{color:var(--primary-red);font-size:0.8rem;margin-top:8px;min-height:1em;}
+
+  /* ---------- top bar ---------- */
+  header{position:sticky;top:0;z-index:50;background:var(--primary-red);color:#fff;padding:14px 16px;
+    display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+  header .title{font-weight:700;font-size:1rem;}
+  header .sub{font-size:0.7rem;opacity:0.85;}
+  #saveBtn{background:var(--gold);color:#3a2a00;border:none;padding:9px 16px;border-radius:30px;font-weight:700;font-family:inherit;font-size:0.85rem;cursor:pointer;}
+  #saveBtn:disabled{opacity:0.5;}
+  #saveStatus{font-size:0.72rem;text-align:center;padding:6px;color:var(--ink-soft);}
+  #saveStatus.ok{color:var(--ok);}
+  #saveStatus.err{color:var(--primary-red);}
+
+  /* ---------- sections ---------- */
+  .section{background:var(--card);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+  .section h2{font-size:0.95rem;margin:0 0 10px;color:var(--primary-red);}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;}
+  .row + .row{border-top:1px solid #f0e9dc;}
+  textarea{width:100%;min-height:70px;border-radius:10px;border:1.5px solid #ddd;padding:10px;font-family:inherit;font-size:0.88rem;resize:vertical;}
+  input[type=text],input[type=password],input[type=number]{font-family:inherit;}
+
+  /* toggle switch */
+  .switch{position:relative;width:46px;height:26px;flex-shrink:0;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;inset:0;background:#ccc;border-radius:30px;cursor:pointer;transition:.2s;}
+  .slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+  input:checked + .slider{background:var(--ok);}
+  input:checked + .slider:before{transform:translateX(20px);}
+
+  /* tabs */
+  .tabbar{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;-webkit-overflow-scrolling:touch;}
+  .tabbtn{flex-shrink:0;padding:8px 14px;border-radius:20px;border:1.5px solid var(--primary-red);background:#fff;
+    color:var(--primary-red);font-family:inherit;font-size:0.8rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .tabbtn.active{background:var(--primary-red);color:#fff;}
+
+  .cat-toggle-row{display:flex;align-items:center;justify-content:space-between;background:#fdf8ef;border-radius:12px;padding:10px 12px;margin-bottom:12px;}
+  .cat-toggle-row .lbl{font-size:0.85rem;font-weight:600;}
+  .cat-toggle-row .lbl small{display:block;font-weight:400;color:var(--ink-soft);font-size:0.72rem;}
+
+  .group-title{font-size:0.75rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 4px;}
+  .item-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #f0e9dc;}
+  .item-row .info{flex:1;min-width:0;}
+  .item-row .name{font-size:0.85rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .item-row .meta{font-size:0.7rem;color:var(--ink-soft);}
+  .item-row .actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .pencil{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--gold);background:#fff;color:#a3801f;
+    font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .pencil.active{background:var(--gold);color:#3a2a00;}
+  .sale-edit{display:none;padding:8px 0 4px;gap:8px;align-items:center;}
+  .sale-edit.open{display:flex;}
+  .sale-edit input{width:80px;padding:7px 8px;border-radius:8px;border:1.5px solid #ddd;font-size:0.82rem;}
+  .sale-edit button{padding:7px 10px;border-radius:8px;border:none;font-family:inherit;font-size:0.75rem;font-weight:600;cursor:pointer;}
+  .sale-edit .apply{background:var(--primary-red);color:#fff;}
+  .sale-edit .clear{background:#eee;color:#555;}
+  .no-items{color:var(--ink-soft);font-size:0.82rem;padding:8px 0;}
+
+  .pat-box{font-size:0.78rem;color:var(--ink-soft);line-height:1.6;}
+  .pat-box input{width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;font-size:0.85rem;margin-top:6px;}
+  .pat-box button{margin-top:8px;padding:8px 14px;border-radius:10px;border:none;background:var(--ink);color:#fff;font-family:inherit;font-size:0.78rem;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <div style="font-size:2rem;">🔒</div>
+    <h1>รหัสผ่านหน้าแอดมิน</h1>
+    <input type="password" id="pwInput" placeholder="••••••••" autocomplete="off" inputmode="text">
+    <button onclick="tryLogin()">เข้าสู่ระบบ</button>
+    <div class="err" id="pwErr"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+  <header>
+    <div>
+      <div class="title">จิจะ เฮงเฮง — แอดมิน</div>
+      <div class="sub" id="loadStatus">กำลังโหลดข้อมูล...</div>
+    </div>
+    <button id="saveBtn" onclick="saveToGitHub()" disabled>💾 บันทึก</button>
+  </header>
+  <div id="saveStatus"></div>
+
+  <div class="wrap">
+
+    <div class="section">
+      <h2>🔑 GitHub Token (สำหรับบันทึกลง repo)</h2>
+      <div class="pat-box">
+        ใส่ Personal Access Token ที่มีสิทธิ์ <b>Contents: Read and write</b> เฉพาะ repo นี้เท่านั้น
+        Token จะถูกเก็บไว้ในเบราว์เซอร์นี้เท่านั้น (localStorage) ไม่ถูกฝังในไฟล์
+        <input type="password" id="patInput" placeholder="github_pat_xxx...">
+        <button onclick="savePat()">บันทึก Token ไว้ในเครื่องนี้</button>
+        <div id="patStatus" style="margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🏪 สถานะร้าน (Popup ล็อกลูกค้า)</h2>
+      <div class="row">
+        <div class="lbl">เปิดร้าน</div>
+        <label class="switch">
+          <input type="checkbox" id="storeOpenToggle" checked onchange="markDirty()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div style="font-size:0.78rem;color:var(--ink-soft);margin:6px 0 4px;">
+        ข้อความที่ลูกค้าจะเห็น (แสดงเฉพาะตอนปิดร้าน ลูกค้าปิดเองไม่ได้)
+      </div>
+      <textarea id="storeMsg" placeholder="เช่น ขออภัยค่ะ วันนี้ร้านหยุดกะทันหัน กลับมาเปิดพรุ่งนี้ตามปกติ 12:00 น." oninput="markDirty()"></textarea>
+    </div>
+
+    <div class="section">
+      <h2>📋 จัดการหมวดเมนู / สินค้า</h2>
+      <div class="tabbar" id="tabbar"></div>
+      <div id="tabContent"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const GH_OWNER = 'jija-hengheng';
+const GH_REPO = 'new';
+const GH_BRANCH = 'main';
+const STATUS_PATH = 'status.json';
+const PW_HASH = '5f8cc8c3f359b8f65ca6ddc4ae481221eac4ae615354c3040d927ddd991043ee';
+
+const CATALOG = [{"key": "suki_type", "label": "ยอดนิยม (ชาบูหม่าล่า)", "items": [{"sku": "TP003", "name": "ข้าวสวย", "price": 10, "group": "หมวดข้าว"}, {"sku": "TP025", "name": "ชีสอาบ", "price": 20, "group": "หมวดพิเศษ"}, {"sku": "TP050", "name": "ไข่กุ้ง", "price": 15, "group": "หมวดพิเศษ"}, {"sku": "10003", "name": "มาชิตะ-สีเขียว", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "10002", "name": "มาชิตะ-สีแดง", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "Sotsy01", "name": "ซอสซัมยัง-สูตรเผ็ด", "price": 15, "group": "ซอสเกาหลี"}, {"sku": "Sotsy02", "name": "ซอสซัมยัง-สูตรคาโบนาร่า", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "TP022", "name": "หมูหมักนุ่ม", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP019", "name": "หมูบะช่อ", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP028", "name": "สามชั้นเสียบไม้", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP020", "name": "สันคอสไลซ์", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP021", "name": "สามชั้นสไลซ์", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "10058", "name": "หมูเสียบไม้", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP030", "name": "เบคอนพันไส้กรอก", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP027", "name": "เต้าหู้รูปปลา", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP045", "name": "ไส้กรอกชีสยาว", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP046", "name": "ไส้กรอกหนังกรอบจัมโบ้", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP016", "name": "มินิคอกเทล", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP032", "name": "เปาไข่กุ้ง", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP008", "name": "ปลาดอลลี่", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP026", "name": "เต้าหู้ชีส", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP012", "name": "ฟองเต้าหู้ซีฟู้ด", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "แมงกะพรุน", "name": "แมงกะพรุน", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP024", "name": "ออมุก", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "10049", "name": "หมึกกรอบ", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP001", "name": "ฟองเต้าหู้ข้าวโพด", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP005", "name": "ชิกุวะญี่ปุ่น", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP029", "name": "เต้าหู้ไข่", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP014", "name": "ฟองเต้าหู้ม้วน", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP034", "name": "เส้นฟองเต้าหู้เล็ก", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP042", "name": "เส้นฟองเต้าหู้ใหญ่", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP015", "name": "ฟองเต้าหู้สาหร่าย", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP013", "name": "ฟองเต้าหู้ดูดซุป", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP040", "name": "เห็ดเข็มทอง", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP036", "name": "เส้นเล็กจีน", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP035", "name": "เส้นมันหนึบ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP038", "name": "เส้นเล็กมันหนึบ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP007", "name": "บะหมี่ผัก", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP004", "name": "ข้าวโพด", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP011", "name": "ผักกาด", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP017", "name": "วากาเมะ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP033", "name": "เส้นบุกหม่าล่า", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP031", "name": "เบบี้กวางตุ้ง", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP018", "name": "วุ้นเส้น", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP039", "name": "เห็ดออรินจิ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP006", "name": "ชุดผัก", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP047", "name": "ต๊อกบกกีไส้ชีส", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "TP043", "name": "ไข่นกกระทา", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "TP044", "name": "ไข่ไก่", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "Z0F001", "name": "ฟองเต้าหู้ทอด – ยกแพ็ค", "price": 59, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0F002", "name": "ฟองเต้าหู้สาหร่าย-ยกแพ็ค", "price": 99, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0F005", "name": "ฟองเต้าหู้ดูดซุป-แพ็ค", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M001", "name": "เส้นมันหนึบหน้ากากแดง", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M005", "name": "เส้นมันหนึบ – เผือก", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M008", "name": "เส้นมันหนึบ – ผัก", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M004", "name": "เส้นมันหนึบ – มันม่วง", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M003", "name": "เส้นมันหนึบ – ฟักทอง", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M006", "name": "เส้นมันหนึบ-เล็ก", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "Z0M007", "name": "เส้นเล็ก-ซันเย่า", "price": 29, "group": "หมวดเมนูพิเศษ – ยกแพ็ค"}, {"sku": "NJ003", "name": "น้ำจิ้มสุกี้กวางตุ้ง", "price": 15, "group": "หมวดน้ำจิ้ม 100 ml"}, {"sku": "NJ001", "name": "น้ำจิ้มงาคั่วหม่าล่า", "price": 29, "group": "หมวดน้ำจิ้ม 100 ml"}, {"sku": "NJ002", "name": "น้ำจิ้มงาคั่วหอม", "price": 25, "group": "หมวดน้ำจิ้ม 100 ml"}, {"sku": "NJ004", "name": "น้ำจิ้มงาคั่วหม่าล่าแบบขวด", "price": 69, "group": "หมวดน้ำจิ้ม 220 ml"}]}, {"key": "mama_type", "label": "ต้มมาม่า", "items": []}, {"key": "malatod", "label": "หม่าล่าทอด", "items": [{"sku": "TP020", "name": "สันคอหมู", "price": 10}, {"sku": "TP021", "name": "สามชั้นสไลค์", "price": 10}, {"sku": "TP043", "name": "ไข่นกกระทา", "price": 10}, {"sku": "TP012", "name": "ฟองเต้าหู้ซีฟูด", "price": 10}, {"sku": "TP004", "name": "ข้าวโพด", "price": 10}, {"sku": "TP017", "name": "วากาเมะ", "price": 10}, {"sku": "TP032", "name": "เปาไข่กุ้ง", "price": 10}, {"sku": "TP026", "name": "เต้าหู้ชีส", "price": 10}, {"sku": "TP001", "name": "ฟองเต้าหู้ข้าวโพด", "price": 10}, {"sku": "TP030", "name": "เบคอนพันไส้กรอก", "price": 10}, {"sku": "TP027", "name": "เต้าหู้ปลา", "price": 10}, {"sku": "TP016", "name": "มินิคอกเทล", "price": 10}, {"sku": "TP040", "name": "เห็ดเข็มทอง", "price": 10}, {"sku": "TP047", "name": "ต็อกบกกีชีส", "price": 10}, {"sku": "TP039", "name": "เห็ดออรินจิ", "price": 10}, {"sku": "TP005", "name": "ชิกุวะ", "price": 10}, {"sku": "TP022", "name": "หมูหมักนุ่ม", "price": 10}]}, {"key": "set", "label": "ชุดเซตสุดคุ้ม", "items": [{"sku": "SET-อิ่มจุสุดคุ้ม", "name": "ชุดอิ่มจุ สุดคุ้ม", "price": 69, "group": "ชุดหลัก"}, {"sku": "SET-สายหมู", "name": "ชุดสายหมู", "price": 79, "group": "ชุดหลัก"}, {"sku": "SET-ติดเทรน", "name": "ชุดติดเทรน", "price": 99, "group": "ชุดหลัก"}, {"sku": "SET-รวมหัวปาร์ตี้", "name": "ชุดรวมหัวปาร์ตี้", "price": 199, "group": "ชุดหลัก"}, {"sku": "NJ004", "name": "น้ำจิ้มงาคั่วหม่าล่า (ขวด)", "price": 69, "group": "น้ำจิ้มเสริม"}, {"sku": "NJ003", "name": "น้ำจิ้มสุกี้กวางตุ้ง", "price": 15, "group": "น้ำจิ้มเสริม"}, {"sku": "NJ001", "name": "น้ำจิ้มงาคั่วหม่าล่า", "price": 29, "group": "น้ำจิ้มเสริม"}, {"sku": "NJ002", "name": "น้ำจิ้มงาคั่วหอม(ขาว)", "price": 25, "group": "น้ำจิ้มเสริม"}]}, {"key": "noodle", "label": "อาหารจานเดี่ยว", "items": []}, {"key": "mala_sides_menu", "label": "วัตถุดิบชาบูหม่าล่า", "items": [{"sku": "Z0M001", "name": "เส้นมันหนึบหน้ากากแดง", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M005", "name": "เส้นหนึบ เผือก", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M008", "name": "เส้นหนึบ ปวยเล้ง", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M004", "name": "เส้นหนึบ มันม่วง", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M003", "name": "เส้นหนึบ ฟักทอง", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M006", "name": "เส้นหนึบ เล็ก", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "Z0M007", "name": "เส้นหนึบ ซันเย่า", "price": 29, "group": "กลุ่มเส้นหนึบ"}, {"sku": "MS-SOUP50", "name": "ซุปหม่าล่า 50ก.", "price": 25, "group": "ซุปและพริกหม่าล่า"}, {"sku": "MS-SOUP150", "name": "ซุปหม่าล่า 150ก.", "price": 69, "group": "ซุปและพริกหม่าล่า"}, {"sku": "MS-SOUP220", "name": "ซุปหม่าล่า 220ก.", "price": 89, "group": "ซุปและพริกหม่าล่า"}, {"sku": "MS-CHILI1", "name": "พริกหม่าล่า 1+1", "price": 25, "group": "ซุปและพริกหม่าล่า"}, {"sku": "MS-CHILI2", "name": "พริกเผ็ดมาก 1+2", "price": 25, "group": "ซุปและพริกหม่าล่า"}, {"sku": "Z0F001", "name": "เต้าหู้ม้วน (แพ็ค)", "price": 59, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "Z0F002", "name": "เต้าหู้สาหร่าย", "price": 99, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "MS-TOFU-L", "name": "เต้าหู้ใหญ่ (แพ็ค)", "price": 69, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "MS-TOFU-S", "name": "เต้าหู้เล็ก (แพ็ค)", "price": 69, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "Z0F005", "name": "เต้าหู้ดูดซุป 60ก.", "price": 29, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "MS-SEAWEED-NOODLE", "name": "เส้นสาหร่าย", "price": 69, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "MS-WAKAME100", "name": "วากาเมะ 100ก.", "price": 59, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "NJ004", "name": "น้ำจิ้มงาคั่ว 220ml", "price": 69, "group": "เครื่องเคียงและฟองเต้าหู้"}, {"sku": "10003", "name": "มาชิตะ-สีเขียว", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "10002", "name": "มาชิตะ-สีแดง", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "Sotsy01", "name": "ซอสซัมยัง-สูตรเผ็ด", "price": 15, "group": "ซอสเกาหลี"}, {"sku": "Sotsy02", "name": "ซอสซัมยัง-สูตรคาโบนาร่า", "price": 20, "group": "ซอสเกาหลี"}, {"sku": "TP003", "name": "ข้าวสวย", "price": 10, "group": "หมวดข้าว"}, {"sku": "TP025", "name": "ชีสอาบ", "price": 20, "group": "หมวดพิเศษ"}, {"sku": "TP050", "name": "ไข่กุ้ง", "price": 15, "group": "หมวดพิเศษ"}, {"sku": "TP022", "name": "หมูหมักนุ่ม", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP019", "name": "หมูบะช่อ", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP028", "name": "สามชั้นเสียบไม้", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP020", "name": "สันคอสไลซ์", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP021", "name": "สามชั้นสไลซ์", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "10058", "name": "หมูเสียบไม้", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP030", "name": "เบคอนพันไส้กรอก", "price": 10, "group": "หมวดเนื้อหมู"}, {"sku": "TP027", "name": "เต้าหู้รูปปลา", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP045", "name": "ไส้กรอกชีสยาว", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP046", "name": "ไส้กรอกหนังกรอบจัมโบ้", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP016", "name": "มินิคอกเทล", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP032", "name": "เปาไข่กุ้ง", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP008", "name": "ปลาดอลลี่", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP026", "name": "เต้าหู้ชีส", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP012", "name": "ฟองเต้าหู้ซีฟู้ด", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "แมงกะพรุน", "name": "แมงกะพรุน", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP024", "name": "ออมุก", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "10049", "name": "หมึกกรอบ", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP001", "name": "ฟองเต้าหู้ข้าวโพด", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP005", "name": "ชิกุวะญี่ปุ่น", "price": 10, "group": "หมวดลูกชิ้น – ไส้กรอก – ทะเล"}, {"sku": "TP029", "name": "เต้าหู้ไข่", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP014", "name": "ฟองเต้าหู้ม้วน", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP034", "name": "เส้นฟองเต้าหู้เล็ก", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP042", "name": "เส้นฟองเต้าหู้ใหญ่", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP015", "name": "ฟองเต้าหู้สาหร่าย", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP013", "name": "ฟองเต้าหู้ดูดซุป", "price": 10, "group": "หมวดเต้าหู้"}, {"sku": "TP040", "name": "เห็ดเข็มทอง", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP036", "name": "เส้นเล็กจีน", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP035", "name": "เส้นมันหนึบ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP038", "name": "เส้นเล็กมันหนึบ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP007", "name": "บะหมี่ผัก", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP004", "name": "ข้าวโพด", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP011", "name": "ผักกาด", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP017", "name": "วากาเมะ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP033", "name": "เส้นบุกหม่าล่า", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP018", "name": "วุ้นเส้น", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP039", "name": "เห็ดออรินจิ", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP006", "name": "ชุดผัก", "price": 10, "group": "หมวดผัก – เส้น"}, {"sku": "TP047", "name": "ต๊อกบกกีไส้ชีส", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "TP043", "name": "ไข่นกกระทา", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "TP044", "name": "ไข่ไก่", "price": 10, "group": "หมวดไข่ – เมนูพิเศษ"}, {"sku": "NJ003", "name": "น้ำจิ้มสุกี้กวางตุ้ง", "price": 15, "group": "หมวดน้ำจิ้ม 100 ml"}, {"sku": "NJ001", "name": "น้ำจิ้มงาคั่วหม่าล่า", "price": 29, "group": "หมวดน้ำจิ้ม 100 ml"}, {"sku": "NJ002", "name": "น้ำจิ้มงาคั่วหอม", "price": 25, "group": "หมวดน้ำจิ้ม 100 ml"}]}, {"key": "hotpot", "label": "หม้อไฟ", "items": []}, {"key": "drink_menu", "label": "เมนูเครื่องดื่ม", "items": [{"sku": "D0003", "name": "โค้ก + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0009", "name": "แฟนต้า บลูเบอร์รี่ + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0007", "name": "น้ำฟักเขียว + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0004", "name": "น้ำเก๊กฮวย + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0005", "name": "น้ำจับเลี้ยง + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0006", "name": "น้ำลำไย + แก้วน้ำแข็ง", "price": 25}, {"sku": "D0002", "name": "น้ำดื่มขวด", "price": 10}, {"sku": "Love01", "name": "Loveza + แก้วน้ำแข็ง (ทุกรสชาติ)", "price": 25}]}];
+
+let statusData = null;
+let currentSha = null;
+let dirty = false;
+let activeTab = CATALOG[0].key;
+
+/* ================= LOGIN ================= */
+async function sha256(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function tryLogin(){
+  const val = document.getElementById('pwInput').value;
+  const hash = await sha256(val);
+  if(hash === PW_HASH){
+    sessionStorage.setItem('rs_admin_ok','1');
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    boot();
+  } else {
+    document.getElementById('pwErr').textContent = 'รหัสผ่านไม่ถูกต้อง';
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+if(sessionStorage.getItem('rs_admin_ok') === '1'){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  boot();
+}
+
+/* ================= PAT ================= */
+function savePat(){
+  const val = document.getElementById('patInput').value.trim();
+  if(val){
+    localStorage.setItem('rs_gh_pat', val);
+    document.getElementById('patStatus').textContent = '✅ บันทึก Token แล้ว';
+    document.getElementById('patStatus').style.color = '#1a7a34';
+    document.getElementById('patInput').value='';
+    document.getElementById('saveBtn').disabled = false;
+  }
+}
+function getPat(){ return localStorage.getItem('rs_gh_pat') || ''; }
+
+/* ================= BOOT / LOAD ================= */
+async function boot(){
+  if(getPat()){
+    document.getElementById('patStatus').textContent = '✅ มี Token บันทึกไว้แล้วในเครื่องนี้';
+    document.getElementById('patStatus').style.color = '#1a7a34';
+    document.getElementById('saveBtn').disabled = false;
+  }
+  renderTabs();
+  await loadStatus();
+}
+
+async function loadStatus(){
+  document.getElementById('loadStatus').textContent = 'กำลังโหลดข้อมูล...';
+  try{
+    const headers = {'Accept':'application/vnd.github+json'};
+    if(getPat()) headers['Authorization'] = 'Bearer ' + getPat();
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${STATUS_PATH}?ref=${GH_BRANCH}`, {headers});
+    if(!res.ok) throw new Error('โหลดไม่สำเร็จ (' + res.status + ')');
+    const json = await res.json();
+    currentSha = json.sha;
+    const decoded = decodeURIComponent(escape(atob(json.content.replace(/\n/g,''))));
+    statusData = JSON.parse(decoded);
+    document.getElementById('loadStatus').textContent = '✅ โหลดข้อมูลล่าสุดจาก GitHub แล้ว';
+  }catch(e){
+    document.getElementById('loadStatus').textContent = '⚠️ โหลดไม่สำเร็จ ใช้ค่าเริ่มต้นแทน (' + e.message + ')';
+    statusData = { store:{open:true,message:''}, categories:{}, items:{} };
+    currentSha = null;
+  }
+  hydrateForm();
+  renderTab(activeTab);
+}
+
+function hydrateForm(){
+  document.getElementById('storeOpenToggle').checked = statusData.store.open !== false;
+  document.getElementById('storeMsg').value = statusData.store.message || '';
+  dirty = false;
+}
+
+function markDirty(){ dirty = true; }
+
+/* ================= TABS ================= */
+function renderTabs(){
+  const bar = document.getElementById('tabbar');
+  bar.innerHTML = CATALOG.map(t => `<button class="tabbtn${t.key===activeTab?' active':''}" onclick="switchTab('${t.key}')">${t.label}</button>`).join('');
+}
+function switchTab(key){
+  activeTab = key;
+  renderTabs();
+  renderTab(key);
+}
+
+function renderTab(key){
+  if(!statusData) return;
+  const tab = CATALOG.find(t=>t.key===key);
+  const container = document.getElementById('tabContent');
+  const isOpen = statusData.categories[key] !== false;
+
+  let html = `
+    <div class="cat-toggle-row">
+      <div class="lbl">เปิดหมวดนี้ให้ลูกค้าเห็น<small>ปิด = การ์ดในหน้าแรกเป็นสีเทา กดเข้าไม่ได้</small></div>
+      <label class="switch">
+        <input type="checkbox" ${isOpen?'checked':''} onchange="toggleCategory('${key}', this.checked)">
+        <span class="slider"></span>
+      </label>
+    </div>`;
+
+  if(tab.items.length === 0){
+    html += `<div class="no-items">หมวดนี้เป็นเมนูแบบเลือกเอง (build-your-own) — ควบคุมได้เฉพาะระดับ "เปิด/ปิดทั้งหมวด" ด้านบนเท่านั้น</div>`;
+  } else {
+    let lastGroup = null;
+    tab.items.forEach(item => {
+      if(item.group && item.group !== lastGroup){
+        html += `<div class="group-title">${item.group}</div>`;
+        lastGroup = item.group;
+      }
+      const info = statusData.items[item.sku] || {};
+      const soldOut = !!info.soldOut;
+      const hasSale = info.salePrice !== undefined && info.salePrice !== null && info.salePrice !== '';
+      html += `
+        <div class="item-row">
+          <div class="info">
+            <div class="name">${item.name}</div>
+            <div class="meta">${item.sku} • ปกติ ${item.price} บ.${hasSale ? ` • ลดเหลือ <b style="color:#c40010">${info.salePrice} บ.</b>` : ''}</div>
+          </div>
+          <div class="actions">
+            <button class="pencil${hasSale?' active':''}" onclick="toggleSaleEdit('${item.sku}')" title="ตั้งราคาลด">✎</button>
+            <label class="switch">
+              <input type="checkbox" ${soldOut?'checked':''} onchange="toggleSoldOut('${item.sku}', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="sale-edit" id="sale-${cssId(item.sku)}">
+          <input type="number" placeholder="ราคาลด" id="saleval-${cssId(item.sku)}" value="${hasSale?info.salePrice:''}">
+          <button class="apply" onclick="applySale('${item.sku}', ${item.price})">ตกลง</button>
+          <button class="clear" onclick="clearSale('${item.sku}')">ยกเลิกลด</button>
+        </div>`;
+    });
+  }
+  container.innerHTML = html;
+}
+
+function cssId(sku){ return sku.replace(/[^a-zA-Z0-9]/g,'_'); }
+
+function toggleCategory(key, val){
+  statusData.categories[key] = val;
+  markDirty();
+}
+function toggleSoldOut(sku, val){
+  if(!statusData.items[sku]) statusData.items[sku] = {};
+  statusData.items[sku].soldOut = val;
+  cleanupItem(sku);
+  markDirty();
+}
+function toggleSaleEdit(sku){
+  const el = document.getElementById('sale-' + cssId(sku));
+  el.classList.toggle('open');
+}
+function applySale(sku, originalPrice){
+  const val = document.getElementById('saleval-' + cssId(sku)).value;
+  if(val === '' || isNaN(val)) return;
+  if(!statusData.items[sku]) statusData.items[sku] = {};
+  statusData.items[sku].salePrice = Number(val);
+  statusData.items[sku].originalPrice = originalPrice;
+  markDirty();
+  renderTab(activeTab);
+}
+function clearSale(sku){
+  if(statusData.items[sku]){
+    delete statusData.items[sku].salePrice;
+    delete statusData.items[sku].originalPrice;
+    cleanupItem(sku);
+  }
+  markDirty();
+  renderTab(activeTab);
+}
+function cleanupItem(sku){
+  const it = statusData.items[sku];
+  if(!it) return;
+  if(!it.soldOut && (it.salePrice===undefined||it.salePrice===null||it.salePrice==='')){
+    delete statusData.items[sku];
+  }
+}
+
+/* ================= SAVE ================= */
+async function saveToGitHub(){
+  if(!getPat()){
+    alert('กรุณาใส่และบันทึก GitHub Token ก่อน');
+    return;
+  }
+  statusData.store.open = document.getElementById('storeOpenToggle').checked;
+  statusData.store.message = document.getElementById('storeMsg').value;
+
+  const statusEl = document.getElementById('saveStatus');
+  statusEl.textContent = 'กำลังบันทึก...';
+  statusEl.className = '';
+  document.getElementById('saveBtn').disabled = true;
+
+  try{
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(statusData, null, 2))));
+    const body = {
+      message: 'อัปเดตสถานะร้าน (admin panel) - ' + new Date().toLocaleString('th-TH'),
+      content: content,
+      branch: GH_BRANCH
+    };
+    if(currentSha) body.sha = currentSha;
+
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${STATUS_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Accept':'application/vnd.github+json',
+        'Authorization':'Bearer ' + getPat(),
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    if(!res.ok) throw new Error(json.message || ('HTTP ' + res.status));
+    currentSha = json.content.sha;
+    dirty = false;
+    statusEl.textContent = '✅ บันทึกสำเร็จ! เว็บลูกค้าจะอัปเดตภายในประมาณ 30 วิ - 2 นาที';
+    statusEl.className = 'ok';
+  }catch(e){
+    statusEl.textContent = '❌ บันทึกไม่สำเร็จ: ' + e.message;
+    statusEl.className = 'err';
+  }
+  document.getElementById('saveBtn').disabled = !getPat();
+}
+
+// เตือนก่อนออกจากหน้าถ้ายังไม่บันทึก
+window.addEventListener('beforeunload', (e) => {
+  if(dirty){ e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>

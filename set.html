@@ -6,6 +6,7 @@
     <title>จิจะ เฮงเฮง - เลือกเมนู</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         body { padding-bottom: 110px; }
 
@@ -155,7 +156,7 @@
 
         function renderMain() {
             document.getElementById('main-menu').innerHTML = mainItems.map(item => `
-                <div class="menu-card" onclick="openSoupModal(${item.id})">
+                <div class="menu-card" id="card-SET-${item.skuBase}" onclick="openSoupModal(${item.id})">
                     <img src="${item.img}" alt="${item.name}">
                     <div class="card-info">
                         <div class="name">${item.name}</div>
@@ -168,7 +169,7 @@
 
         function renderSauce() {
             document.getElementById('sauce-menu').innerHTML = sauceItems.map(item => `
-                <div class="menu-card sauce-card" onclick="addSauceToCart(${item.id})">
+                <div class="menu-card sauce-card" id="card-${item.sku}" onclick="addSauceToCart(${item.id})">
                     <img src="${item.img}">
                     <div class="card-info">
                         <div class="name">${item.name}</div>
@@ -260,6 +261,7 @@
         renderMain();
         renderSauce();
         updateCartUI();
+        RemoteStatus.init({ categoryKey: 'set' });
     </script>
 </body>
 </html>

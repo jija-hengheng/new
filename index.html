@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         :root {
             --primary-red: #940008;
@@ -412,7 +413,7 @@
 
         <div class="menu-grid-top">
 
-            <div class="menu-card" onclick="goDirect('suki_type.html');" tabindex="0">
+            <div class="menu-card" data-cat="suki_type" onclick="goDirect('suki_type.html');" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/suki.png');">
                     <div class="badge-pick i18n" data-th="ยอดนิยม" data-en="Popular">ยอดนิยม</div>
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
@@ -421,7 +422,7 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="ซุปเข้มข้น ท็อปปิ้งหลากหลาย" data-en="Rich mala broth, endless toppings">ซุปเข้มข้น ท็อปปิ้งหลากหลาย</p></div>
             </div>
 
-            <div class="menu-card" onclick="goDirect('mama_type.html');" tabindex="0">
+            <div class="menu-card" data-cat="mama_type" onclick="goDirect('mama_type.html');" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/mama.png');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
@@ -433,7 +434,7 @@
 
         <div class="menu-grid">
 
-            <div class="menu-card coming-soon" tabindex="-1" aria-disabled="true">
+            <div class="menu-card coming-soon" data-cat="malatod" tabindex="-1" aria-disabled="true">
                 <div class="card-top-content" style="background-image: url('images/mala-tod.png');">
                     <div class="coming-soon-badge i18n" data-th="Coming.." data-en="Coming..">Coming..</div>
                 </div>
@@ -441,7 +442,7 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="กรอบนอกนุ่มใน เลือกไม้เองได้ตามใจชอบ" data-en="Crispy outside, tender inside — pick your own skewers">กรอบฟันแตก เลือกเองได้ตามใจชอบ</p></div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='set.html';" tabindex="0">
+            <div class="menu-card" data-cat="set" onclick="window.location.href='set.html';" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/n.jpg');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
@@ -451,7 +452,7 @@
                 </div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='noodle.html';" tabindex="0">
+            <div class="menu-card" data-cat="noodle" onclick="window.location.href='noodle.html';" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/mheekaicheak.png');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
@@ -459,7 +460,7 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="เมนูจานเดียว ทานง่าย อิ่มอร่อย" data-en="Easy one-plate meals, always satisfying">เมนูจานเดียว ทานง่าย อิ่มอร่อย</p></div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='mala_sides_menu.html';" tabindex="0">
+            <div class="menu-card" data-cat="mala_sides_menu" onclick="window.location.href='mala_sides_menu.html';" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/mala_side.png');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
@@ -467,7 +468,7 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน" data-en="Quality ingredients to cook at home">วัตถุดิบคุณภาพ สำหรับทำเองที่บ้าน</p></div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='hotpot.html';" tabindex="0">
+            <div class="menu-card" data-cat="hotpot" onclick="window.location.href='hotpot.html';" tabindex="0">
                 <!-- TODO: images/hotpot.png เป็น placeholder ชั่วคราว รอเปลี่ยนเป็นรูปจริงภายหลัง -->
                 <div class="card-top-content" style="background-image: url('images/hotpot.png');">
                     <div class="badge-pick i18n" data-th="ทานที่ร้าน" data-en="Dine-in Only">ทานที่ร้าน</div>
@@ -477,7 +478,7 @@
                 <div class="card-details"><p class="menu-details-text i18n" data-th="ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส" data-en="Cook it yourself at the table">ต้ม-ลวกเองที่โต๊ะ อิ่มเต็มอรรถรส</p></div>
             </div>
 
-            <div class="menu-card" onclick="window.location.href='drink_menu.html';" tabindex="0">
+            <div class="menu-card" data-cat="drink_menu" onclick="window.location.href='drink_menu.html';" tabindex="0">
                 <div class="card-top-content" style="background-image: url('images/drink.png');">
                     <div class="click-here-button-overlay i18n" data-th="ดูเมนู →" data-en="View Menu →">ดูเมนู →</div>
                 </div>
@@ -568,6 +569,9 @@
         }
 
         setLang(currentLang);
+
+        // ดึงสถานะร้าน/หมวดเมนู จากแอดมิน (เปิด/ปิดร้าน, เปิด/ปิดหมวด, ป้ายราคาลด)
+        RemoteStatus.init({ isIndex: true });
     </script>
 </body>
 </html>

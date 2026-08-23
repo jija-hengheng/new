@@ -6,6 +6,7 @@
     <title>เมนูเครื่องดื่ม - จิจะ เฮงเฮง</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         body { padding-bottom: 110px; }
 
@@ -95,7 +96,7 @@
         function renderMenu() {
             const container = document.getElementById('menu-container');
             container.innerHTML = drinks.map((item, idx) => `
-                <div class="menu-item">
+                <div class="menu-item" id="card-${item.sku || (item.options && item.options[0].sku) || ('idx' + idx)}">
                     <img src="${item.img}" class="menu-img" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
                     <div class="menu-info">
                         <div class="menu-name">${item.name}</div>
@@ -169,6 +170,7 @@
         }
 
         renderMenu();
+        RemoteStatus.init({ categoryKey: 'drink_menu' });
     </script>
 </body>
 </html>

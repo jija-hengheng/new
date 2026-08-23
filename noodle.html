@@ -6,6 +6,7 @@
     <title>เมนูเส้น - สั่งอาหาร</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         body { padding-bottom: 110px; }
         .item-price { color: var(--primary-red); }
@@ -234,6 +235,9 @@
 
         function closeModal() { document.getElementById('optModal').style.display = 'none'; }
         updateUI();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { RemoteStatus.init({ categoryKey: 'noodle' }); });
     </script>
 </body>
 </html>
