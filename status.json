@@ -11,6 +11,10 @@
   "items": {
     "TP003": {
       "soldOut": true
+    },
+    "TP025": {
+      "salePrice": 18,
+      "originalPrice": 20
     }
   }
 }
