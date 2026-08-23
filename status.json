@@ -13,5 +13,11 @@
     "hotpot": true,
     "drink_menu": true
   },
-  "items": {}
+  "items": {
+    "TP003": {
+      "soldOut": true,
+      "salePrice": 15,
+      "originalPrice": 10
+    }
+  }
 }
