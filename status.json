@@ -55,6 +55,10 @@
     },
     "TP029": {
       "soldOut": true
+    },
+    "TP050": {
+      "salePrice": 13,
+      "originalPrice": 15
     }
   }
 }
