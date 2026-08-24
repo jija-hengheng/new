@@ -486,8 +486,8 @@
         <div class="section-label"><span class="dot"></span><span class="i18n" data-th="วิธีรับสินค้า" data-en="Delivery Method">วิธีรับสินค้า</span></div>
         <div class="panel panel-white">
             <div class="option-cards">
-                <input type="radio" id="r1" name="stype" value="🪭ทานที่ร้าน" onchange="toggleLocationField(); loadCart();">
-                <label for="r1"><span class="opt-icon">🪭</span><span class="opt-label">🪭ทานที่ร้าน</span></label>
+                <input type="radio" id="r1" name="stype" value="🪭" onchange="toggleLocationField(); loadCart();">
+                <label for="r1"><span class="opt-icon">🪭</span><span class="opt-label">🪭</span></label>
 
                 <input type="radio" id="r2" name="stype" value="🏡 กลับบ้าน (มารับที่ร้าน)" onchange="toggleLocationField(); loadCart();">
                 <label for="r2"><span class="opt-icon">🥡</span><span class="opt-label i18n" data-th="กลับบ้าน" data-en="Takeaway">กลับบ้าน</span></label>
@@ -643,10 +643,8 @@
 
         const headerCount = document.getElementById('header-count');
         const footerCount = document.getElementById('footer-count');
-        // 🔧 FIX: นับจำนวน items จริง (รวม count)
-        const totalItemCount = cartItems.reduce((sum, item) => sum + (item.count || 1), 0);
-        headerCount.innerText = `${totalItemCount} ${itemsLabel}`;
-        footerCount.innerText = `${totalItemCount} ${itemsLabel}`;
+        headerCount.innerText = `${cartItems.length} ${itemsLabel}`;
+        footerCount.innerText = `${cartItems.length} ${itemsLabel}`;
 
         if (cartItems.length === 0) {
             list.innerHTML = `<div class="empty-cart">${t('ไม่มีรายการอาหารในตะกร้า', 'No items in your cart')}</div>`;
@@ -655,8 +653,7 @@
         }
 
         cartItems.forEach((item, idx) => {
-            // 🔧 FIX: คูณด้วย count เพื่อได้ยอดรวมจริง
-            totalFood += item.price * (item.count || 1);
+            totalFood += item.price;
             const hasDetails = item.details && item.details.length > 0;
             const isOpen = expandedItems.has(idx);
             const removeLabel = t('ลบ', 'Remove');
@@ -666,10 +663,9 @@
                 <div class="cart-item-head" ${hasDetails ? `onclick="toggleCartItem(${idx})"` : ''} style="${hasDetails ? 'cursor:pointer;' : ''}">
                     <div class="cart-item-icon">🍲</div>
                     <div class="cart-item-main">
-                        <div class="cart-item-name">${item.name}${item.count > 1 ? ` (x${item.count})` : ''}</div>
+                        <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-meta">
-                            <!-- 🔧 FIX: แสดงยอดรวม โดยคูณด้วย count -->
-                            <span class="price">${item.price * (item.count || 1)} ${unit}</span>
+                            <span class="price">${item.price} ${unit}</span>
                             ${hasDetails ? `<span class="qty-badge">${item.details.length} ${itemsLabel}</span>` : ''}
                         </div>
                     </div>
@@ -727,8 +723,7 @@
         const serviceType = serviceTypeEl.value;
         const privilegeType = privilegeTypeEl.value;
         let totalFood = 0;
-        // 🔧 FIX: คูณด้วย count เพื่อได้ยอดรวมจริง
-        cartItems.forEach(item => totalFood += item.price * (item.count || 1));
+        cartItems.forEach(item => totalFood += item.price);
 
         let deliveryFee = 0;
         if (serviceType.includes('Delivery') && totalFood < 80) deliveryFee = 10;
@@ -740,8 +735,7 @@
         const paymentType = (privilegeType === 'ไม่ใช้สิทธิ' && paymentTypeEl) ? paymentTypeEl.value : '';
 
         // ===== สร้างข้อความสรุปสำหรับวางในแชท (คงเป็นภาษาไทยเสมอ เพื่อให้ทางร้าน/แอดมินอ่านออเดอร์ตรงกัน ไม่ว่าลูกค้าจะดูหน้าเว็บเป็นภาษาใด) =====
-        let txt = ` เลขที่ออเดอร์ : ${orderId}\n`;
-        txt += '========================\n';
+        let txt = '========================\n';
         txt += '📢 **รายการสั่งซื้อใหม่ (จิจะ เฮงเฮง)**\n';
         txt += '========================\n';
         txt += `👤 ชื่อผู้รับ: ${name}\n`;
@@ -758,14 +752,11 @@
             txt += `💰 วิธีชำระเงิน: ${paymentTypeEl.value}\n`;
         txt += `━━━━━━━━━━━━\n`;
 
-        // 🔧 FIX: นับจำนวน items จริง (รวม count)
-        const totalItemsCount = cartItems.reduce((sum, item) => sum + (item.count || 1), 0);
-        txt += `🍴🥡 *รายการอาหารทั้งหมด:* ${totalItemsCount} รายการ\n━━━━━━━━━━━━\n`;
+        txt += `🍴🥡 *รายการอาหารทั้งหมด:* ${cartItems.length} รายการ\n━━━━━━━━━━━━\n`;
 
         cartItems.forEach((item, i) => {
             if (i > 0) txt += `\n`;
-            // 🔧 FIX: แสดงจำนวน และยอดรวมต่อรายการ
-            txt += `${i + 1}. *${item.name}${item.count > 1 ? ` (x${item.count})` : ''}* (${item.price * (item.count || 1)} บ.)\n`;
+            txt += `${i + 1}. *${item.name}* (${item.price} บ.)\n`;
             if (item.details && item.details.length > 0) {
                 item.details.forEach(d => {
                     txt += ` ➖ ${d.name} x${d.count} (+${d.price * d.count} บ.)\n`;
@@ -778,8 +769,9 @@
         if (extraServiceFee > 0) txt += `✨ค่าบริการระบบเพิ่ม: ${extraServiceFee} บ.\n`;
         txt += `🧺*ยอดรวมทั้งหมด: ${grandTotal} บาท*🪭\n`;
         txt += `━━━━━━━━━━━━\n━━ขอบพระคุณค่ะ 🙏✨━━`;
+        txt += `\n\n(เลขที่ออเดอร์: ${orderId})`;
 
-        // ===== เก็บข้อมูลแบบมีโครงสร้าง ไว้ส่งเข้า Sheets =====
+        // ===== เก็บข้อมูลแบบมีโครงสร้าง ไว้ส่งเข้า Sheets ตอนกดคัดลอก =====
         currentOrderData = {
             orderID: orderId,
             name: name,
@@ -787,11 +779,10 @@
             orderType: serviceType,
             mapLink: googleMapsLink || '',
             summaryText: txt,
-            // 🔧 FIX: เก็บจำนวน count จริง ไม่ใช่ 1 เสมอ
             items: cartItems.map(item => ({
                 name: item.name,
                 sku: item.sku || '',
-                qty: item.count || 1,
+                qty: 1,
                 price: item.price,
                 details: item.details || []
             })),
@@ -803,12 +794,12 @@
             paymentType: paymentType
         };
 
+        document.getElementById('order-text').value = txt;
+        document.getElementById('overlay').style.display = 'flex';
+
         // ✅ ส่งเข้าชีตทันทีตอนกด "ส่งออเดอร์" (ปุ่มแดง) — ไม่ต้องรอกดปุ่มเขียวอีกที
         // แยกออกจากขั้นตอนคัดลอก/ไปแชท ทำให้แต่ละปุ่มทำหน้าที่เดียวจบ ไม่ชนกัน เสถียรขึ้น
         sendOrderToSheets(currentOrderData);
-
-        document.getElementById('order-text').value = txt;
-        document.getElementById('overlay').style.display = 'flex';
     }
 
     function addMoreOrder() {
@@ -900,7 +891,7 @@
         } catch (e) { /* ไม่มีคิวค้าง หรืออ่านไม่ได้ ก็ข้ามไป */ }
     }
 
-    // ✅ ตอนนี้ปุ่มเขียวทำหน้าที่เดียว: คัดลอกข้อความ + ไปแชท (ไม่ยิงเข้าชีตซ้ำ เพราะยิงไปแล้วตอนกดปุ่มแดง)
+    // ✅ ปุ่มเขียวทำหน้าที่เดียว: คัดลอกข้อความ + ไปแชท (ไม่ยิงเข้าชีตซ้ำ เพราะยิงไปแล้วตอนกดปุ่มแดง)
     async function copyAndChat() {
         if (!currentOrderData) return;
 
