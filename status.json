@@ -1,7 +1,7 @@
 {
   "store": {
-    "open": false,
-    "message": "ของหมดแล้วค่ะ ขออภัยมากๆนะคะ \nเจอกันวันพรุ่งนี้ 12:00 ค่ะ 🙏💖"
+    "open": true,
+    "message": ""
   },
   "categories": {
     "suki_type": true,
