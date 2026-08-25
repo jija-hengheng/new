@@ -14,45 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "TP003": {
-      "soldOut": true
-    },
-    "TP046": {
-      "soldOut": true
-    },
-    "TP042": {
-      "soldOut": true
-    },
-    "Z0M003": {
-      "soldOut": true
-    },
-    "MS-SOUP220": {
-      "soldOut": true
-    },
-    "MS-CHILI2": {
-      "soldOut": true
-    },
-    "MS-SOUP150": {
-      "soldOut": true
-    },
-    "MS-CHILI1": {
-      "soldOut": true
-    },
-    "MS-TOFU-L": {
-      "soldOut": true
-    },
-    "MS-SEAWEED-NOODLE": {
-      "soldOut": true
-    },
-    "MS-WAKAME100": {
-      "soldOut": true
-    },
-    "Z0F002": {
-      "soldOut": true
-    },
-    "MS-TOFU-S": {
-      "soldOut": true
-    },
     "TP050": {
       "salePrice": 13,
       "originalPrice": 15
