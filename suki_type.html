@@ -224,10 +224,39 @@
                 el.textContent = el.getAttribute('data-' + lang);
             });
 
-            const lockLabel = lang === 'en' ? 'Not available for Hot Pot' : 'ไม่รองรับหม้อไฟ';
-            document.querySelectorAll('.soup-card').forEach(function (card) {
-                card.setAttribute('data-lock-label', lockLabel);
-            });
+            document.querySelectorAll('.soup-card.locked').forEach(updateLockLabel);
+        }
+
+        function updateLockLabel(card) {
+            const reason = card.dataset.lockReason;
+            if (!reason) return;
+            const label = reason === 'admin'
+                ? (currentLang === 'en' ? 'Temporarily closed' : 'ปิดชั่วคราว')
+                : (currentLang === 'en' ? 'Not available for Hot Pot' : 'ไม่รองรับหม้อไฟ');
+            card.setAttribute('data-lock-label', label);
+        }
+
+        function lockCard(id, reason) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            const card = input.closest('.soup-card');
+            if (!card) return;
+            input.disabled = true;
+            card.classList.add('locked');
+            // ถ้าเคยล็อกด้วยเหตุผลหม้อไฟไว้แล้ว ไม่ให้แอดมินเผลอทับข้อความ
+            if (!card.dataset.lockReason) card.dataset.lockReason = reason;
+            updateLockLabel(card);
+        }
+
+        function unlockAdminCard(id) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            const card = input.closest('.soup-card');
+            if (!card || card.dataset.lockReason !== 'admin') return; // ห้ามปลดล็อกการ์ดที่ถูกล็อกเพราะหม้อไฟ
+            input.disabled = false;
+            card.classList.remove('locked');
+            delete card.dataset.lockReason;
+            card.removeAttribute('data-lock-label');
         }
 
         // ถ้ามาจาก Flow หม้อไฟ (ทานที่ร้าน) ให้ปิดการใช้งานเมนูที่ไม่เหมาะกับการต้ม/ลวกเอง
@@ -235,11 +264,21 @@
         function applyHotpotLocks() {
             if (sessionStorage.getItem('orderFlow') !== 'HOTPOT') return;
             const lockedIds = ['s9', 's6', 's10']; // หม่าล่าผัดแห้ง, สุกี้แห้ง, หม่าล่าปั้น (ย่าง)
-            lockedIds.forEach(id => {
-                const input = document.getElementById(id);
-                if (!input) return;
-                input.disabled = true;
-                input.closest('.soup-card').classList.add('locked');
+            lockedIds.forEach(id => lockCard(id, 'hotpot'));
+        }
+
+        // อ่านสถานะปิดการ์ดน้ำซุปจากแอดมิน (status.json -> cardLocks.suki_type)
+        // เรียกซ้ำทุกครั้งที่ RemoteStatus โหลด/โพลข้อมูลใหม่ ทำให้ปิด/เปิดจากแอดมินมีผลแบบเกือบเรียลไทม์
+        function applyAdminSoupLocks() {
+            const data = window.RemoteStatus && window.RemoteStatus.data;
+            const lockedIds = (data && data.cardLocks && data.cardLocks.suki_type) || [];
+            document.querySelectorAll('.soup-card input[name="soup"]').forEach(function (input) {
+                const id = input.id;
+                if (lockedIds.includes(id)) {
+                    lockCard(id, 'admin');
+                } else {
+                    unlockAdminCard(id);
+                }
             });
         }
 
@@ -270,7 +309,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             applyHotpotLocks();
             setLang(currentLang);
-            RemoteStatus.init({ categoryKey: 'suki_type' });
+            RemoteStatus.init({ categoryKey: 'suki_type', renderFn: applyAdminSoupLocks });
         });
     </script>
 </body>

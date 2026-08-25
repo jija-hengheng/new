@@ -44,13 +44,15 @@
   textarea{width:100%;min-height:70px;border-radius:10px;border:1.5px solid #ddd;padding:10px;font-family:inherit;font-size:0.88rem;resize:vertical;}
   input[type=text],input[type=password],input[type=number]{font-family:inherit;}
 
-  /* toggle switch */
-  .switch{position:relative;width:46px;height:26px;flex-shrink:0;}
-  .switch input{opacity:0;width:0;height:0;}
-  .slider{position:absolute;inset:0;background:#ccc;border-radius:30px;cursor:pointer;transition:.2s;}
-  .slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
-  input:checked + .slider{background:var(--ok);}
-  input:checked + .slider:before{transform:translateX(20px);}
+  /* segmented capsule toggle — เขียว/แดง เห็นสถานะชัดทั้งสองฝั่งโดยไม่ต้องกด */
+  .seg-toggle{display:flex;border-radius:20px;overflow:hidden;border:1px solid #ddd;cursor:pointer;user-select:none;flex-shrink:0;}
+  .seg-toggle .seg{padding:6px 12px;font-size:0.72rem;font-weight:700;font-family:inherit;transition:.15s;white-space:nowrap;}
+  .seg-toggle .seg-on{background:#d9f0df;color:#1a7a34;}
+  .seg-toggle .seg-off{background:#fbe3e3;color:#a32d2d;}
+  .seg-toggle.is-off .seg-on{background:transparent;color:#8a9a8f;}
+  .seg-toggle.is-off .seg-off{background:#c0392b;color:#fff;}
+  .seg-toggle:not(.is-off) .seg-on{background:#2e9e52;color:#fff;}
+  .seg-toggle:not(.is-off) .seg-off{background:transparent;color:#a08f8f;}
 
   /* tabs */
   .tabbar{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;-webkit-overflow-scrolling:touch;}
@@ -123,10 +125,9 @@
       <h2>🏪 สถานะร้าน (Popup ล็อกลูกค้า)</h2>
       <div class="row">
         <div class="lbl">เปิดร้าน</div>
-        <label class="switch">
-          <input type="checkbox" id="storeOpenToggle" checked onchange="markDirty()">
-          <span class="slider"></span>
-        </label>
+        <div class="seg-toggle" id="storeOpenToggle" data-state="on" onclick="segToggleClick(this, markDirty)">
+          <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+        </div>
       </div>
       <div style="font-size:0.78rem;color:var(--ink-soft);margin:6px 0 4px;">
         ข้อความที่ลูกค้าจะเห็น (แสดงเฉพาะตอนปิดร้าน ลูกค้าปิดเองไม่ได้)
@@ -155,6 +156,30 @@ const CATALOG = [{"key": "suki_type", "label": "ยอดนิยม (ชาบ
 
 let statusData = null;
 let currentSha = null;
+
+// การ์ดน้ำซุป (suki_type.html) — ปิดได้ทีละใบทั้งใบ ไม่ต้องคุมระดับความเผ็ดย่อย
+const SOUP_CARDS = [
+  { id: 's9', name: 'หม่าล่าผัดแห้ง' },
+  { id: 's7', name: 'ซุปหม่าล่ากระดูกหมู' },
+  { id: 's8', name: 'ซุปกระดูกหมูน้ำดำ' },
+  { id: 's1', name: 'ซุปหม่าล่าน้ำข้น' },
+  { id: 's2', name: 'ซุปหม่าล่าน้ำดำ' },
+  { id: 's3', name: 'ซุปหม่าล่าดั้งเดิม' },
+  { id: 's4', name: 'ซุปน้ำดำ' },
+  { id: 's5', name: 'ซุปกระดูกหมู' },
+  { id: 's6', name: 'สุกี้แห้ง' },
+  { id: 's10', name: 'หม่าล่าปั้น (ย่าง)' }
+];
+
+// การ์ดอาหารจานเดี่ยว (noodle.html) — ปิดได้ทีละใบทั้งใบ ไม่ต้องคุมตัวเลือกย่อย (สูตร/ไข่/ชีส)
+const NOODLE_CARDS = [
+  { id: 's1', name: 'สุกี้แห้งวุ้นเส้นไข่ข้น', price: 59 },
+  { id: 's2', name: 'สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม', price: 69 },
+  { id: 's3', name: 'สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม ใส่ผัก', price: 69 },
+  { id: 's4', name: 'สุกี้ไข่ข้น x หมูนุ่ม x หมึกกรอบ', price: 79 },
+  { id: 'n1', name: 'หมี่ไก่ฉีก', price: 50 },
+  { id: 'n2', name: 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', price: 79 }
+];
 let dirty = false;
 let activeTab = CATALOG[0].key;
 
@@ -228,7 +253,7 @@ async function loadStatus(){
 }
 
 function hydrateForm(){
-  document.getElementById('storeOpenToggle').checked = statusData.store.open !== false;
+  document.getElementById('storeOpenToggle').dataset.state = (statusData.store.open !== false) ? 'on' : 'off';
   document.getElementById('storeMsg').value = statusData.store.message || '';
   dirty = false;
 }
@@ -255,15 +280,52 @@ function renderTab(key){
   let html = `
     <div class="cat-toggle-row">
       <div class="lbl">เปิดหมวดนี้ให้ลูกค้าเห็น<small>ปิด = การ์ดในหน้าแรกเป็นสีเทา กดเข้าไม่ได้</small></div>
-      <label class="switch">
-        <input type="checkbox" ${isOpen?'checked':''} onchange="toggleCategory('${key}', this.checked)">
-        <span class="slider"></span>
-      </label>
+      <div class="seg-toggle" data-state="${isOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCategory('${key}', checked))">
+        <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+      </div>
     </div>`;
 
-  if(tab.items.length === 0){
+  if(!statusData.cardLocks) statusData.cardLocks = { suki_type: [], noodle: [] };
+
+  // การ์ดน้ำซุป (เฉพาะแท็บ ยอดนิยม) — ปิดได้ทีละใบ ไม่ยุ่งตัวเลือกย่อย (ระดับความเผ็ด)
+  if(key === 'suki_type'){
+    const locked = statusData.cardLocks.suki_type || [];
+    html += `<div class="group-title">การ์ดน้ำซุป (ปิดได้ทีละใบ)</div>`;
+    SOUP_CARDS.forEach(card => {
+      const isCardOpen = !locked.includes(card.id);
+      html += `
+        <div class="item-row">
+          <div class="info"><div class="name">${card.name}</div></div>
+          <div class="actions">
+            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCardLock('suki_type','${card.id}', checked), true)">
+              <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  // การ์ดอาหารจานเดี่ยว (เฉพาะแท็บ อาหารจานเดี่ยว) — ปิดได้ทีละใบ ไม่ยุ่งตัวเลือกย่อย
+  if(key === 'noodle'){
+    const locked = statusData.cardLocks.noodle || [];
+    html += `<div class="group-title">การ์ดเมนู (ปิดได้ทีละใบ)</div>`;
+    NOODLE_CARDS.forEach(card => {
+      const isCardOpen = !locked.includes(card.id);
+      html += `
+        <div class="item-row">
+          <div class="info"><div class="name">${card.name}</div><div class="meta">${card.price} บ.</div></div>
+          <div class="actions">
+            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCardLock('noodle','${card.id}', checked), true)">
+              <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  if(tab.items.length === 0 && key !== 'noodle'){
     html += `<div class="no-items">หมวดนี้เป็นเมนูแบบเลือกเอง (build-your-own) — ควบคุมได้เฉพาะระดับ "เปิด/ปิดทั้งหมวด" ด้านบนเท่านั้น</div>`;
-  } else {
+  } else if(tab.items.length > 0) {
     let lastGroup = null;
     tab.items.forEach(item => {
       if(item.group && item.group !== lastGroup){
@@ -281,10 +343,9 @@ function renderTab(key){
           </div>
           <div class="actions">
             <button class="pencil${hasSale?' active':''}" onclick="toggleSaleEdit('${item.sku}')" title="ตั้งราคาลด">✎</button>
-            <label class="switch">
-              <input type="checkbox" ${soldOut?'checked':''} onchange="toggleSoldOut('${item.sku}', this.checked)">
-              <span class="slider"></span>
-            </label>
+            <div class="seg-toggle" data-state="${soldOut?'off':'on'}" onclick="segToggleClick(this, checked=>toggleSoldOut('${item.sku}', checked), true)">
+              <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
+            </div>
           </div>
         </div>
         <div class="sale-edit" id="sale-${cssId(item.sku)}">
@@ -297,10 +358,30 @@ function renderTab(key){
   container.innerHTML = html;
 }
 
+// คลิกที่ปุ่มแคปซูล 2 ช่อง (เปิด/ปิด หรือ มี/หมด) สลับสถานะ + เรียก callback
+// invertForSoldOut=true ใช้กับสวิตช์ "มี/หมด" เพราะ state on=มี (ไม่หมด) ตรงข้ามกับความหมาย checked เดิม
+function segToggleClick(el, callback, invertForSoldOut){
+  const isOn = el.dataset.state !== 'off';
+  const newIsOn = !isOn;
+  el.dataset.state = newIsOn ? 'on' : 'off';
+  const checkedValue = invertForSoldOut ? !newIsOn : newIsOn; // สำหรับ มี/หมด: "ปิด"(off)=สินค้าหมด=true
+  callback(checkedValue);
+}
+
 function cssId(sku){ return sku.replace(/[^a-zA-Z0-9]/g,'_'); }
 
 function toggleCategory(key, val){
   statusData.categories[key] = val;
+  markDirty();
+}
+// isClosed=true → เพิ่ม id เข้า cardLocks[pageKey] (ปิดการ์ดใบนั้น) / false → เอาออก (เปิดใช้งาน)
+function toggleCardLock(pageKey, cardId, isClosed){
+  if(!statusData.cardLocks) statusData.cardLocks = { suki_type: [], noodle: [] };
+  if(!statusData.cardLocks[pageKey]) statusData.cardLocks[pageKey] = [];
+  const arr = statusData.cardLocks[pageKey];
+  const idx = arr.indexOf(cardId);
+  if(isClosed && idx === -1) arr.push(cardId);
+  if(!isClosed && idx !== -1) arr.splice(idx, 1);
   markDirty();
 }
 function toggleSoldOut(sku, val){
@@ -345,7 +426,7 @@ async function saveToGitHub(){
     alert('กรุณาใส่และบันทึก GitHub Token ก่อน');
     return;
   }
-  statusData.store.open = document.getElementById('storeOpenToggle').checked;
+  statusData.store.open = document.getElementById('storeOpenToggle').dataset.state !== 'off';
   statusData.store.message = document.getElementById('storeMsg').value;
 
   const statusEl = document.getElementById('saveStatus');

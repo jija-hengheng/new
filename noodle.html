@@ -13,6 +13,15 @@
         .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px dashed rgba(148,1,9,0.15); }
         .addon-counter { display: flex; align-items: center; gap: 12px; }
         .btn-round { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--primary-red); background: #fff; color: var(--primary-red); font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        .t-card.locked { opacity: 0.45; filter: grayscale(70%); pointer-events: none; position: relative; }
+        .t-card.locked::after {
+            content: "ปิดชั่วคราว";
+            position: absolute; top: 6px; left: 6px;
+            background: rgba(44,28,18,0.8); color: #fff;
+            font-size: 0.6rem; font-weight: 600;
+            padding: 3px 8px; border-radius: 20px;
+        }
     </style>
 </head>
 <body class="themed">
@@ -28,27 +37,27 @@
 
     <div class="t-container">
         <div class="t-grid">
-            <div class="t-card" onclick="openOptions('s1', 'สุกี้แห้งวุ้นเส้นไข่ข้น', 59, 'suki')">
+            <div class="t-card" id="card-s1" onclick="openOptions('s1', 'สุกี้แห้งวุ้นเส้นไข่ข้น', 59, 'suki')">
                 <img src="images/suki-S.png" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">สุกี้แห้งวุ้นเส้นไข่ข้น</div><div class="t-card-price">59.-</div></div>
             </div>
-            <div class="t-card" onclick="openOptions('s2', 'สุกี้ x หมูนุ่ม', 69, 'suki')">
+            <div class="t-card" id="card-s2" onclick="openOptions('s2', 'สุกี้ x หมูนุ่ม', 69, 'suki')">
                 <img src="images/suki2.jpg" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม</div><div class="t-card-price">69.-</div></div>
             </div>
-            <div class="t-card" onclick="openOptions('s3', 'สุกี้ x หมูนุ่ม ใส่ผัก', 69, 'suki')">
+            <div class="t-card" id="card-s3" onclick="openOptions('s3', 'สุกี้ x หมูนุ่ม ใส่ผัก', 69, 'suki')">
                 <img src="images/suki3.jpg" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">สุกี้วุ้นเส้นไข่ข้น x หมูนุ่ม ใส่ผัก</div><div class="t-card-price">69.-</div></div>
             </div>
-            <div class="t-card" onclick="openOptions('s4', 'สุกี้ x หมูนุ่ม x หมึกกรอบ', 79, 'suki')">
+            <div class="t-card" id="card-s4" onclick="openOptions('s4', 'สุกี้ x หมูนุ่ม x หมึกกรอบ', 79, 'suki')">
                 <img src="images/suki-xl.png" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">สุกี้ไข่ข้น x หมูนุ่ม x หมึกกรอบ</div><div class="t-card-price">79.-</div></div>
             </div>
-            <div class="t-card" onclick="openOptions('n1', 'หมี่ไก่ฉีก', 50, 'noodle')">
+            <div class="t-card" id="card-n1" onclick="openOptions('n1', 'หมี่ไก่ฉีก', 50, 'noodle')">
                 <img src="images/mhee-kai.png" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">หมี่ไก่ฉีก</div><div class="t-card-price">50.-</div></div>
             </div>
-            <div class="t-card" onclick="openOptions('n2', 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', 79, 'noodle')">
+            <div class="t-card" id="card-n2" onclick="openOptions('n2', 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', 79, 'noodle')">
                 <img src="images/79.png" class="t-card-img">
                 <div class="t-card-body"><div class="t-card-name">หมี่ไก่ฉีก พิเศษ เส้นxไก่</div><div class="t-card-price">79.-</div></div>
             </div>
@@ -84,7 +93,20 @@
         const NOODLE_SKU = { 'n1': 'MK1-01', 'n2': '10186' };
         const ADDON_SKU = { 'ไข่ไก่': 'TP044', '+ชีสอาบ': 'TP025', '+หมูหมักนุ่ม': 'TP022', 'น้ำพริกกากหมู': 'MK1-03' };
 
+        // อ่านสถานะปิดการ์ดจากแอดมิน (status.json -> cardLocks.noodle)
+        // เก็บ id ที่ถูกปิดไว้ในตัวแปรนี้ ใช้กันไว้ทั้งตอนเรนเดอร์ภาพและตอนกันคลิก
+        let noodleLockedIds = [];
+        function applyAdminNoodleLocks() {
+            const data = window.RemoteStatus && window.RemoteStatus.data;
+            noodleLockedIds = (data && data.cardLocks && data.cardLocks.noodle) || [];
+            document.querySelectorAll('.t-card[id^="card-"]').forEach(function (card) {
+                const id = card.id.replace('card-', '');
+                card.classList.toggle('locked', noodleLockedIds.includes(id));
+            });
+        }
+
         function openOptions(id, name, price, type) {
+            if (noodleLockedIds.includes(id)) return; // กันคลิกเปิดตัวเลือกของเมนูที่แอดมินปิดไว้
             currentItem = { id, name, price, options: [], type: type, eggQty: 0, addonQty: 0, sukiType: '' };
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('tempPrice').innerText = price;
@@ -237,7 +259,7 @@
         updateUI();
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => { RemoteStatus.init({ categoryKey: 'noodle' }); });
+        document.addEventListener('DOMContentLoaded', () => { RemoteStatus.init({ categoryKey: 'noodle', renderFn: applyAdminNoodleLocks }); });
     </script>
 </body>
 </html>
