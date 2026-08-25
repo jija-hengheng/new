@@ -6,11 +6,11 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": true,
+    "malatod": false,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
-    "hotpot": true,
+    "hotpot": false,
     "drink_menu": true
   },
   "items": {
