@@ -10,13 +10,10 @@
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
-    "hotpot": false,
+    "hotpot": true,
     "drink_menu": true
   },
   "items": {
-    "TP003": {
-      "soldOut": true
-    },
     "TP046": {
       "soldOut": true
     },
