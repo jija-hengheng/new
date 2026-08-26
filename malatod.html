@@ -253,12 +253,16 @@
     function submitToppings() {
         let totalCount = 0;
         let totalPrice = 0;
-        const detailsList = [];
+        // แถวหัวรายการ "หม่าล่าทอด" ราคา 0 บาท ใส่ไว้เป็นบรรทัดแรกเสมอ เพื่อให้ขึ้นชื่อเมนูบนใบเสร็จ Loyverse ด้วย
+        // (ไม่บวกเข้า totalPrice เพราะราคาจริงมาจากผลรวมของท็อปปิ้งที่เลือกทั้งหมด)
+        const detailsList = [
+            { name: 'หม่าล่าทอด', count: 1, price: 0, sku: 'mala-tod' }
+        ];
 
         Object.values(selectedToppings).forEach(t => {
             totalCount += t.count;
             totalPrice += t.count * t.price;
-            detailsList.push({ name: t.name, count: t.count, price: t.price });
+            detailsList.push({ name: t.name, count: t.count, price: t.price, sku: t.sku });
         });
 
         if (totalCount < MIN_ITEMS) return; // กันไว้อีกชั้น ปกติปุ่มจะถูกปิดไว้ก่อนถึงขั้นต่ำอยู่แล้ว
