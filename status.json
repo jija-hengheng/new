@@ -10,7 +10,7 @@
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
-    "hotpot": true,
+    "hotpot": false,
     "drink_menu": true
   },
   "items": {
