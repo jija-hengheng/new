@@ -53,11 +53,22 @@
     "TP050": {
       "salePrice": 13,
       "originalPrice": 15
+    },
+    "TP003": {
+      "soldOut": true
+    },
+    "TP017": {
+      "soldOut": true
     }
   },
   "cardLocks": {
     "suki_type": [
-      "s10"
+      "s10",
+      "s9",
+      "s7",
+      "s2",
+      "s1",
+      "s3"
     ],
     "noodle": []
   }
