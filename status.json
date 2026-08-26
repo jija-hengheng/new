@@ -14,16 +14,16 @@
     "drink_menu": true
   },
   "items": {
-    "10058": {
-      "soldOut": true
-    },
     "TP003": {
       "soldOut": true
     },
-    "Z0M003": {
+    "TP046": {
       "soldOut": true
     },
-    "MS-SOUP150": {
+    "TP042": {
+      "soldOut": true
+    },
+    "Z0M003": {
       "soldOut": true
     },
     "MS-SOUP220": {
@@ -32,13 +32,13 @@
     "MS-CHILI2": {
       "soldOut": true
     },
-    "Z0F002": {
+    "MS-SOUP150": {
+      "soldOut": true
+    },
+    "MS-CHILI1": {
       "soldOut": true
     },
     "MS-TOFU-L": {
-      "soldOut": true
-    },
-    "MS-TOFU-S": {
       "soldOut": true
     },
     "MS-SEAWEED-NOODLE": {
@@ -47,23 +47,19 @@
     "MS-WAKAME100": {
       "soldOut": true
     },
-    "TP046": {
+    "Z0F002": {
       "soldOut": true
     },
-    "แมงกะพรุน": {
+    "MS-TOFU-S": {
       "soldOut": true
     },
-    "TP042": {
-      "soldOut": true
+    "TP050": {
+      "salePrice": 13,
+      "originalPrice": 15
     }
   },
   "cardLocks": {
-    "suki_type": [
-      "s10"
-    ],
-    "noodle": [
-      "n1",
-      "n2"
-    ]
+    "suki_type": [],
+    "noodle": []
   }
 }

@@ -47,12 +47,10 @@
   /* segmented capsule toggle — เขียว/แดง เห็นสถานะชัดทั้งสองฝั่งโดยไม่ต้องกด */
   .seg-toggle{display:flex;border-radius:20px;overflow:hidden;border:1px solid #ddd;cursor:pointer;user-select:none;flex-shrink:0;}
   .seg-toggle .seg{padding:6px 12px;font-size:0.72rem;font-weight:700;font-family:inherit;transition:.15s;white-space:nowrap;}
-  .seg-toggle .seg-on{background:#d9f0df;color:#1a7a34;}
-  .seg-toggle .seg-off{background:#fbe3e3;color:#a32d2d;}
-  .seg-toggle.is-off .seg-on{background:transparent;color:#8a9a8f;}
-  .seg-toggle.is-off .seg-off{background:#c0392b;color:#fff;}
-  .seg-toggle:not(.is-off) .seg-on{background:#2e9e52;color:#fff;}
-  .seg-toggle:not(.is-off) .seg-off{background:transparent;color:#a08f8f;}
+  .seg-toggle[data-state="on"] .seg-on{background:#2e9e52;color:#fff;}
+  .seg-toggle[data-state="on"] .seg-off{background:#fbe3e3;color:#a32d2d;}
+  .seg-toggle[data-state="off"] .seg-on{background:#d9f0df;color:#1a7a34;}
+  .seg-toggle[data-state="off"] .seg-off{background:#c0392b;color:#fff;}
 
   /* tabs */
   .tabbar{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;-webkit-overflow-scrolling:touch;}
@@ -181,7 +179,7 @@ const NOODLE_CARDS = [
   { id: 'n2', name: 'หมี่ไก่ฉีก พิเศษ เส้นxไก่', price: 79 }
 ];
 let dirty = false;
-let activeTab = CATALOG[0].key;
+let activeTab = '__summary__';
 
 /* ================= LOGIN ================= */
 async function sha256(text){
@@ -245,7 +243,7 @@ async function loadStatus(){
     document.getElementById('loadStatus').textContent = '✅ โหลดข้อมูลล่าสุดจาก GitHub แล้ว';
   }catch(e){
     document.getElementById('loadStatus').textContent = '⚠️ โหลดไม่สำเร็จ ใช้ค่าเริ่มต้นแทน (' + e.message + ')';
-    statusData = { store:{open:true,message:''}, categories:{}, items:{} };
+    statusData = { store:{open:true,message:''}, categories:{}, items:{}, cardLocks:{suki_type:[],noodle:[]} };
     currentSha = null;
   }
   hydrateForm();
@@ -263,7 +261,8 @@ function markDirty(){ dirty = true; }
 /* ================= TABS ================= */
 function renderTabs(){
   const bar = document.getElementById('tabbar');
-  bar.innerHTML = CATALOG.map(t => `<button class="tabbtn${t.key===activeTab?' active':''}" onclick="switchTab('${t.key}')">${t.label}</button>`).join('');
+  const summaryBtn = `<button class="tabbtn${activeTab==='__summary__'?' active':''}" onclick="switchTab('__summary__')">🔴 สรุปของหมด/ปิด</button>`;
+  bar.innerHTML = summaryBtn + CATALOG.map(t => `<button class="tabbtn${t.key===activeTab?' active':''}" onclick="switchTab('${t.key}')">${t.label}</button>`).join('');
 }
 function switchTab(key){
   activeTab = key;
@@ -273,6 +272,7 @@ function switchTab(key){
 
 function renderTab(key){
   if(!statusData) return;
+  if(key === '__summary__'){ renderSummaryTab(); return; }
   const tab = CATALOG.find(t=>t.key===key);
   const container = document.getElementById('tabContent');
   const isOpen = statusData.categories[key] !== false;
@@ -280,7 +280,7 @@ function renderTab(key){
   let html = `
     <div class="cat-toggle-row">
       <div class="lbl">เปิดหมวดนี้ให้ลูกค้าเห็น<small>ปิด = การ์ดในหน้าแรกเป็นสีเทา กดเข้าไม่ได้</small></div>
-      <div class="seg-toggle" data-state="${isOpen?'on':'off'}" onclick="segToggleClick(this, isClosed=>toggleCategory('${key}', !isClosed))">
+      <div class="seg-toggle" data-state="${isOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCategory('${key}', checked))">
         <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
       </div>
     </div>`;
@@ -297,7 +297,7 @@ function renderTab(key){
         <div class="item-row">
           <div class="info"><div class="name">${card.name}</div></div>
           <div class="actions">
-            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, isClosed=>toggleCardLock('suki_type','${card.id}', isClosed))">
+            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCardLock('suki_type','${card.id}', checked), true)">
               <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
             </div>
           </div>
@@ -315,7 +315,7 @@ function renderTab(key){
         <div class="item-row">
           <div class="info"><div class="name">${card.name}</div><div class="meta">${card.price} บ.</div></div>
           <div class="actions">
-            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, isClosed=>toggleCardLock('noodle','${card.id}', isClosed))">
+            <div class="seg-toggle" data-state="${isCardOpen?'on':'off'}" onclick="segToggleClick(this, checked=>toggleCardLock('noodle','${card.id}', checked), true)">
               <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
             </div>
           </div>
@@ -343,7 +343,7 @@ function renderTab(key){
           </div>
           <div class="actions">
             <button class="pencil${hasSale?' active':''}" onclick="toggleSaleEdit('${item.sku}')" title="ตั้งราคาลด">✎</button>
-            <div class="seg-toggle" data-state="${soldOut?'off':'on'}" onclick="segToggleClick(this, isSoldOut=>toggleSoldOut('${item.sku}', isSoldOut))">
+            <div class="seg-toggle" data-state="${soldOut?'off':'on'}" onclick="segToggleClick(this, checked=>toggleSoldOut('${item.sku}', checked), true)">
               <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
             </div>
           </div>
@@ -358,21 +358,89 @@ function renderTab(key){
   container.innerHTML = html;
 }
 
-// คลิกที่ปุ่มแคปซูล 2 ช่อง สลับสถานะ + ส่งค่าสภาวะปิด/หมด (isClosedOrSoldOut) เข้า callback
-function segToggleClick(el, callback){
-  const isCurrentlyOff = el.dataset.state === 'off';
-  const newIsOff = !isCurrentlyOff;
-  
-  el.dataset.state = newIsOff ? 'off' : 'on';
-  if (newIsOff) {
-    el.classList.add('is-off');
+// รวมทุกอย่างที่ "ปิด/หมด" อยู่ทั้งเว็บมาไว้หน้าเดียว เพื่อเช็คและปลดล็อกได้ไวโดยไม่ต้องไล่ทีละแท็บ
+function renderSummaryTab(){
+  const container = document.getElementById('tabContent');
+  let catRows = '', soupRows = '', noodleRows = '', soldOutRows = '';
+  let soldOutCount = 0;
+
+  CATALOG.forEach(tab => {
+    if(statusData.categories[tab.key] === false){
+      catRows += `
+        <div class="item-row">
+          <div class="info"><div class="name">${tab.label}</div><div class="meta">ปิดทั้งหมวด</div></div>
+          <div class="actions">
+            <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleCategory('${tab.key}', checked); renderSummaryTab();})">
+              <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+            </div>
+          </div>
+        </div>`;
+    }
+    tab.items.forEach(item => {
+      const info = statusData.items[item.sku];
+      if(info && info.soldOut){
+        soldOutCount++;
+        soldOutRows += `
+          <div class="item-row">
+            <div class="info"><div class="name">${item.name}</div><div class="meta">${tab.label} • ${item.sku}</div></div>
+            <div class="actions">
+              <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleSoldOut('${item.sku}', checked); renderSummaryTab();}, true)">
+                <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
+              </div>
+            </div>
+          </div>`;
+      }
+    });
+  });
+
+  (statusData.cardLocks?.suki_type || []).forEach(id => {
+    const card = SOUP_CARDS.find(c => c.id === id);
+    if(!card) return;
+    soupRows += `
+      <div class="item-row">
+        <div class="info"><div class="name">${card.name}</div><div class="meta">การ์ดน้ำซุป (ยอดนิยม)</div></div>
+        <div class="actions">
+          <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleCardLock('suki_type','${id}', checked); renderSummaryTab();}, true)">
+            <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  (statusData.cardLocks?.noodle || []).forEach(id => {
+    const card = NOODLE_CARDS.find(c => c.id === id);
+    if(!card) return;
+    noodleRows += `
+      <div class="item-row">
+        <div class="info"><div class="name">${card.name}</div><div class="meta">การ์ดเมนู (อาหารจานเดี่ยว)</div></div>
+        <div class="actions">
+          <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleCardLock('noodle','${id}', checked); renderSummaryTab();}, true)">
+            <span class="seg seg-on">เปิด</span><span class="seg seg-off">ปิด</span>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  let html = '';
+  if(!catRows && !soupRows && !noodleRows && !soldOutRows){
+    html = `<div class="no-items">✅ ตอนนี้ทุกอย่างเปิดขายปกติหมด ไม่มีอะไรปิด/หมดอยู่เลย</div>`;
   } else {
-    el.classList.remove('is-off');
+    if(catRows) html += `<div class="group-title">หมวดที่ปิดทั้งหมวด</div>` + catRows;
+    if(soupRows) html += `<div class="group-title">การ์ดน้ำซุปที่ปิดอยู่</div>` + soupRows;
+    if(noodleRows) html += `<div class="group-title">การ์ดอาหารจานเดี่ยวที่ปิดอยู่</div>` + noodleRows;
+    if(soldOutRows) html += `<div class="group-title">สินค้าที่หมด (${soldOutCount} รายการ)</div>` + soldOutRows;
   }
-  
-  if (typeof callback === 'function') {
-    callback(newIsOff);
-  }
+  container.innerHTML = html;
+}
+
+// คลิกที่ปุ่มแคปซูล 2 ช่อง (เปิด/ปิด หรือ มี/หมด) สลับสถานะ + เรียก callback
+// invertForSoldOut=true ใช้กับสวิตช์ "มี/หมด" เพราะ state on=มี (ไม่หมด) ตรงข้ามกับความหมาย checked เดิม
+function segToggleClick(el, callback, invertForSoldOut){
+  const isOn = el.dataset.state !== 'off';
+  const newIsOn = !isOn;
+  el.dataset.state = newIsOn ? 'on' : 'off';
+  const checkedValue = invertForSoldOut ? !newIsOn : newIsOn; // สำหรับ มี/หมด: "ปิด"(off)=สินค้าหมด=true
+  callback(checkedValue);
 }
 
 function cssId(sku){ return sku.replace(/[^a-zA-Z0-9]/g,'_'); }
