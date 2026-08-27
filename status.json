@@ -1,7 +1,7 @@
 {
   "store": {
-    "open": true,
-    "message": "❌หมดค่ะ❌เปิดพรุ่งนี้ 12:00 นะคะ"
+    "open": false,
+    "message": "เปิด 13:30 นะคะ\nแม่ค้ามีหมอนัดตัดไหมค่ะ 🙏💖"
   },
   "categories": {
     "suki_type": true,
