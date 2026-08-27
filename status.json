@@ -14,6 +14,9 @@
     "drink_menu": true
   },
   "items": {
+    "10058": {
+      "soldOut": true
+    },
     "TP042": {
       "soldOut": true
     },
@@ -61,6 +64,15 @@
       "soldOut": true
     },
     "TP026": {
+      "soldOut": true
+    },
+    "TP022": {
+      "soldOut": true
+    },
+    "TP032": {
+      "soldOut": true
+    },
+    "TP012": {
       "soldOut": true
     }
   },
