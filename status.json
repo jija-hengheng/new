@@ -1,12 +1,12 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ หมดค่ะ ❌🙏 \nรอเจอกันพรุ่งนี้ 12:00 นะคะ"
   },
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": false,
     "mala_sides_menu": true,
@@ -14,9 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "10058": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -57,37 +54,14 @@
     "TP003": {
       "soldOut": true
     },
-    "TP043": {
-      "soldOut": true
-    },
     "TP018": {
-      "soldOut": true
-    },
-    "TP026": {
-      "soldOut": true
-    },
-    "TP022": {
-      "soldOut": true
-    },
-    "TP032": {
-      "soldOut": true
-    },
-    "TP012": {
       "soldOut": true
     }
   },
   "cardLocks": {
     "suki_type": [
-      "s10",
-      "s4"
+      "s10"
     ],
-    "noodle": [
-      "s2",
-      "s1",
-      "s3",
-      "s4",
-      "n1",
-      "n2"
-    ]
+    "noodle": []
   }
 }
