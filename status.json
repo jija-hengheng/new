@@ -8,7 +8,7 @@
     "mama_type": true,
     "malatod": false,
     "set": true,
-    "noodle": true,
+    "noodle": false,
     "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
@@ -64,7 +64,9 @@
       "s2",
       "s1",
       "s3",
-      "s4"
+      "s4",
+      "n1",
+      "n2"
     ]
   }
 }
