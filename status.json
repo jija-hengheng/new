@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": true,
+    "malatod": false,
     "set": true,
     "noodle": false,
     "mala_sides_menu": true,
