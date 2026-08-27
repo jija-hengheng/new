@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "เปิด 13:30 นะคะ\nแม่ค้ามีหมอนัดตัดไหมค่ะ 🙏💖"
   },
   "categories": {
@@ -14,9 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "TP046": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -55,9 +52,6 @@
       "originalPrice": 15
     },
     "TP003": {
-      "soldOut": true
-    },
-    "TP017": {
       "soldOut": true
     }
   },
