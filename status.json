@@ -47,11 +47,10 @@
     "MS-TOFU-S": {
       "soldOut": true
     },
-    "TP050": {
-      "salePrice": 13,
-      "originalPrice": 15
-    },
     "TP003": {
+      "soldOut": true
+    },
+    "TP030": {
       "soldOut": true
     }
   },
