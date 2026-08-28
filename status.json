@@ -8,7 +8,7 @@
     "mama_type": true,
     "malatod": true,
     "set": true,
-    "noodle": false,
+    "noodle": true,
     "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
@@ -53,15 +53,15 @@
     },
     "TP003": {
       "soldOut": true
-    },
-    "TP018": {
-      "soldOut": true
     }
   },
   "cardLocks": {
     "suki_type": [
       "s10"
     ],
-    "noodle": []
+    "noodle": [
+      "n1",
+      "n2"
+    ]
   }
 }
