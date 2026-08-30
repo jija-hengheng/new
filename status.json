@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ หมดค่ะ ❌🙏 \nปิดรับออเดอร์ค่ะเนื่องจากทางร้านติดคิวจำนวนมาก ขออนุญาตเคลียร์คิวที่เหลือค่ะ 🙏"
   },
   "categories": {
@@ -51,6 +51,9 @@
       "soldOut": true
     },
     "TP019": {
+      "soldOut": true
+    },
+    "TP045": {
       "soldOut": true
     }
   },
