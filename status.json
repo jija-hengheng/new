@@ -5,7 +5,7 @@
   },
   "categories": {
     "suki_type": true,
-    "mama_type": true,
+    "mama_type": false,
     "malatod": false,
     "set": false,
     "noodle": false,
