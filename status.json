@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ตอนนี้มี 15 คิว❌\nพ่อค้าอยู่คนเดียว ขอเคลียร์คิวสักครู่ครับ"
   },
   "categories": {
@@ -83,6 +83,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": true
+    "delivery": false
   }
 }
