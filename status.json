@@ -1,7 +1,7 @@
 {
   "store": {
-    "open": true,
-    "message": "❌ ปิด ❌🙏 "
+    "open": false,
+    "message": "❌ตอนนี้มี 15 คิว❌\nพ่อค้าอยู่คนเดียว ขอเคลียร์คิวสักครู่ครับ"
   },
   "categories": {
     "suki_type": true,
