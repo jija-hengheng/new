@@ -79,5 +79,10 @@
       "n2",
       "n1"
     ]
+  },
+  "orderTypes": {
+    "dineIn": true,
+    "takeaway": true,
+    "delivery": true
   }
 }

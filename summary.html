@@ -6,6 +6,7 @@
     <title>สรุปออเดอร์</title>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
+    <script src="remote-status.js"></script>
     <style>
         /* ============ Design tokens — เหมือนหน้าเลือกเมนู ============ */
         :root {
@@ -496,6 +497,7 @@
                 <label for="r3"><span class="opt-icon">🛵</span><span class="opt-label">Delivery</span></label>
             </div>
             <div id="hotpot-lock-note" class="i18n" data-th="🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้" data-en="🔒 Hot Pot orders are dine-in only, so the delivery method is locked">🔒 ออเดอร์หม้อไฟทานที่ร้านเท่านั้น จึงล็อกวิธีรับสินค้าไว้</div>
+            <div id="order-type-note" style="font-size:0.74rem;color:var(--primary-red);margin-top:10px;display:none;background:rgba(148,1,9,0.06);padding:8px 10px;border-radius:10px;"></div>
             <div class="location-box" id="location-section">
                 <button type="button" class="location-btn i18n" data-th="📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ" data-en="📍 Tap to share your delivery location" onclick="getLocation()">📍 กดเพื่อแชร์ตำแหน่งจัดส่งของคุณ</button>
                 <div id="location-text" class="location-status i18n" data-th="⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง" data-en="⚠️ Delivery location not shared yet" style="color:#c0392b;">⚠️ ยังไม่ได้แชร์ตำแหน่งจัดส่ง</div>
@@ -597,6 +599,41 @@
         takeaway.disabled = true;
         delivery.disabled = true;
         document.getElementById('hotpot-lock-note').style.display = 'block';
+        toggleLocationField();
+    }
+
+    // แอดมินปิดวิธีรับสินค้าบางแบบชั่วคราวได้ (เช่น ปิดเดลิเวอรี่วันฝนตกหนัก) จาก status.json -> orderTypes
+    // ถ้ามาจาก flow หม้อไฟอยู่แล้ว ไม่ต้องทำอะไรซ้ำ เพราะ hotpot lock บังคับทานที่ร้านอย่างเดียวอยู่แล้ว
+    function applyAdminOrderTypeLock() {
+        if (sessionStorage.getItem('orderFlow') === 'HOTPOT') return;
+        const data = window.RemoteStatus && window.RemoteStatus.data;
+        const ot = (data && data.orderTypes) || {};
+
+        const options = [
+            { el: document.getElementById('r1'), open: ot.dineIn !== false },
+            { el: document.getElementById('r2'), open: ot.takeaway !== false },
+            { el: document.getElementById('r3'), open: ot.delivery !== false }
+        ];
+
+        options.forEach(o => {
+            if (!o.el) return;
+            o.el.disabled = !o.open;
+            if (!o.open && o.el.checked) o.el.checked = false; // ถ้าเลือกอันที่เพิ่งถูกปิดไว้อยู่ ให้ยกเลิกการเลือกทันที
+        });
+
+        const closedLabels = [];
+        if (ot.dineIn === false) closedLabels.push(t('ทานที่ร้าน', 'Dine-in'));
+        if (ot.takeaway === false) closedLabels.push(t('กลับบ้าน', 'Takeaway'));
+        if (ot.delivery === false) closedLabels.push(t('เดลิเวอรี่', 'Delivery'));
+        const noteEl = document.getElementById('order-type-note');
+        if (closedLabels.length > 0) {
+            noteEl.textContent = t('🔒 ปิดรับออเดอร์ชั่วคราว: ', '🔒 Temporarily unavailable: ') + closedLabels.join(', ');
+            noteEl.style.display = 'block';
+        } else {
+            noteEl.style.display = 'none';
+        }
+
+        // ถ้าไม่มีตัวเลือกไหนถูกเลือกอยู่เลย ไม่ต้องเลือกให้อัตโนมัติ ปล่อยให้ลูกค้าเลือกเองจากตัวเลือกที่ยังเปิดอยู่
         toggleLocationField();
     }
 
@@ -916,6 +953,7 @@
         loadCart();
         applyHotpotOrderTypeLock();
         flushPendingOrders(); // ลองส่งออเดอร์ค้างจากรอบก่อนใหม่แบบเงียบๆ (ถ้ามี)
+        RemoteStatus.init({ renderFn: applyAdminOrderTypeLock });
     };
 </script>
 </body>
