@@ -7,9 +7,9 @@
     "suki_type": true,
     "mama_type": true,
     "malatod": false,
-    "set": true,
-    "noodle": true,
-    "mala_sides_menu": true,
+    "set": false,
+    "noodle": false,
+    "mala_sides_menu": false,
     "hotpot": false,
     "drink_menu": true
   },
@@ -59,7 +59,9 @@
   },
   "cardLocks": {
     "suki_type": [
-      "s10"
+      "s10",
+      "s9",
+      "s6"
     ],
     "noodle": [
       "n2",
