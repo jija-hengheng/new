@@ -75,6 +75,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
