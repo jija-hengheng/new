@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
@@ -58,6 +58,12 @@
     },
     "NJ001": {
       "soldOut": true
+    },
+    "TP039": {
+      "soldOut": true
+    },
+    "TP043": {
+      "soldOut": true
     }
   },
   "cardLocks": {
@@ -72,6 +78,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": true
+    "delivery": false
   }
 }
