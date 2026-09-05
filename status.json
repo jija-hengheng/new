@@ -32,18 +32,6 @@
     "MS-CHILI1": {
       "soldOut": true
     },
-    "MS-TOFU-L": {
-      "soldOut": true
-    },
-    "MS-SEAWEED-NOODLE": {
-      "soldOut": true
-    },
-    "MS-WAKAME100": {
-      "soldOut": true
-    },
-    "MS-TOFU-S": {
-      "soldOut": true
-    },
     "NJ001": {
       "soldOut": true
     },
@@ -53,10 +41,22 @@
     "TP011": {
       "soldOut": true
     },
-    "Z0F002": {
+    "TP003": {
       "soldOut": true
     },
-    "TP003": {
+    "MS-TOFU-L": {
+      "soldOut": true
+    },
+    "MS-TOFU-S": {
+      "soldOut": true
+    },
+    "MS-SEAWEED-NOODLE": {
+      "soldOut": true
+    },
+    "MS-WAKAME100": {
+      "soldOut": true
+    },
+    "Z0F002": {
       "soldOut": true
     }
   },
