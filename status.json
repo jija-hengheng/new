@@ -55,11 +55,19 @@
     },
     "TP006": {
       "soldOut": true
+    },
+    "TP020": {
+      "soldOut": true
+    },
+    "TP004": {
+      "soldOut": true
     }
   },
   "cardLocks": {
     "suki_type": [
-      "s10"
+      "s10",
+      "s9",
+      "s6"
     ],
     "noodle": [
       "n2",
