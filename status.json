@@ -41,10 +41,13 @@
     "MS-WAKAME100": {
       "soldOut": true
     },
-    "Z0F002": {
+    "MS-TOFU-S": {
       "soldOut": true
     },
-    "MS-TOFU-S": {
+    "NJ001": {
+      "soldOut": true
+    },
+    "TP043": {
       "soldOut": true
     },
     "TP003": {
@@ -53,10 +56,7 @@
     "TP011": {
       "soldOut": true
     },
-    "NJ001": {
-      "soldOut": true
-    },
-    "TP043": {
+    "Z0F002": {
       "soldOut": true
     }
   },
