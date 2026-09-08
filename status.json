@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ปิดรับออเดอร์เคลียร์คิวสักครู่นะครับ❌"
   },
   "categories": {
@@ -14,9 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "10049": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -59,10 +56,7 @@
     "TP036": {
       "soldOut": true
     },
-    "TP020": {
-      "soldOut": true
-    },
-    "TP011": {
+    "TP045": {
       "soldOut": true
     }
   },
