@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
@@ -56,13 +56,7 @@
     "TP008": {
       "soldOut": true
     },
-    "TP036": {
-      "soldOut": true
-    },
     "MS-SOUP50": {
-      "soldOut": true
-    },
-    "TP011": {
       "soldOut": true
     }
   },
