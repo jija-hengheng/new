@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
@@ -56,16 +56,10 @@
     "TP008": {
       "soldOut": true
     },
-    "TP045": {
-      "soldOut": true
-    },
     "TP019": {
       "soldOut": true
     },
     "SET-สายหมู": {
-      "soldOut": true
-    },
-    "TP039": {
       "soldOut": true
     },
     "TP011": {
@@ -74,10 +68,10 @@
     "TP028": {
       "soldOut": true
     },
-    "TP021": {
+    "TP044": {
       "soldOut": true
     },
-    "TP044": {
+    "TP021": {
       "soldOut": true
     }
   },
