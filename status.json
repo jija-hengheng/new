@@ -50,9 +50,6 @@
     "Z0F002": {
       "soldOut": true
     },
-    "TP008": {
-      "soldOut": true
-    },
     "SET-สายหมู": {
       "soldOut": true
     },
@@ -63,6 +60,9 @@
       "soldOut": true
     },
     "TP020": {
+      "soldOut": true
+    },
+    "TP032": {
       "soldOut": true
     }
   },
@@ -78,6 +78,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
