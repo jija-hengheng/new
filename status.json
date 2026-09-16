@@ -50,6 +50,9 @@
     "TP031": {
       "salePrice": 9,
       "originalPrice": 10
+    },
+    "NJ002": {
+      "soldOut": true
     }
   },
   "cardLocks": {
