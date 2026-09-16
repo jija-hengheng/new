@@ -46,6 +46,10 @@
     },
     "TP045": {
       "soldOut": true
+    },
+    "TP031": {
+      "salePrice": 9,
+      "originalPrice": 10
     }
   },
   "cardLocks": {
