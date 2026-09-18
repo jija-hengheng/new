@@ -8,7 +8,7 @@
     "mama_type": true,
     "malatod": true,
     "set": true,
-    "noodle": true,
+    "noodle": false,
     "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
@@ -64,6 +64,9 @@
       "soldOut": true
     },
     "TP003": {
+      "soldOut": true
+    },
+    "TP044": {
       "soldOut": true
     }
   },
