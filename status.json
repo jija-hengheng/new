@@ -48,15 +48,6 @@
       "salePrice": 8,
       "originalPrice": 10
     },
-    "NJ002": {
-      "soldOut": true
-    },
-    "NJ004": {
-      "soldOut": true
-    },
-    "NJ001": {
-      "soldOut": true
-    },
     "TP034": {
       "soldOut": true
     },
@@ -64,9 +55,6 @@
       "soldOut": true
     },
     "TP003": {
-      "soldOut": true
-    },
-    "TP044": {
       "soldOut": true
     }
   },
