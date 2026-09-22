@@ -14,6 +14,9 @@
     "drink_menu": true
   },
   "items": {
+    "10049": {
+      "soldOut": true
+    },
     "TP042": {
       "soldOut": true
     },
@@ -60,6 +63,12 @@
       "soldOut": true
     },
     "SET-ติดเทรน": {
+      "soldOut": true
+    },
+    "TP003": {
+      "soldOut": true
+    },
+    "TP020": {
       "soldOut": true
     }
   },
