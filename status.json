@@ -47,9 +47,6 @@
     "TP011": {
       "soldOut": true
     },
-    "SET-ติดเทรน": {
-      "soldOut": true
-    },
     "TP003": {
       "soldOut": true
     },
@@ -57,6 +54,9 @@
       "soldOut": true
     },
     "TP004": {
+      "soldOut": true
+    },
+    "SET-สายหมู": {
       "soldOut": true
     }
   },
