@@ -64,7 +64,10 @@
     "suki_type": [
       "s10"
     ],
-    "noodle": []
+    "noodle": [
+      "n2",
+      "n1"
+    ]
   },
   "orderTypes": {
     "dineIn": true,
