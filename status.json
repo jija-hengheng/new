@@ -8,7 +8,7 @@
     "mama_type": true,
     "malatod": true,
     "set": true,
-    "noodle": false,
+    "noodle": true,
     "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
@@ -86,7 +86,8 @@
       "s9"
     ],
     "noodle": [
-      "n2"
+      "n2",
+      "n1"
     ]
   },
   "orderTypes": {
