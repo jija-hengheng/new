@@ -70,7 +70,9 @@
     }
   },
   "cardLocks": {
-    "suki_type": [],
+    "suki_type": [
+      "s10"
+    ],
     "noodle": [
       "n2"
     ]
