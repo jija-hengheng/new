@@ -70,6 +70,9 @@
     },
     "D0003": {
       "soldOut": true
+    },
+    "D0002": {
+      "soldOut": true
     }
   },
   "cardLocks": {
