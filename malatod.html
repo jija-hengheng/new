@@ -2,15 +2,44 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกเมนู: ท็อปปิ้งเพิ่มเติม</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=stylesheet" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>เลือกเมนู: หม่าล่าทอด</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <script src="remote-status.js"></script>
     <style>
-        body { padding-bottom: 110px; }
+        body { padding-bottom: 120px; }
 
-        .mama-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 13px; padding: 10px 4px 0 4px; }
+        /* ---------- แถบบอกกติกาด้านบน ---------- */
+        .rule-note {
+            margin: 4px 4px 0;
+            padding: 9px 14px;
+            background: #fff;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: var(--ink);
+            box-shadow: 0 4px 12px rgba(43,28,18,0.06);
+        }
+        .rule-note b { color: var(--primary-red); }
+
+        /* ---------- หัวข้อหมวด ---------- */
+        .mala-section { margin-top: 18px; }
+        .mala-section-title {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 0 4px 8px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid rgba(148,1,9,0.18);
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.02em;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .mala-section-title small { font-size: 0.72em; font-weight: 400; opacity: 0.6; }
+
+        /* ---------- การ์ดสินค้า ---------- */
+        .mama-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 13px; padding: 2px 4px 0; }
         .mama-card {
             background-color: #fff;
             border: 2px solid transparent;
@@ -18,13 +47,16 @@
             padding: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
             box-shadow: 0 6px 16px rgba(43,28,18,0.08);
-            min-height: 190px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
+        .mama-card:focus-visible { outline: 3px solid rgba(148,1,9,0.4); outline-offset: 2px; }
         .mama-card.selected { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(148,1,9,0.12); }
         .mama-img-wrap {
             width: 100%;
@@ -39,35 +71,27 @@
         }
         .mama-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .mama-img-wrap .img-fallback { font-size: 1.8em; opacity: 0.35; }
-        .mama-name { font-size: 0.88em; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+        .mama-name { font-size: 0.88em; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
         .mama-price { font-size: 0.92em; color: var(--primary-red); font-weight: 700; }
 
-        /* Multi-selection quantity counter adjustments inside card or footer */
-        .item-counter {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 6px;
-        }
+        .item-counter { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
         .item-counter button {
             background-color: var(--primary-red);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            width: 24px;
-            height: 24px;
-            font-size: 1em;
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            font-size: 1.1em;
+            line-height: 1;
             cursor: pointer;
         }
-        .item-counter span {
-            font-size: 0.95em;
-            font-weight: 700;
-            min-width: 18px;
-            text-align: center;
-        }
+        .item-counter button:disabled { opacity: 0.3; cursor: default; }
+        .item-counter span { font-size: 0.98em; font-weight: 700; min-width: 22px; text-align: center; }
 
-        /* ============ ป๊อปอัพสรุปยอดแบบลอย (ย่อขนาดจากแถบเต็มความกว้างเดิม) ============ */
+        .empty-note { text-align: center; padding: 40px 10px; color: var(--ink); opacity: 0.7; }
+
+        /* ---------- แถบสรุปยอดแบบลอย ---------- */
         .t-footer-fixed {
             position: fixed;
             left: 50%;
@@ -84,18 +108,12 @@
             width: max-content;
             max-width: calc(100% - 24px);
         }
-
         .order-info-group { display: flex; flex-direction: column; color: var(--primary-red); white-space: nowrap; }
         .order-summary { font-weight: 700; font-size: 0.76em; }
         .order-summary span { color: var(--ink); }
-        .total-display { font-weight: 700; margin-left: 8px; color: var(--ink); }
-
-        .min-hint {
-            font-size: 0.68em;
-            font-weight: 600;
-            color: var(--primary-red);
-            margin-top: 2px;
-        }
+        .order-total { font-weight: 700; font-size: 0.82em; margin-top: 3px; color: var(--ink); }
+        .order-total span { color: var(--primary-red); }
+        .min-hint { font-size: 0.68em; font-weight: 600; color: var(--primary-red); margin-top: 2px; }
 
         .next-button {
             font-size: 0.82em;
@@ -106,179 +124,242 @@
             transition: opacity 0.2s ease;
         }
         .next-button.active { opacity: 1; pointer-events: auto; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .mama-card, .next-button { transition: none; }
+        }
     </style>
 </head>
 <body class="themed">
 
     <div class="mini-header">
-        <a href="index.html" class="back-btn">←</a>
+        <a href="index.html" class="back-btn" aria-label="ย้อนกลับ">←</a>
         <img src="images/2.png" class="mini-logo" alt="โลโก้ร้าน">
         <div>
-            <div class="mini-title">🍢 เลือกท็อปปิ้งเพิ่มเติม</div>
-            <div class="mini-sub">เลือกรายการที่ต้องการได้เลย</div>
+            <div class="mini-title">🍢 หม่าล่าทอด</div>
+            <div class="mini-sub">เลือกไม้ที่ต้องการทอดได้เลย</div>
         </div>
     </div>
 
     <div class="t-container">
-        <div class="mama-grid" id="topping-grid">
-            <!-- Items rendered dynamically or static HTML -->
-        </div>
+        <div class="rule-note" id="rule-note"></div>
+        <div id="topping-grid"></div>
     </div>
 
     <div class="t-footer-fixed" id="footer-summary" style="display:none;">
         <div class="order-info-group">
-            <div class="order-summary">
-                เลือกแล้ว: <span id="selected-count">0</span> รายการ
-            </div>
-            <div style="font-weight: 700; margin-top: 3px;">
-                ราคารวมท็อปปิ้ง: <span id="current-total-price" style="color: var(--primary-red);">0</span> บ.
-            </div>
+            <div class="order-summary">เลือกแล้ว: <span id="selected-count">0</span> ไม้</div>
+            <div class="order-total">ราคารวม: <span id="current-total-price">0</span> บ.</div>
             <div class="min-hint" id="min-hint" style="display:none;"></div>
         </div>
-        <button class="t-btn-primary next-button" id="next-btn" onclick="submitToppings()">
-            ยืนยันการสั่งซื้อ 👉
-        </button>
+        <button class="t-btn-primary next-button" id="next-btn" type="button">ยืนยันการสั่งซื้อ 👉</button>
     </div>
 
 <script>
+    // ================== ข้อมูลเมนู ==================
+    // ที่มา: ไฟล์ CSV คอลัมน์ "ทอดได้" = Yes (18 รายการ)
+    // img = ชื่อไฟล์รูปตาม CSV (มีนามสกุลในตัว จึงรองรับทั้ง .png และ .jpg)
+    // price = ราคาต่อไม้ (CSV ไม่มีราคา จึงใช้ 10 บ. ตามเดิม; แก้เฉพาะรายการได้ที่นี่)
     const toppings = [
-        { name: "สามชั้นสไลค์", png: "3C", sku: "TP021", price: 10 },
-        { name: "ไข่นกกระทา", png: "EG", sku: "TP043", price: 10 },
-        { name: "ฟองเต้าหู้ซีฟูด", png: "FT", sku: "TP012", price: 10 },
-        { name: "ข้าวโพด", png: "KP", sku: "TP004", price: 10 },
-        { name: "เปาไข่กุ้ง", png: "paokaigung", sku: "TP032", price: 10 },
-        { name: "เต้าหู้ชีส", png: "paochese", sku: "TP026", price: 10 },
-        { name: "ฟองเต้าหู้ข้าวโพด", png: "FK", sku: "TP001", price: 10 },
-        { name: "เบคอนพันไส้กรอก", png: "BC", sku: "TP030", price: 10 },
-        { name: "เต้าหู้ปลา", png: "TP", sku: "TP027", price: 10 },
-        { name: "มินิคอกเทล", png: "MN", sku: "TP016", price: 10 },
-        { name: "ไส้กรอกชีสยาว", png: "cheeseyaww", sku: "TP045", price: 10 },
-        { name: "ไส้กรอกหนังกรอบจัมโบ้", png: "nunggroobchhet", sku: "TP046", price: 10 },
-        { name: "ต็อกบกกีชีส", png: "TG", sku: "TP047", price: 10 },
-        { name: "เห็ดออรินจิ", png: "AR", sku: "TP039", price: 10 },
-        { name: "ชิกุวะ", png: "chigo", sku: "TP005", price: 10 },
-        { name: "หมูหมักนุ่ม", png: "moomuk-noom", sku: "TP022", price: 10 }
+        // หมูและเบคอน
+        { sku: "TP028", name: "หมูสามชั้นเสียบไม้",     img: "moo3mai.png",         group: "pork",    price: 10 },
+        { sku: "10058", name: "หมูเสียบไม้",            img: "moomai.png",          group: "pork",    price: 10 },
+        { sku: "TP030", name: "เบคอนพันไส้กรอก",        img: "beconpun.png",        group: "pork",    price: 10 },
+        // ไส้กรอก ลูกชิ้น ปลา
+        { sku: "TP045", name: "ไส้กรอกชีสยาว",          img: "cheeseyaww.png",      group: "sausage", price: 10 },
+        { sku: "TP046", name: "ไส้กรอกหนังกรอบจัมโบ้",  img: "nunggroobchhet.png",  group: "sausage", price: 10 },
+        { sku: "TP016", name: "มินิคอกเทล",             img: "mini.png",            group: "sausage", price: 10 },
+        { sku: "TP027", name: "เต้าหู้ปลา",             img: "rooppla.png",         group: "sausage", price: 10 },
+        { sku: "TP024", name: "ออมุกปลา",               img: "plapan.png",          group: "sausage", price: 10 },
+        { sku: "TP005", name: "ชิกุวะญี่ปุ่น",          img: "chigo.png",           group: "sausage", price: 10 },
+        // เต้าหู้
+        { sku: "TP026", name: "เต้าหู้ชีส",             img: "paochese.png",        group: "tofu",    price: 10 },
+        { sku: "TP012", name: "ฟองเต้าหู้ซีฟู้ด",       img: "fongZ-fod.png",       group: "tofu",    price: 10 },
+        { sku: "TP001", name: "ฟองเต้าหู้ข้าวโพด",      img: "fongkao.png",         group: "tofu",    price: 10 },
+        // เปา
+        { sku: "TP032", name: "เปาไข่กุ้ง",             img: "paokaigung.png",      group: "pao",     price: 10 },
+        { sku: "TP048", name: "เปาหม่าล่า",             img: "paomala.jpg",         group: "pao",     price: 10 },
+        { sku: "TP049", name: "เปาข้าวโพด",             img: "paokaopod.jpg",       group: "pao",     price: 10 },
+        // ผักและไข่
+        { sku: "TP004", name: "ข้าวโพด",                img: "kaopod.png",          group: "veg",     price: 10 },
+        { sku: "TP039", name: "เห็ดออรินจิ",            img: "hedaurinji.png",      group: "veg",     price: 10 },
+        { sku: "TP043", name: "ไข่นกกระทา",             img: "nokgataegg.png",      group: "veg",     price: 10 }
     ];
 
+    const GROUPS = [
+        { key: "pork",    label: "🐖 หมูและเบคอน" },
+        { key: "sausage", label: "🌭 ไส้กรอก ลูกชิ้น ปลา" },
+        { key: "tofu",    label: "🧀 เต้าหู้" },
+        { key: "pao",     label: "🥟 เปา" },
+        { key: "veg",     label: "🌽 ผักและไข่" },
+        { key: "other",   label: "🍢 อื่น ๆ" }
+    ];
+
+    const MIN_ITEMS = 3;    // ขั้นต่ำ (ไม้)
+    const MAX_PER_ITEM = 99;
+
+    // เก็บเฉพาะที่เลือก: { [sku]: { ...item, count } }
     let selectedToppings = {};
-    const MIN_ITEMS = 3;
 
-    function renderGrid() {
-        const grid = document.getElementById('topping-grid');
-        grid.innerHTML = toppings.map(item => {
-            const count = selectedToppings[item.sku] ? selectedToppings[item.sku].count : 0;
-            const isSelected = count > 0;
-            return `
-                <div class="mama-card ${isSelected ? 'selected' : ''}" id="card-${item.sku}" onclick="handleCardClick(event, '${item.sku}')">
-                    <div>
-                        <div class="mama-img-wrap">
-                            <img src="images/${item.png}.png" alt="${item.name}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'img-fallback',textContent:'🍢'}))">
-                        </div>
-                        <div class="mama-name">${item.name}</div>
-                        <div class="mama-price">${item.price} บ.</div>
+    // ================== ตัวช่วย ==================
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const countOf = (sku) => (selectedToppings[sku] ? selectedToppings[sku].count : 0);
+
+    // ================== แสดงผล ==================
+    function cardHTML(item) {
+        const count = countOf(item.sku);
+        const sku = esc(item.sku);
+        return `
+            <div class="mama-card ${count > 0 ? 'selected' : ''}" data-sku="${sku}" role="button" tabindex="0" aria-label="เพิ่ม ${esc(item.name)}">
+                <div>
+                    <div class="mama-img-wrap">
+                        <img src="images/${esc(item.img)}" alt="${esc(item.name)}" loading="lazy">
                     </div>
-                    <div class="item-counter" onclick="event.stopPropagation()">
-                        <button onclick="updateItemCount('${item.sku}', -1)">-</button>
-                        <span id="count-${item.sku}">${count}</span>
-                        <button onclick="updateItemCount('${item.sku}', 1)">+</button>
-                    </div>
+                    <div class="mama-name">${esc(item.name)}</div>
+                    <div class="mama-price">${item.price} บ.</div>
                 </div>
-            `;
+                <div class="item-counter">
+                    <button type="button" data-act="dec" aria-label="ลด ${esc(item.name)}" ${count === 0 ? 'disabled' : ''}>−</button>
+                    <span class="count-num">${count}</span>
+                    <button type="button" data-act="inc" aria-label="เพิ่ม ${esc(item.name)}">+</button>
+                </div>
+            </div>`;
+    }
+
+    // วาดทั้งหน้า (ถูกเรียกตอนเริ่ม และตอน RemoteStatus อัปเดตสถานะสินค้า)
+    function renderGrid() {
+        // ถ้าสินค้าที่เคยเลือกไว้ถูกปิดขาย/หายไปจากรายการ ให้เอาออกจากตะกร้า
+        Object.keys(selectedToppings).forEach((sku) => {
+            if (!toppings.some((t) => t.sku === sku)) delete selectedToppings[sku];
+        });
+
+        const known = new Set(GROUPS.map((g) => g.key));
+        const html = GROUPS.map((g) => {
+            const items = toppings.filter((t) => (known.has(t.group) ? t.group : 'other') === g.key);
+            if (!items.length) return '';
+            return `
+                <section class="mala-section">
+                    <h2 class="mala-section-title"><span>${g.label}</span><small>${items.length} รายการ</small></h2>
+                    <div class="mama-grid">${items.map(cardHTML).join('')}</div>
+                </section>`;
         }).join('');
-    }
 
-    function handleCardClick(event, sku) {
-        if (!selectedToppings[sku] || selectedToppings[sku].count === 0) {
-            updateItemCount(sku, 1);
-        } else {
-            updateItemCount(sku, 1);
-        }
-    }
-
-    function updateItemCount(sku, change) {
-        const item = toppings.find(t => t.sku === sku);
-        if (!item) return;
-
-        if (!selectedToppings[sku]) {
-            selectedToppings[sku] = { ...item, count: 0 };
-        }
-
-        let newCount = selectedToppings[sku].count + change;
-        if (newCount < 0) newCount = 0;
-
-        if (newCount === 0) {
-            delete selectedToppings[sku];
-        } else {
-            selectedToppings[sku].count = newCount;
-        }
-
-        renderGrid();
+        $('topping-grid').innerHTML = html || '<div class="empty-note">ขณะนี้ยังไม่มีรายการที่พร้อมขาย</div>';
         updateFooter();
     }
 
-    function updateFooter() {
-        let totalCount = 0;
-        let totalPrice = 0;
+    // อัปเดตเฉพาะการ์ดที่เปลี่ยน (ไม่วาดใหม่ทั้งหน้า → ไม่กระพริบ ไม่เสียตำแหน่งเลื่อน)
+    function refreshCard(sku) {
+        const card = Array.from(document.querySelectorAll('.mama-card')).find((c) => c.dataset.sku === sku);
+        if (!card) return;
+        const count = countOf(sku);
+        card.classList.toggle('selected', count > 0);
+        card.querySelector('.count-num').textContent = count;
+        card.querySelector('[data-act="dec"]').disabled = count === 0;
+    }
 
-        Object.values(selectedToppings).forEach(t => {
-            totalCount += t.count;
-            totalPrice += t.count * t.price;
-        });
+    function updateItemCount(sku, change) {
+        const item = toppings.find((t) => t.sku === sku);
+        if (!item) return;
 
-        document.getElementById('selected-count').innerText = totalCount;
-        document.getElementById('current-total-price').innerText = totalPrice.toLocaleString();
-
-        const footer = document.getElementById('footer-summary');
-        const nextBtn = document.getElementById('next-btn');
-        const minHint = document.getElementById('min-hint');
-
-        if (totalCount > 0) {
-            footer.style.display = 'flex';
+        const newCount = Math.max(0, Math.min(MAX_PER_ITEM, countOf(sku) + change));
+        if (newCount === 0) {
+            delete selectedToppings[sku];
         } else {
-            footer.style.display = 'none';
+            selectedToppings[sku] = { ...item, count: newCount };
         }
+        refreshCard(sku);
+        updateFooter();
+    }
 
-        if (totalCount < MIN_ITEMS) {
+    function getTotals() {
+        let count = 0, price = 0;
+        Object.values(selectedToppings).forEach((t) => {
+            count += t.count;
+            price += t.count * t.price;
+        });
+        return { count, price };
+    }
+
+    function updateFooter() {
+        const { count, price } = getTotals();
+
+        $('selected-count').textContent = count;
+        $('current-total-price').textContent = price.toLocaleString();
+        $('footer-summary').style.display = count > 0 ? 'flex' : 'none';
+
+        const nextBtn = $('next-btn');
+        const minHint = $('min-hint');
+        if (count < MIN_ITEMS) {
             nextBtn.classList.remove('active');
-            const remaining = MIN_ITEMS - totalCount;
             minHint.style.display = 'block';
-            minHint.innerText = `เลือกอีก ${remaining} ไม้ (ขั้นต่ำ ${MIN_ITEMS} ไม้)`;
+            minHint.textContent = `เลือกอีก ${MIN_ITEMS - count} ไม้ (ขั้นต่ำ ${MIN_ITEMS} ไม้)`;
         } else {
             nextBtn.classList.add('active');
             minHint.style.display = 'none';
         }
     }
 
+    // ================== ส่งเข้าตะกร้า ==================
     function submitToppings() {
-        let totalCount = 0;
-        let totalPrice = 0;
-        // แถวหัวรายการ "หม่าล่าทอด" ราคา 0 บาท ใส่ไว้เป็นบรรทัดแรกเสมอ เพื่อให้ขึ้นชื่อเมนูบนใบเสร็จ Loyverse ด้วย
-        // (ไม่บวกเข้า totalPrice เพราะราคาจริงมาจากผลรวมของท็อปปิ้งที่เลือกทั้งหมด)
-        const detailsList = [
-            { name: 'หม่าล่าทอด', count: 1, price: 0, sku: 'mala-tod' }
-        ];
+        const { count, price } = getTotals();
+        if (count < MIN_ITEMS) return; // กันไว้อีกชั้น ปกติปุ่มจะถูกปิดไว้ก่อนถึงขั้นต่ำอยู่แล้ว
 
-        Object.values(selectedToppings).forEach(t => {
-            totalCount += t.count;
-            totalPrice += t.count * t.price;
+        // แถวหัวรายการ "หม่าล่าทอด" ราคา 0 บาท ใส่เป็นบรรทัดแรกเสมอ เพื่อให้ขึ้นชื่อเมนูบนใบเสร็จ Loyverse
+        // (ไม่บวกเข้ายอด เพราะราคาจริงมาจากผลรวมของไม้ที่เลือก)
+        const detailsList = [{ name: 'หม่าล่าทอด', count: 1, price: 0, sku: 'mala-tod' }];
+        Object.values(selectedToppings).forEach((t) => {
             detailsList.push({ name: t.name, count: t.count, price: t.price, sku: t.sku });
         });
 
-        if (totalCount < MIN_ITEMS) return; // กันไว้อีกชั้น ปกติปุ่มจะถูกปิดไว้ก่อนถึงขั้นต่ำอยู่แล้ว
+        let cartItems = [];
+        try { cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]'); } catch (e) { cartItems = []; }
+        cartItems.push({ name: 'หม่าล่าทอด', sku: 'mala-tod', price: price, details: detailsList });
 
-        const cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-        cartItems.push({
-            name: 'หม่าล่าทอด',
-            sku: 'mala-tod',
-            price: totalPrice,
-            details: detailsList
-        });
-        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-
+        try {
+            sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        } catch (e) {
+            alert('บันทึกตะกร้าไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+            return;
+        }
         window.location.href = 'summary.html';
     }
 
-    // Initial render
+    // ================== ผูกเหตุการณ์ ==================
+    const gridEl = $('topping-grid');
+
+    gridEl.addEventListener('click', (e) => {
+        const card = e.target.closest('.mama-card');
+        if (!card) return;
+        const btn = e.target.closest('[data-act]');
+        if (btn) {
+            if (!btn.disabled) updateItemCount(card.dataset.sku, btn.dataset.act === 'inc' ? 1 : -1);
+        } else {
+            updateItemCount(card.dataset.sku, 1); // แตะที่การ์ด = เพิ่ม 1 ไม้
+        }
+    });
+
+    gridEl.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mama-card')) {
+            e.preventDefault();
+            updateItemCount(e.target.dataset.sku, 1);
+        }
+    });
+
+    // รูปโหลดไม่ได้ → แสดงไอคอนแทน (error ไม่ bubble จึงใช้ capture)
+    gridEl.addEventListener('error', (e) => {
+        if (e.target.tagName === 'IMG') {
+            e.target.replaceWith(Object.assign(document.createElement('span'), { className: 'img-fallback', textContent: '🍢' }));
+        }
+    }, true);
+
+    $('next-btn').addEventListener('click', submitToppings);
+
+    $('rule-note').innerHTML = `เลือกขั้นต่ำ <b>${MIN_ITEMS} ไม้</b> · แตะที่การ์ดเพื่อเพิ่มทีละไม้`;
+
+    // ================== เริ่มทำงาน ==================
+    // RemoteStatus จะกรองรายการที่ปิดขายจาก toppings แล้วเรียก renderFn ให้วาดใหม่ (โครงสร้างเรียกเหมือนเดิม)
     RemoteStatus.init({ categoryKey: 'malatod', catalogs: [{ items: toppings, keyFn: 'sku' }], renderFn: renderGrid });
 </script>
 </body>
