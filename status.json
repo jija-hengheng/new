@@ -7,9 +7,9 @@
     "suki_type": true,
     "mama_type": true,
     "malatod": false,
-    "set": true,
+    "set": false,
     "noodle": true,
-    "mala_sides_menu": true,
+    "mala_sides_menu": false,
     "hotpot": false,
     "drink_menu": true
   },
