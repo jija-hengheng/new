@@ -14,12 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "10002": {
-      "soldOut": true
-    },
-    "10003": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -53,25 +47,10 @@
     "TP003": {
       "soldOut": true
     },
-    "TP011": {
-      "soldOut": true
-    },
     "Z0M001": {
       "soldOut": true
     },
-    "TP045": {
-      "soldOut": true
-    },
     "D0002": {
-      "soldOut": true
-    },
-    "TP040": {
-      "soldOut": true
-    },
-    "TP043": {
-      "soldOut": true
-    },
-    "TP021": {
       "soldOut": true
     },
     "Z0M005": {
