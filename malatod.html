@@ -157,37 +157,41 @@
 
 <script>
     // ================== ข้อมูลเมนู ==================
-    // ที่มา: ไฟล์ CSV คอลัมน์ "ทอดได้" = Yes (18 รายการ)
+    // ที่มา: ไฟล์ CSV คอลัมน์ "ทอดได้" = Yes (22 รายการ)
     // img = ชื่อไฟล์รูปตาม CSV (มีนามสกุลในตัว จึงรองรับทั้ง .png และ .jpg)
     // price = ราคาต่อไม้ (CSV ไม่มีราคา จึงใช้ 10 บ. ตามเดิม; แก้เฉพาะรายการได้ที่นี่)
     const toppings = [
-        // หมูและเบคอน
-        { sku: "TP028", name: "หมูสามชั้นเสียบไม้",     img: "moo3mai.png",         group: "pork",    price: 10 },
-        { sku: "10058", name: "หมูเสียบไม้",            img: "moomai.png",          group: "pork",    price: 10 },
-        { sku: "TP030", name: "เบคอนพันไส้กรอก",        img: "beconpun.png",        group: "pork",    price: 10 },
-        // ไส้กรอก ลูกชิ้น ปลา
-        { sku: "TP045", name: "ไส้กรอกชีสยาว",          img: "cheeseyaww.png",      group: "sausage", price: 10 },
-        { sku: "TP046", name: "ไส้กรอกหนังกรอบจัมโบ้",  img: "nunggroobchhet.png",  group: "sausage", price: 10 },
-        { sku: "TP016", name: "มินิคอกเทล",             img: "mini.png",            group: "sausage", price: 10 },
-        { sku: "TP027", name: "เต้าหู้ปลา",             img: "rooppla.png",         group: "sausage", price: 10 },
-        { sku: "TP024", name: "ออมุกปลา",               img: "plapan.png",          group: "sausage", price: 10 },
-        { sku: "TP005", name: "ชิกุวะญี่ปุ่น",          img: "chigo.png",           group: "sausage", price: 10 },
+        // หมู เบคอน และไก่
+        { sku: "TP028", name: "หมูสามชั้นเสียบไม้", img: "moo3mai.png", group: "meat", price: 10 },
+        { sku: "TP030", name: "เบคอนพันไส้กรอก", img: "beconpun.png", group: "meat", price: 10 },
+        { sku: "10058", name: "หมูเสียบไม้", img: "moomai.png", group: "meat", price: 10 },
+        { sku: "TP053", name: "สันในไก่", img: "zunnai.jpg", group: "meat", price: 10 },
+        { sku: "TP055", name: "สามชั้นพันเห็ด", img: "zamchunpunhed.png", group: "meat", price: 10 },
+        // ไส้กรอก ลูกชิ้น ปลา ปูอัด
+        { sku: "TP045", name: "ไส้กรอกชีสยาว", img: "cheeseyaww.png", group: "sausage", price: 10 },
+        { sku: "TP005", name: "ชิกุวะญี่ปุ่น", img: "chigo.png", group: "sausage", price: 10 },
+        { sku: "TP016", name: "มินิคอกเทล", img: "mini.png", group: "sausage", price: 10 },
+        { sku: "TP046", name: "ไส้กรอกหนังกรอบจัมโบ้", img: "nunggroobchhet.png", group: "sausage", price: 10 },
+        { sku: "TP024", name: "ออมุกปลา", img: "plapan.png", group: "sausage", price: 10 },
+        { sku: "TP027", name: "เต้าหู้ปลา", img: "rooppla.png", group: "sausage", price: 10 },
+        { sku: "TP054", name: "ปูอัด-วากาเมะ", img: "poo-wa.jpg", group: "sausage", price: 10 },
         // เต้าหู้
-        { sku: "TP026", name: "เต้าหู้ชีส",             img: "paochese.png",        group: "tofu",    price: 10 },
-        { sku: "TP012", name: "ฟองเต้าหู้ซีฟู้ด",       img: "fongZ-fod.png",       group: "tofu",    price: 10 },
-        { sku: "TP001", name: "ฟองเต้าหู้ข้าวโพด",      img: "fongkao.png",         group: "tofu",    price: 10 },
+        { sku: "TP026", name: "เต้าหู้ชีส", img: "paochese.png", group: "tofu", price: 10 },
+        { sku: "TP012", name: "ฟองเต้าหู้ซีฟู้ด", img: "fongZ-fod.png", group: "tofu", price: 10 },
+        { sku: "TP001", name: "ฟองเต้าหู้ข้าวโพด", img: "fongkao.png", group: "tofu", price: 10 },
         // เปา
-        { sku: "TP032", name: "เปาไข่กุ้ง",             img: "paokaigung.png",      group: "pao",     price: 10 },
-        { sku: "TP048", name: "เปาหม่าล่า",             img: "paomala.jpg",         group: "pao",     price: 10 },
-        { sku: "TP049", name: "เปาข้าวโพด",             img: "paokaopod.jpg",       group: "pao",     price: 10 },
-        // ผักและไข่
-        { sku: "TP004", name: "ข้าวโพด",                img: "kaopod.png",          group: "veg",     price: 10 },
-        { sku: "TP039", name: "เห็ดออรินจิ",            img: "hedaurinji.png",      group: "veg",     price: 10 },
-        { sku: "TP043", name: "ไข่นกกระทา",             img: "nokgataegg.png",      group: "veg",     price: 10 }
+        { sku: "TP032", name: "เปาไข่กุ้ง", img: "paokaigung.png", group: "pao", price: 10 },
+        { sku: "TP048", name: "เปาหม่าล่า", img: "paomala.jpg", group: "pao", price: 10 },
+        { sku: "TP049", name: "เปาข้าวโพด", img: "paokaopod.jpg", group: "pao", price: 10 },
+        // ผัก ราก และไข่
+        { sku: "TP039", name: "เห็ดออรินจิ", img: "hedaurinji.png", group: "veg", price: 10 },
+        { sku: "TP043", name: "ไข่นกกะทา", img: "nokgataegg.png", group: "veg", price: 10 },
+        { sku: "TP004", name: "ข้าวโพด", img: "kaopod.png", group: "veg", price: 10 },
+        { sku: "TP052", name: "รากบัว", img: "rakbua.jpg", group: "veg", price: 10 }
     ];
 
     const GROUPS = [
-        { key: "pork",    label: "🐖 หมูและเบคอน" },
+        { key: "meat",    label: "🥩 หมู เบคอน ไก่" },
         { key: "sausage", label: "🌭 ไส้กรอก ลูกชิ้น ปลา" },
         { key: "tofu",    label: "🧀 เต้าหู้" },
         { key: "pao",     label: "🥟 เปา" },
