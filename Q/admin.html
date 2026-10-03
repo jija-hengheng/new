@@ -20,7 +20,7 @@ import {doc,runTransaction,writeBatch,updateDoc,serverTimestamp} from "https://w
 const $=id=>document.getElementById(id);let S=null,W=[],started=false,last=null;
 const it=n=>doc(db,"queue_items",String(n)),st=doc(db,"meta","state");
 async function login(){$("lerr").textContent="";try{await signInWithEmailAndPassword(auth,ADMIN_EMAIL,$("pw").value)}catch(e){$("lerr").textContent="รหัสผ่านไม่ถูกต้อง"}}
-$("go").onclick=login;$("pw").onkeydown=e=>e.key==="Enter"&&login();$("out").onclick=()=>signOut(auth);
+$("go").onclick=login;$("pw").onkeydown=e=>{if(e.key==="Enter")login()};$("out").onclick=()=>signOut(auth);
 onAuthStateChanged(auth,u=>{$("login").hidden=!!u;$("app").hidden=!u;if(u&&!started){started=true;watch((s,w)=>{S=s;W=w;render()})}});
 function render(){
   const cur=S&&S.number;$("num").textContent=cur||"-";$("who").innerHTML=cur?esc(nm(S.name)):"&nbsp;";
@@ -47,5 +47,5 @@ async function add(){
     t.set(c,{next:n+1});t.set(it(n),{queueNumber:n,customerName:name,status:"WAITING",createdAt:serverTimestamp(),calledAt:null})});$("name").value=""}
   catch(e){alert("เพิ่มคิวไม่สำเร็จ: "+e.message)}$("add").disabled=false;$("name").focus();
 }
-$("add").onclick=add;$("name").onkeydown=e=>e.key==="Enter"&&add();
+$("add").onclick=add;$("name").onkeydown=e=>{if(e.key==="Enter")add()};
 </script></body></html>
