@@ -1,0 +1,23 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>คิวร้านจิจะ เฮงเฮง</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body><div class="wrap">
+<div class="brand">จิจะ เฮงเฮง<small>หม่าล่า</small></div>
+<div id="err" hidden></div>
+<section class="card now"><div class="lbl">กำลังเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>กรุณามาที่หน้าร้าน</div></section>
+<section class="card"><div class="count">คิวที่กำลังรออยู่ <b id="cnt">0</b> คิว</div>
+<input id="q" type="search" placeholder="🔍 ค้นหาชื่อ / หมายเลขคิว" autocomplete="off" style="margin-top:12px">
+<ul class="list" id="list"></ul></section>
+<div class="foot">อัปเดตอัตโนมัติ ไม่ต้องรีเฟรช</div></div>
+<script type="module">
+import {watch,nm,esc,pop} from "./app.js";
+const $=id=>document.getElementById(id);let S=null,W=[],last=null;
+function render(){
+  $("num").textContent=S&&S.number?S.number:"-";$("who").innerHTML=S&&S.number?esc(nm(S.name)):"&nbsp;";$("go").hidden=!(S&&S.number);
+  const k=S?S.seq+":"+S.number:null;if(k!==last){if(last!==null)pop($("num"));last=k}
+  $("cnt").textContent=W.length;const t=$("q").value.trim().toLowerCase();
+  const f=W.filter(w=>!t||String(w.queueNumber)===t||String(w.queueNumber).includes(t)||nm(w.customerName).toLowerCase().includes(t));
+  $("list").innerHTML=f.length?f.map(w=>`<li><span class="n">${w.queueNumber}</span>${esc(nm(w.customerName))}</li>`).join(""):`<li class="empty" style="justify-content:center">${W.length?"ไม่พบรายชื่อที่ค้นหา":"ยังไม่มีคิวที่รออยู่"}</li>`;
+}
+$("q").oninput=render;watch((s,w)=>{S=s;W=w;render()});
+</script></body></html>

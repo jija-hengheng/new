@@ -1,0 +1,21 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>จอเรียกคิว</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<div class="gate" id="gate"><div><div class="brand" style="font-size:40px;margin-bottom:20px">จิจะ เฮงเฮง</div><button class="btn main" id="on">🔊 เปิดเสียง</button></div></div>
+<div class="tv"><section class="card now"><div class="lbl">กำลังเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>กรุณามาที่หน้าร้าน</div></section>
+<div class="side"><div class="card"><div class="brand">จิจะ เฮงเฮง<small>หม่าล่า</small></div></div>
+<div class="card"><div class="count">คิวที่กำลังรออยู่<br><b id="cnt">0</b> คิว</div></div>
+<div class="card" style="flex:1;overflow:hidden"><b>คิวถัดไป</b><ul class="list" id="list"></ul></div></div></div>
+<div id="err" hidden></div>
+<script type="module">
+import {watch,nm,esc,pop,speak} from "./app.js";
+const $=id=>document.getElementById(id);let on=false,lastSeq=null;
+$("on").onclick=()=>{on=true;$("gate").hidden=true;speechSynthesis.speak(new SpeechSynthesisUtterance(""))};
+watch((s,w)=>{
+  $("num").textContent=s&&s.number?s.number:"-";$("who").innerHTML=s&&s.number?esc(nm(s.name)):"&nbsp;";$("go").hidden=!(s&&s.number);
+  $("cnt").textContent=w.length;
+  $("list").innerHTML=w.slice(0,5).map(x=>`<li><span class="n">${x.queueNumber}</span>${esc(nm(x.customerName))}</li>`).join("")||'<li class="empty" style="justify-content:center">ไม่มีคิวรอ</li>';
+  if(s){if(lastSeq!==null&&s.seq!==lastSeq&&s.number){pop($("num"));if(on)speak(s.number,s.name)}lastSeq=s.seq}
+});
+</script></body></html>

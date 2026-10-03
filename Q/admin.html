@@ -1,0 +1,51 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Admin คิว</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body><div class="wrap">
+<div class="brand">จัดการคิว<small>จิจะ เฮงเฮง</small></div><div id="err" hidden></div>
+<section id="login" class="card"><b>รหัสผ่านพนักงาน</b><input id="pw" type="password" placeholder="รหัสผ่าน" style="margin:12px 0"><button class="btn main" id="go">เข้าสู่ระบบ</button><div id="lerr" class="foot" style="color:var(--red-d)"></div></section>
+<div id="app" hidden>
+<section class="card now"><div class="lbl">กำลังเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div></section>
+<div style="margin-top:14px"><button class="btn main" id="next">🔊 เรียกคิวถัดไป</button>
+<div class="row"><button class="btn" id="rep">🔁 เรียกซ้ำ</button><button class="btn" id="skip">⏭ ข้ามคิว</button><button class="btn" id="cancel">❌ ยกเลิก</button></div>
+<label class="foot" style="display:block;text-align:left"><input type="checkbox" id="snd" style="width:auto"> ประกาศเสียงที่เครื่องนี้ด้วย</label></div>
+<section class="card"><b>เพิ่มคิว</b><div class="row"><input id="name" placeholder="ชื่อลูกค้า" autocomplete="off"><button class="btn main" id="add" style="width:auto;font-size:16px;padding:0 18px">+ เพิ่มคิว</button></div></section>
+<section class="card"><div class="count">คิวที่รอ <b id="cnt">0</b> คิว</div><ul class="list" id="list"></ul></section>
+<div class="foot"><button class="btn sm" id="out">ออกจากระบบ</button></div></div></div>
+<script type="module">
+import {db,auth,watch,nm,esc,pop,speak} from "./app.js";
+import {ADMIN_EMAIL} from "./config.js";
+import {signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {doc,runTransaction,writeBatch,updateDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const $=id=>document.getElementById(id);let S=null,W=[],started=false,last=null;
+const it=n=>doc(db,"queue_items",String(n)),st=doc(db,"meta","state");
+async function login(){$("lerr").textContent="";try{await signInWithEmailAndPassword(auth,ADMIN_EMAIL,$("pw").value)}catch(e){$("lerr").textContent="รหัสผ่านไม่ถูกต้อง"}}
+$("go").onclick=login;$("pw").onkeydown=e=>e.key==="Enter"&&login();$("out").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{$("login").hidden=!!u;$("app").hidden=!u;if(u&&!started){started=true;watch((s,w)=>{S=s;W=w;render()})}});
+function render(){
+  const cur=S&&S.number;$("num").textContent=cur||"-";$("who").innerHTML=cur?esc(nm(S.name)):"&nbsp;";
+  const k=S?S.seq:null;if(k!==last){if(last!==null)pop($("num"));last=k}
+  $("cnt").textContent=W.length;$("rep").disabled=$("skip").disabled=$("cancel").disabled=!cur;$("next").disabled=!cur&&!W.length;
+  $("list").innerHTML=W.map(w=>`<li><span class="n">${w.queueNumber}</span>${esc(nm(w.customerName))}<span class="foot" style="margin:0 0 0 auto">รอคิว</span><button class="btn sm x" data-n="${w.queueNumber}">ยกเลิก</button></li>`).join("")||'<li class="empty" style="justify-content:center">ยังไม่มีคิวที่รอ</li>';
+}
+$("list").onclick=async e=>{const n=e.target.dataset.n;if(n&&confirm("ยกเลิกคิว "+n+" ?"))await updateDoc(it(n),{status:"CANCELLED"})};
+async function callNext(mark){
+  const nx=W[0],seq=(S&&S.seq||0),b=writeBatch(db);
+  if(S&&S.number)b.update(it(S.number),{status:mark});
+  if(nx){b.update(it(nx.queueNumber),{status:"CALLING",calledAt:serverTimestamp()});b.set(st,{number:nx.queueNumber,name:nx.customerName,seq:seq+1});}
+  else b.set(st,{number:null,name:"",seq:seq+1});
+  await b.commit();
+  if(nx&&$("snd").checked)speak(nx.queueNumber,nx.customerName);
+}
+$("next").onclick=()=>callNext("CALLED");
+$("skip").onclick=()=>callNext("SKIPPED");
+$("rep").onclick=async()=>{if(!S||!S.number)return;await updateDoc(st,{seq:S.seq+1});if($("snd").checked)speak(S.number,S.name)};
+$("cancel").onclick=async()=>{if(!S||!S.number||!confirm("ยกเลิกคิว "+S.number+" ?"))return;const b=writeBatch(db);b.update(it(S.number),{status:"CANCELLED"});b.set(st,{number:null,name:"",seq:S.seq+1});await b.commit()};
+async function add(){
+  const name=$("name").value.trim();if(!name)return $("name").focus();$("add").disabled=true;
+  try{await runTransaction(db,async t=>{const c=doc(db,"meta","counter"),s=await t.get(c),n=s.exists()?s.data().next:1;
+    t.set(c,{next:n+1});t.set(it(n),{queueNumber:n,customerName:name,status:"WAITING",createdAt:serverTimestamp(),calledAt:null})});$("name").value=""}
+  catch(e){alert("เพิ่มคิวไม่สำเร็จ: "+e.message)}$("add").disabled=false;$("name").focus();
+}
+$("add").onclick=add;$("name").onkeydown=e=>e.key==="Enter"&&add();
+</script></body></html>
