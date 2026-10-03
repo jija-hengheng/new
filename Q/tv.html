@@ -1,21 +1,46 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>จอเรียกคิว</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body>
-<div class="gate" id="gate"><div><div class="brand" style="font-size:40px;margin-bottom:20px">จิจะ เฮงเฮง</div><button class="btn main" id="on">🔊 เปิดเสียง</button></div></div>
-<div class="tv"><section class="card now"><div class="lbl">กำลังเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>กรุณามาที่หน้าร้าน</div></section>
-<div class="side"><div class="card"><div class="brand">จิจะ เฮงเฮง<small>หม่าล่า</small></div></div>
-<div class="card"><div class="count">คิวที่กำลังรออยู่<br><b id="cnt">0</b> คิว</div></div>
-<div class="card" style="flex:1;overflow:hidden"><b>คิวถัดไป</b><ul class="list" id="list"></ul></div></div></div>
-<div id="err" hidden></div>
+<link rel="stylesheet" href="style.css">
+<style>
+body{overflow:hidden;height:100vh}
+.tvx{position:relative;z-index:1;display:grid;grid-template-columns:.5fr 1.7fr 1fr;gap:2.4vw;height:100vh;padding:3vh 3vw 15vh}
+.tvx .l{display:flex;flex-direction:column;justify-content:space-between;min-height:0}
+.tvx .brand{font-size:clamp(26px,3.4vw,60px);line-height:1.1}.tvx .brand small{font-size:.5em}
+.slogan{color:var(--red);font-weight:800;font-size:clamp(18px,2vw,36px);line-height:1.25;transform:rotate(-8deg);transform-origin:left bottom;margin-bottom:6vh}
+.tvx .c{background:var(--card);border:1px solid var(--line);border-radius:3vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 1vh 4vh #D628281a;min-height:0}
+.lbl{font-size:clamp(24px,3vw,56px);font-weight:700;color:var(--red-d)}
+.pill{background:var(--red);color:#fff;font-weight:800;line-height:1;border-radius:999px;padding:.08em .5em;margin:2vh 0;font-size:min(20vw,38vh);min-width:55%}
+.who{font-size:clamp(36px,5vw,96px);font-weight:800}
+.go{background:var(--red);color:#fff;font-weight:700;border-radius:999px;padding:1vh 3vw;margin-top:2vh;font-size:clamp(20px,2.4vw,44px)}
+.tvx .r{display:flex;flex-direction:column;gap:2vh;min-height:0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:2vw;padding:2vh 1.6vw;font-size:clamp(18px,1.8vw,34px);font-weight:600}
+.box b{display:block;font-size:clamp(48px,6.5vw,130px);line-height:1.1;color:var(--ink)}
+.box.w b{color:var(--red);display:inline}
+.box.w b{margin:0 .3em}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2vh}.two .box b{font-size:clamp(40px,4.6vw,90px)}
+.wave{position:fixed;left:0;right:0;bottom:0;height:15vh;width:100%;z-index:0}
+.pot{position:fixed;right:0;bottom:0;height:24vh;z-index:1}
+@media(max-width:800px){body{overflow:auto;height:auto}.tvx{grid-template-columns:1fr;height:auto;padding-bottom:18vh}.slogan{display:none}.pill{font-size:30vw}}
+</style></head><body>
+<button class="btn sm" id="on" style="position:fixed;top:1vh;right:1vw;z-index:20">🔊 เปิดเสียง</button>
+<svg class="wave" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0,110 C240,30 480,170 760,100 C1040,30 1240,60 1440,15 L1440,200 L0,200Z" fill="#D62828"/></svg>
+<img class="pot" src="hotpot.png" alt="" onerror="this.remove()">
+<div class="tvx">
+<aside class="l"><div class="brand">จิจะ เฮงเฮง<small style="display:block;font-weight:500;color:var(--mut)">หม่าล่า</small></div><div class="slogan">หม่าล่า<br>ความอร่อย<br>ที่รอคุณอยู่</div></aside>
+<main class="c"><div class="lbl">📢 กำลังเรียกคิว</div><div class="pill" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" style="visibility:hidden">กรุณามาที่หน้าร้าน</div></main>
+<section class="r"><div class="box w">คิวที่กำลังรออยู่<br><b id="cnt">0</b> คิว</div>
+<div class="two"><div class="box">✅ เรียกแล้ว<b id="done">0</b>คิว</div><div class="box">🕐 กำลังเรียก<b id="cur">-</b>คิว</div></div></section>
+</div><div id="err" hidden style="position:fixed;top:8px;left:8px;z-index:10"></div>
 <script type="module">
 import {watch,nm,esc,pop,speak} from "./app.js";
 const $=id=>document.getElementById(id);let on=false,lastSeq=null;
-$("on").onclick=()=>{on=true;$("gate").hidden=true;speechSynthesis.speak(new SpeechSynthesisUtterance(""))};
-watch((s,w)=>{
-  $("num").textContent=s&&s.number?s.number:"-";$("who").innerHTML=s&&s.number?esc(nm(s.name)):"&nbsp;";$("go").hidden=!(s&&s.number);
-  $("cnt").textContent=w.length;
-  $("list").innerHTML=w.slice(0,5).map(x=>`<li><span class="n">${x.queueNumber}</span>${esc(nm(x.customerName))}</li>`).join("")||'<li class="empty" style="justify-content:center">ไม่มีคิวรอ</li>';
-  if(s){if(lastSeq!==null&&s.seq!==lastSeq&&s.number){pop($("num"));if(on)speak(s.number,s.name)}lastSeq=s.seq}
+const enable=()=>{if(on)return;on=true;$("on").style.display="none";try{speechSynthesis.speak(new SpeechSynthesisUtterance(""))}catch(e){}};
+$("on").onclick=enable;addEventListener("pointerdown",enable);addEventListener("keydown",enable);
+watch((s,w,c)=>{
+  const has=s&&s.number;
+  $("num").textContent=has?s.number:"-";$("cur").textContent=has?s.number:"-";$("who").innerHTML=has?esc(nm(s.name)):"&nbsp;";
+  $("go").style.visibility=has?"visible":"hidden";$("cnt").textContent=w.length;$("done").textContent=c;
+  if(s){if(lastSeq!==null&&s.seq!==lastSeq&&has){pop($("num"));if(on)speak(s.number,s.name)}lastSeq=s.seq}
 });
 </script></body></html>
