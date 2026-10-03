@@ -9,7 +9,7 @@
     "malatod": true,
     "set": false,
     "noodle": true,
-    "mala_sides_menu": false,
+    "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
   },
