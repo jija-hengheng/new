@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="style.css"></head><body><div class="wrap">
 <div class="brand">จิจะ เฮงเฮง<small>หม่าล่า</small></div>
 <div id="err" hidden></div>
-<section class="card now"><div class="lbl">กำลังเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>กรุณามาที่หน้าร้าน</div></section>
-<section class="card"><div class="count">คิวที่กำลังรออยู่ <b id="cnt">0</b> คิว</div>
+<section class="card now"><div class="lbl" id="lbl">รอเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>ออเดอร์เสร็จแล้ว</div></section>
+<section class="card"><div class="count">ตอนนี้มีคิวรอทั้งหมด <b id="cnt">0</b> คิว</div>
 <input id="q" type="search" placeholder="🔍 ค้นหาชื่อ / หมายเลขคิว" autocomplete="off" style="margin-top:12px">
 <ul class="list" id="list"></ul></section>
 <div class="foot">อัปเดตอัตโนมัติ ไม่ต้องรีเฟรช</div></div>
@@ -13,6 +13,7 @@
 import {watch,nm,esc,pop} from "./app.js";
 const $=id=>document.getElementById(id);let S=null,W=[],last=null;
 function render(){
+  $("lbl").textContent=S&&S.number?`ถึงคิวที่ ${S.number} ของ${nm(S.name)}`:"รอเรียกคิว";
   $("num").textContent=S&&S.number?S.number:"-";$("who").innerHTML=S&&S.number?esc(nm(S.name)):"&nbsp;";$("go").hidden=!(S&&S.number);
   const k=S?S.seq+":"+S.number:null;if(k!==last){if(last!==null)pop($("num"));last=k}
   $("cnt").textContent=W.length;const t=$("q").value.trim().toLowerCase();

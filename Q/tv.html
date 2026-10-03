@@ -23,24 +23,35 @@ body{overflow:hidden;height:100vh}
 .pot{position:fixed;right:0;bottom:0;height:24vh;z-index:1}
 @media(max-width:800px){body{overflow:auto;height:auto}.tvx{grid-template-columns:1fr;height:auto;padding-bottom:18vh}.slogan{display:none}.pill{font-size:30vw}}
 </style></head><body>
-<button class="btn sm" id="on" style="position:fixed;top:1vh;right:1vw;z-index:20">🔊 เปิดเสียง</button>
+<div style="position:fixed;top:1vh;right:1vw;z-index:20;display:flex;gap:8px"><button class="btn sm" id="on">🔊 เปิดเสียง</button><button class="btn sm" id="gear" title="ตั้งค่าเสียง">⚙️</button></div>
+<div id="vp" hidden style="position:fixed;top:7vh;right:1vw;z-index:21;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;width:min(320px,90vw);font-size:16px;display:grid;gap:10px;box-shadow:0 8px 30px #0003"><b>ตั้งค่าเสียงประกาศ</b><select id="vsel" style="font:inherit;padding:10px;border-radius:12px;border:1.5px solid var(--line)"></select><label>ความเร็ว <input type="range" id="vrate" min="0.6" max="1.3" step="0.05" style="padding:0"></label><label>ระดับเสียง <input type="range" id="vpitch" min="0.6" max="1.6" step="0.05" style="padding:0"></label><div style="display:flex;gap:8px"><button class="btn sm" id="vtest">▶ ทดลองฟัง</button><button class="btn sm" id="vclose">ปิด</button></div></div>
 <svg class="wave" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0,110 C240,30 480,170 760,100 C1040,30 1240,60 1440,15 L1440,200 L0,200Z" fill="#D62828"/></svg>
 <img class="pot" src="hotpot.png" alt="" onerror="this.remove()">
 <div class="tvx">
 <aside class="l"><div class="brand">จิจะ เฮงเฮง<small style="display:block;font-weight:500;color:var(--mut)">หม่าล่า</small></div><div class="slogan">หม่าล่า<br>ความอร่อย<br>ที่รอคุณอยู่</div></aside>
-<main class="c"><div class="lbl">📢 กำลังเรียกคิว</div><div class="pill" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" style="visibility:hidden">กรุณามาที่หน้าร้าน</div></main>
-<section class="r"><div class="box w">คิวที่กำลังรออยู่<br><b id="cnt">0</b> คิว</div>
-<div class="two"><div class="box">✅ เรียกแล้ว<b id="done">0</b>คิว</div><div class="box">🕐 กำลังเรียก<b id="cur">-</b>คิว</div></div></section>
+<main class="c"><div class="lbl" id="lbl">📢 รอเรียกคิว</div><div class="pill" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" style="visibility:hidden">ออเดอร์เสร็จแล้ว</div></main>
+<section class="r"><div class="box w">ตอนนี้มีคิวรอทั้งหมด<br><b id="cnt">0</b> คิว</div>
+<div class="box">🕐 กำลังเรียก<b id="cur">-</b>คิว</div></section>
 </div><div id="err" hidden style="position:fixed;top:8px;left:8px;z-index:10"></div>
 <script type="module">
 import {watch,nm,esc,pop,speak} from "./app.js";
 const $=id=>document.getElementById(id);let on=false,lastSeq=null;
 const enable=()=>{if(on)return;on=true;$("on").style.display="none";try{speechSynthesis.speak(new SpeechSynthesisUtterance(""))}catch(e){}};
 $("on").onclick=enable;addEventListener("pointerdown",enable);addEventListener("keydown",enable);
+let pref={};try{pref=JSON.parse(localStorage.getItem("voicePref")||"{}")}catch(e){}
+function loadVoices(){const vs=speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith("th"));
+  $("vsel").innerHTML=vs.length?vs.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join(""):'<option value="">(ไม่พบเสียงไทยในเครื่องนี้)</option>';
+  if(pref.voice)$("vsel").value=pref.voice}
+speechSynthesis.onvoiceschanged=loadVoices;loadVoices();
+$("vrate").value=pref.rate||0.9;$("vpitch").value=pref.pitch||1;
+const save=()=>{try{localStorage.setItem("voicePref",JSON.stringify({voice:$("vsel").value,rate:+$("vrate").value,pitch:+$("vpitch").value}))}catch(e){}};
+["vsel","vrate","vpitch"].forEach(i=>$(i).oninput=save);
+$("gear").onclick=()=>{$("vp").hidden=!$("vp").hidden};$("vclose").onclick=()=>{$("vp").hidden=true};
+$("vtest").onclick=()=>{save();speak(12,"ทดสอบ")};
 watch((s,w,c)=>{
   const has=s&&s.number;
   $("num").textContent=has?s.number:"-";$("cur").textContent=has?s.number:"-";$("who").innerHTML=has?esc(nm(s.name)):"&nbsp;";
-  $("go").style.visibility=has?"visible":"hidden";$("cnt").textContent=w.length;$("done").textContent=c;
+  $("go").style.visibility=has?"visible":"hidden";$("cnt").textContent=w.length;$("lbl").textContent=has?"📢 "+`ถึงคิวที่ ${s.number} ของ${nm(s.name)}`:"📢 รอเรียกคิว";
   if(s){if(lastSeq!==null&&s.seq!==lastSeq&&has){pop($("num"));if(on)speak(s.number,s.name)}lastSeq=s.seq}
 });
 </script></body></html>
