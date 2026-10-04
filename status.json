@@ -1,7 +1,7 @@
 {
   "store": {
-    "open": true,
-    "message": "❌ปิดปรับปรุงค่ะ❌"
+    "open": false,
+    "message": "❌หยุด 1 วันค่ะ ❌"
   },
   "categories": {
     "suki_type": true,
