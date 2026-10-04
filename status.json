@@ -7,7 +7,7 @@
     "suki_type": true,
     "mama_type": true,
     "malatod": true,
-    "set": false,
+    "set": true,
     "noodle": true,
     "mala_sides_menu": true,
     "hotpot": false,
@@ -63,15 +63,6 @@
       "soldOut": true
     },
     "TP031": {
-      "soldOut": true
-    },
-    "SET-รวมหัวปาร์ตี้": {
-      "soldOut": true
-    },
-    "SET-ติดเทรน": {
-      "soldOut": true
-    },
-    "SET-สายหมู": {
       "soldOut": true
     },
     "TP051": {
