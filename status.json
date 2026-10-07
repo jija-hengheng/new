@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ของหมดครับ 🙏 ❌"
   },
   "categories": {
@@ -71,9 +71,6 @@
     "TP051": {
       "soldOut": true
     },
-    "TP006": {
-      "soldOut": true
-    },
     "TP054": {
       "soldOut": true
     },
@@ -81,9 +78,6 @@
       "soldOut": true
     },
     "TP020": {
-      "soldOut": true
-    },
-    "TP011": {
       "soldOut": true
     },
     "TP056": {
