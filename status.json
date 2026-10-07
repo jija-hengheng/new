@@ -85,6 +85,9 @@
     },
     "D0003": {
       "soldOut": true
+    },
+    "TP008": {
+      "soldOut": true
     }
   },
   "cardLocks": {
@@ -99,6 +102,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
