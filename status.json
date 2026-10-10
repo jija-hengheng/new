@@ -65,9 +65,6 @@
     "TP031": {
       "soldOut": true
     },
-    "TP054": {
-      "soldOut": true
-    },
     "TP056": {
       "soldOut": true
     },
@@ -87,6 +84,9 @@
       "soldOut": true
     },
     "TP045": {
+      "soldOut": true
+    },
+    "TP044": {
       "soldOut": true
     }
   },
