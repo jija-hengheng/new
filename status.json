@@ -14,9 +14,6 @@
     "drink_menu": true
   },
   "items": {
-    "10058": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -71,19 +68,10 @@
     "D0003": {
       "soldOut": true
     },
-    "TP055": {
-      "soldOut": true
-    },
-    "TP044": {
-      "soldOut": true
-    },
     "TP057": {
       "soldOut": true
     },
     "TP043": {
-      "soldOut": true
-    },
-    "TP022": {
       "soldOut": true
     },
     "SET-สายหมู": {
@@ -95,19 +83,10 @@
     "SET-รวมหัวปาร์ตี้": {
       "soldOut": true
     },
-    "NJ001": {
-      "soldOut": true
-    },
     "MS-SOUP50": {
       "soldOut": true
     },
-    "NJ004": {
-      "soldOut": true
-    },
     "Z0F005": {
-      "soldOut": true
-    },
-    "TP011": {
       "soldOut": true
     }
   },
