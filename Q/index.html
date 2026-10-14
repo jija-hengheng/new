@@ -1,24 +1,291 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>คิวร้านจิจะ เฮงเฮง</title>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body><div class="wrap">
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คิวร้านจิจะ เฮงเฮง</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  :root {
+    --bg-cream: #f4efe6;
+    --card-bg: #fffbf7;
+    --primary-red: #8b0000;
+    --accent-red: #a52a2a;
+    --text-main: #5c1d1d;
+    --text-muted: #8c5858;
+    --border-color: #d9c5b2;
+    --done-green: #2e7d32;
+  }
+
+  [hidden] { display: none !important; }
+
+  body {
+    background-color: var(--bg-cream);
+    font-family: 'Prompt', sans-serif;
+    color: var(--text-main);
+  }
+
+  .wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ส่วนหัวแบรนด์ตามโทนสีภาพ */
+  .brand {
+    font-size: 2.4rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--primary-red);
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+  .brand small {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-red);
+    margin-top: 2px;
+    letter-spacing: 2px;
+  }
+
+  /* ดีไซน์การ์ดทั่วไป */
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(139, 0, 0, 0.04);
+  }
+
+  /* การ์ดกำลังเรียกคิว โทนสีแดงเลือดหมูพรีเมียม */
+  .card.now {
+    background: linear-gradient(135deg, #8b0000 0%, #5c1d1d 100%);
+    color: #fffbf7;
+    border: none;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(139, 0, 0, 0.2);
+  }
+
+  .card.now .lbl {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #f4efe6;
+    opacity: 0.9;
+    text-transform: uppercase;
+  }
+
+  .card.now .num {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 10px 0;
+  }
+
+  .card.now .who {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f4efe6;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 6px 20px;
+    border-radius: 30px;
+    display: inline-block;
+  }
+
+  .card.now .go {
+    margin-top: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #8b0000;
+    background: #f4efe6;
+    padding: 6px 18px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .cols > .card {
+    min-width: 0;
+    margin: 0;
+  }
+  .cols .count {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .cols .list li {
+    font-size: 0.95rem;
+    word-break: break-word;
+  }
+
+  /* ช่องค้นหา */
+  input[type="search"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    font-family: 'Prompt', sans-serif;
+    font-weight: 500;
+    background: #ffffff;
+    color: var(--text-main);
+    outline: none;
+    transition: all 0.2s;
+  }
+  input[type="search"]::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+  input[type="search"]:focus {
+    border-color: var(--primary-red);
+  }
+
+  /* รายการคิว */
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-main);
+  }
+  .list li .n {
+    background: var(--bg-cream);
+    color: var(--primary-red);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+  }
+
+  /* คิวที่เสร็จแล้ว (ใช้โทนสีเขียวสุภาพตามโจทย์เดิม) */
+  .card.done {
+    background: #2e7d32;
+    color: #ffffff;
+    border-color: #1b5e20;
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
+  }
+  .card.done .count {
+    color: #ffffff;
+  }
+  .card.done .list li {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+  .card.done .n {
+    background: #ffffff;
+    color: #2e7d32;
+    border: none;
+  }
+  .card.done .empty {
+    color: #ffffff !important;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+  /* ฟุตเตอร์ */
+  .foot {
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 24px;
+    padding: 10px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+  }
+
+  /* Responsive สำหรับหน้าจอมือถือ */
+  @media(max-width: 480px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+    .brand {
+      font-size: 2rem;
+    }
+    .card.now .num {
+      font-size: 4rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
 <div class="brand">จิจะ เฮงเฮง<small>หม่าล่า</small></div>
 <div id="err" hidden></div>
-<section class="card now"><div class="lbl" id="lbl">รอเรียกคิว</div><div class="num" id="num">-</div><div class="who" id="who">&nbsp;</div><div class="go" id="go" hidden>ออเดอร์เสร็จแล้ว</div></section>
-<section class="card"><div class="count">ตอนนี้มีคิวรอทั้งหมด <b id="cnt">0</b> คิว</div>
-<input id="q" type="search" placeholder="🔍 ค้นหาชื่อ / หมายเลขคิว" autocomplete="off" style="margin-top:12px">
-<ul class="list" id="list"></ul></section>
-<div class="foot">อัปเดตอัตโนมัติ ไม่ต้องรีเฟรช</div></div>
+
+<section class="card now">
+  <div class="lbl">กำลังเรียกคิว</div>
+  <div class="num" id="num">-</div>
+  <div class="who" id="who">&nbsp;</div>
+  <div class="go" id="go" hidden>กรุณามาที่หน้าร้าน</div>
+</section>
+
+<div class="cols">
+  <section class="card">
+    <div class="count">คิวที่กำลังรออยู่ <b id="cnt">0</b> คิว</div>
+    <input id="q" type="search" placeholder="ค้นหาชื่อ หรือ หมายเลขคิว" autocomplete="off" style="margin-top:12px">
+    <ul class="list" id="list"></ul>
+  </section>
+
+  <section class="card done">
+    <div class="count">คิวออเดอร์เสร็จแล้ว <small style="opacity:.85"></small></div>
+    <ul class="list" id="passed"></ul>
+  </section>
+</div>
+
+<div class="foot">อัปเดตอัตโนมัติ ไม่ต้องรีเฟรช</div>
+</div>
+
 <script type="module">
 import {watch,nm,esc,pop} from "./app.js";
-const $=id=>document.getElementById(id);let S=null,W=[],last=null;
+const $=id=>document.getElementById(id);let S=null,W=[],D=[],last=null;
+const MAX=10;
+const tm=d=>{const v=d.calledAt||d.updatedAt||0;return v&&v.toMillis?v.toMillis():(+v||0)};
 function render(){
-  $("lbl").textContent=S&&S.number?`ถึงคิวที่ ${S.number} ของ${nm(S.name)}`:"รอเรียกคิว";
   $("num").textContent=S&&S.number?S.number:"-";$("who").innerHTML=S&&S.number?esc(nm(S.name)):"&nbsp;";$("go").hidden=!(S&&S.number);
   const k=S?S.seq+":"+S.number:null;if(k!==last){if(last!==null)pop($("num"));last=k}
   $("cnt").textContent=W.length;const t=$("q").value.trim().toLowerCase();
   const f=W.filter(w=>!t||String(w.queueNumber)===t||String(w.queueNumber).includes(t)||nm(w.customerName).toLowerCase().includes(t));
   $("list").innerHTML=f.length?f.map(w=>`<li><span class="n">${w.queueNumber}</span>${esc(nm(w.customerName))}</li>`).join(""):`<li class="empty" style="justify-content:center">${W.length?"ไม่พบรายชื่อที่ค้นหา":"ยังไม่มีคิวที่รออยู่"}</li>`;
+  /* คิวที่เสร็จแล้ว: ดึงจาก Firestore (status = CALLED) ตัดคิวที่กำลังเรียกอยู่ออก ใหม่สุดก่อน แสดงไม่เกิน 10 รายชื่อ */
+  const cur=S&&S.number?String(S.number):null;
+  const P=D.filter(d=>String(d.queueNumber)!==cur)
+    .sort((a,b)=>(tm(b)-tm(a))||(b.queueNumber-a.queueNumber))
+    .filter(d=>!t||String(d.queueNumber).includes(t)||nm(d.customerName).toLowerCase().includes(t))
+    .slice(0,MAX);
+  $("passed").innerHTML=P.length?P.map(d=>`<li><span class="n">${d.queueNumber}</span>${esc(nm(d.customerName))}</li>`).join(""):`<li class="empty" style="justify-content:center">${t?"ไม่พบรายชื่อที่ค้นหา":"ยังไม่มีคิวที่เสร็จแล้ว"}</li>`;
 }
-$("q").oninput=render;watch((s,w)=>{S=s;W=w;render()});
-</script></body></html>
+$("q").oninput=render;watch((s,w,c,ci)=>{S=s;W=w;D=ci||[];render()});
+</script>
+</body>
+</html>
