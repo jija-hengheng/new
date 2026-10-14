@@ -210,6 +210,10 @@
     // ================== ตัวช่วย ==================
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const isSoldOut = (sku) => {
+        const d = window.RemoteStatus && RemoteStatus.data;
+        return !!(d && d.items && d.items[sku] && d.items[sku].soldOut);
+    };
     const countOf = (sku) => (selectedToppings[sku] ? selectedToppings[sku].count : 0);
 
     // ================== แสดงผล ==================
@@ -217,7 +221,7 @@
         const count = countOf(item.sku);
         const sku = esc(item.sku);
         return `
-            <div class="mama-card ${count > 0 ? 'selected' : ''}" data-sku="${sku}" role="button" tabindex="0" aria-label="เพิ่ม ${esc(item.name)}">
+            <div id="card-${sku}" class="mama-card ${count > 0 ? 'selected' : ''}" data-sku="${sku}" role="button" tabindex="0" aria-label="เพิ่ม ${esc(item.name)}">
                 <div>
                     <div class="mama-img-wrap">
                         <img src="images/${esc(item.img)}" alt="${esc(item.name)}" loading="lazy">
@@ -235,9 +239,13 @@
 
     // วาดทั้งหน้า (ถูกเรียกตอนเริ่ม และตอน RemoteStatus อัปเดตสถานะสินค้า)
     function renderGrid() {
-        // ถ้าสินค้าที่เคยเลือกไว้ถูกปิดขาย/หายไปจากรายการ ให้เอาออกจากตะกร้า
+        const gridTarget = $('topping-grid');
+        if (!gridTarget) return; // หน้าถูกแทนด้วยหน้า "หมวดปิด" แล้ว
+        // ถ้าสินค้าที่เคยเลือกไว้หมด/หายไปจากรายการ ให้เอาออกจากตะกร้า และซิงก์ราคาล่าสุด (เผื่อมีราคาลด)
         Object.keys(selectedToppings).forEach((sku) => {
-            if (!toppings.some((t) => t.sku === sku)) delete selectedToppings[sku];
+            const t = toppings.find((x) => x.sku === sku);
+            if (!t || isSoldOut(sku)) delete selectedToppings[sku];
+            else selectedToppings[sku].price = t.price;
         });
 
         const known = new Set(GROUPS.map((g) => g.key));
@@ -268,6 +276,7 @@
     function updateItemCount(sku, change) {
         const item = toppings.find((t) => t.sku === sku);
         if (!item) return;
+        if (change > 0 && isSoldOut(sku)) return; // สินค้าหมด เพิ่มไม่ได้ (กันกด Enter/Space ผ่านคีย์บอร์ด)
 
         const newCount = Math.max(0, Math.min(MAX_PER_ITEM, countOf(sku) + change));
         if (newCount === 0) {
