@@ -79,6 +79,18 @@
   .sale-edit .clear{background:#eee;color:#555;}
   .no-items{color:var(--ink-soft);font-size:0.82rem;padding:8px 0;}
 
+  /* search */
+  .searchbar{display:flex;gap:6px;margin-bottom:8px;}
+  .searchbar input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1.5px solid #ddd;font-family:inherit;font-size:0.88rem;}
+  .searchbar input:focus{outline:none;border-color:var(--primary-red);}
+  .searchbar button{flex-shrink:0;padding:0 14px;border-radius:12px;border:none;font-family:inherit;font-size:0.82rem;font-weight:600;cursor:pointer;}
+  .searchbar .go{background:var(--primary-red);color:#fff;}
+  .searchbar .clr{background:#eee;color:#555;}
+  .searchopts{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:0.75rem;color:var(--ink-soft);}
+  .chip{padding:5px 12px;border-radius:16px;border:1.5px solid #c0392b;background:#fff;color:#c0392b;font-family:inherit;font-size:0.74rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .chip.active{background:#c0392b;color:#fff;}
+  .cats{display:inline-block;}
+
   .pat-box{font-size:0.78rem;color:var(--ink-soft);line-height:1.6;}
   .pat-box input{width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;font-size:0.85rem;margin-top:6px;}
   .pat-box button{margin-top:8px;padding:8px 14px;border-radius:10px;border:none;background:var(--ink);color:#fff;font-family:inherit;font-size:0.78rem;cursor:pointer;}
@@ -160,6 +172,15 @@
 
     <div class="section">
       <h2>📋 จัดการหมวดเมนู / สินค้า</h2>
+      <div class="searchbar">
+        <input type="search" id="searchInput" placeholder="🔍 ค้นหาท็อปปิ้ง (ชื่อ หรือ รหัส เช่น หมูสามชั้น, TP025)" autocomplete="off" oninput="onSearchInput()">
+        <button class="go" onclick="runSearch()">ค้นหา</button>
+        <button class="clr" onclick="clearSearch()">ล้าง</button>
+      </div>
+      <div class="searchopts">
+        <span id="searchInfo"></span>
+        <button class="chip" id="soldOnlyChip" onclick="toggleSoldOnly()">🔴 เฉพาะที่หมด</button>
+      </div>
       <div class="tabbar" id="tabbar"></div>
       <div id="tabContent"></div>
     </div>
@@ -205,6 +226,8 @@ const NOODLE_CARDS = [
 ];
 let dirty = false;
 let activeTab = '__summary__';
+let searchQuery = '';
+let soldOnly = false;
 
 /* ================= LOGIN ================= */
 async function sha256(text){
@@ -301,6 +324,7 @@ function switchTab(key){
 
 function renderTab(key){
   if(!statusData) return;
+  if(searchQuery || soldOnly){ renderSearchResults(); return; }
   if(key === '__summary__'){ renderSummaryTab(); return; }
   const tab = CATALOG.find(t=>t.key===key);
   const container = document.getElementById('tabContent');
@@ -356,35 +380,98 @@ function renderTab(key){
     html += `<div class="no-items">หมวดนี้เป็นเมนูแบบเลือกเอง (build-your-own) — ควบคุมได้เฉพาะระดับ "เปิด/ปิดทั้งหมวด" ด้านบนเท่านั้น</div>`;
   } else if(tab.items.length > 0) {
     let lastGroup = null;
+    const seen = new Set(); // กัน sku ซ้ำในแท็บเดียวกัน
     tab.items.forEach(item => {
+      if(seen.has(item.sku)) return;
+      seen.add(item.sku);
       if(item.group && item.group !== lastGroup){
         html += `<div class="group-title">${item.group}</div>`;
         lastGroup = item.group;
       }
-      const info = statusData.items[item.sku] || {};
-      const soldOut = !!info.soldOut;
-      const hasSale = info.salePrice !== undefined && info.salePrice !== null && info.salePrice !== '';
-      html += `
-        <div class="item-row">
-          <div class="info">
-            <div class="name">${item.name}</div>
-            <div class="meta">${item.sku} • ปกติ ${item.price} บ.${hasSale ? ` • ลดเหลือ <b style="color:#c40010">${info.salePrice} บ.</b>` : ''}</div>
-          </div>
-          <div class="actions">
-            <button class="pencil${hasSale?' active':''}" onclick="toggleSaleEdit('${item.sku}')" title="ตั้งราคาลด">✎</button>
-            <div class="seg-toggle" data-state="${soldOut?'off':'on'}" onclick="segToggleClick(this, checked=>toggleSoldOut('${item.sku}', checked), true)">
-              <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
-            </div>
-          </div>
-        </div>
-        <div class="sale-edit" id="sale-${cssId(item.sku)}">
-          <input type="number" placeholder="ราคาลด" id="saleval-${cssId(item.sku)}" value="${hasSale?info.salePrice:''}">
-          <button class="apply" onclick="applySale('${item.sku}', ${item.price})">ตกลง</button>
-          <button class="clear" onclick="clearSale('${item.sku}')">ยกเลิกลด</button>
-        </div>`;
+      html += itemRowHtml(item, '');
     });
   }
   container.innerHTML = html;
+}
+
+// แถวสินค้า 1 รายการ (ใช้ร่วมกันทั้งแท็บหมวด และผลค้นหา)
+function itemRowHtml(item, catsLabel){
+  const info = statusData.items[item.sku] || {};
+  const soldOut = !!info.soldOut;
+  const hasSale = info.salePrice !== undefined && info.salePrice !== null && info.salePrice !== '';
+  return `
+    <div class="item-row">
+      <div class="info">
+        <div class="name">${item.name}</div>
+        <div class="meta">${item.sku}${catsLabel ? ' • ' + catsLabel : ''} • ปกติ ${item.price} บ.${hasSale ? ` • ลดเหลือ <b style="color:#c40010">${info.salePrice} บ.</b>` : ''}</div>
+      </div>
+      <div class="actions">
+        <button class="pencil${hasSale?' active':''}" onclick="toggleSaleEdit('${item.sku}')" title="ตั้งราคาลด">✎</button>
+        <div class="seg-toggle" data-state="${soldOut?'off':'on'}" onclick="segToggleClick(this, checked=>toggleSoldOut('${item.sku}', checked), true)">
+          <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
+        </div>
+      </div>
+    </div>
+    <div class="sale-edit" id="sale-${cssId(item.sku)}">
+      <input type="number" placeholder="ราคาลด" id="saleval-${cssId(item.sku)}" value="${hasSale?info.salePrice:''}">
+      <button class="apply" onclick="applySale('${item.sku}', ${item.price})">ตกลง</button>
+      <button class="clear" onclick="clearSale('${item.sku}')">ยกเลิกลด</button>
+    </div>`;
+}
+
+// รวมสินค้าทั้งเมนู โดย 1 sku = 1 รายการ (สินค้าเดียวกันที่อยู่หลายหมวดจะไม่ซ้ำ) พร้อมเก็บว่าอยู่หมวดไหนบ้าง
+function getUniqueItems(){
+  const map = new Map();
+  CATALOG.forEach(tab => {
+    tab.items.forEach(item => {
+      if(!map.has(item.sku)) map.set(item.sku, { item, cats: [] });
+      const e = map.get(item.sku);
+      if(!e.cats.includes(tab.label)) e.cats.push(tab.label);
+    });
+  });
+  return Array.from(map.values());
+}
+
+/* ================= SEARCH ================= */
+function onSearchInput(){ runSearch(); }
+function runSearch(){
+  searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+  refreshSearchUI();
+  renderTab(activeTab);
+}
+function clearSearch(){
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  soldOnly = false;
+  refreshSearchUI();
+  renderTab(activeTab);
+}
+function toggleSoldOnly(){
+  soldOnly = !soldOnly;
+  refreshSearchUI();
+  renderTab(activeTab);
+}
+function refreshSearchUI(){
+  document.getElementById('soldOnlyChip').classList.toggle('active', soldOnly);
+  if(!searchQuery && !soldOnly) document.getElementById('searchInfo').textContent = '';
+}
+document.getElementById('searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); runSearch(); e.target.blur(); } });
+
+function renderSearchResults(){
+  const container = document.getElementById('tabContent');
+  const all = getUniqueItems();
+  const results = all.filter(({item}) => {
+    if(soldOnly && !(statusData.items[item.sku] && statusData.items[item.sku].soldOut)) return false;
+    if(!searchQuery) return true;
+    return (item.name || '').toLowerCase().includes(searchQuery) || (item.sku || '').toLowerCase().includes(searchQuery);
+  });
+  const label = (soldOnly ? 'เฉพาะที่หมด' : 'ทั้งหมด') + (searchQuery ? ` • "${searchQuery}"` : '');
+  document.getElementById('searchInfo').textContent = `พบ ${results.length} รายการ (${label}) — ไม่นับซ้ำ`;
+  if(!results.length){
+    container.innerHTML = `<div class="no-items">ไม่พบรายการที่ค้นหา</div>`;
+    return;
+  }
+  container.innerHTML = results.map(({item, cats}) => itemRowHtml(item, cats.join(', '))).join('');
 }
 
 // รวมทุกอย่างที่ "ปิด/หมด" อยู่ทั้งเว็บมาไว้หน้าเดียว เพื่อเช็คและปลดล็อกได้ไวโดยไม่ต้องไล่ทีละแท็บ
@@ -421,21 +508,23 @@ function renderSummaryTab(){
           </div>
         </div>`;
     }
-    tab.items.forEach(item => {
-      const info = statusData.items[item.sku];
-      if(info && info.soldOut){
-        soldOutCount++;
-        soldOutRows += `
-          <div class="item-row">
-            <div class="info"><div class="name">${item.name}</div><div class="meta">${tab.label} • ${item.sku}</div></div>
-            <div class="actions">
-              <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleSoldOut('${item.sku}', checked); renderSummaryTab();}, true)">
-                <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
-              </div>
+  });
+
+  // สินค้าที่หมด: 1 sku แสดงครั้งเดียว (ไม่ซ้ำตามหมวด) และบอกว่าอยู่หมวดไหนบ้าง
+  getUniqueItems().forEach(({item, cats}) => {
+    const info = statusData.items[item.sku];
+    if(info && info.soldOut){
+      soldOutCount++;
+      soldOutRows += `
+        <div class="item-row">
+          <div class="info"><div class="name">${item.name}</div><div class="meta">${item.sku} • ${cats.join(', ')}</div></div>
+          <div class="actions">
+            <div class="seg-toggle" data-state="off" onclick="segToggleClick(this, checked=>{toggleSoldOut('${item.sku}', checked); renderSummaryTab();}, true)">
+              <span class="seg seg-on">มี</span><span class="seg seg-off">หมด</span>
             </div>
-          </div>`;
-      }
-    });
+          </div>
+        </div>`;
+    }
   });
 
   (statusData.cardLocks?.suki_type || []).forEach(id => {
