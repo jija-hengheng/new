@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
@@ -75,9 +75,6 @@
       "soldOut": true
     },
     "TP033": {
-      "soldOut": true
-    },
-    "TP055": {
       "soldOut": true
     }
   },
