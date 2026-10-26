@@ -77,31 +77,13 @@
     "SET-สายหมู": {
       "soldOut": true
     },
-    "TP008": {
-      "soldOut": true
-    },
     "TP055": {
-      "soldOut": true
-    },
-    "TP029": {
-      "soldOut": true
-    },
-    "TP019": {
-      "soldOut": true
-    },
-    "TP028": {
       "soldOut": true
     },
     "TP043": {
       "soldOut": true
     },
     "TP027": {
-      "soldOut": true
-    },
-    "TP020": {
-      "soldOut": true
-    },
-    "TP021": {
       "soldOut": true
     },
     "TP030": {
@@ -123,6 +105,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
