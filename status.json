@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌ปิดรับออเดอร์แล้วค่ะ❌😍เจอกันพรุ่งนี้ ตอนเที่ยงนะคะ"
   },
   "categories": {
@@ -15,9 +15,6 @@
   },
   "items": {
     "10003": {
-      "soldOut": true
-    },
-    "10049": {
       "soldOut": true
     },
     "10058": {
@@ -83,15 +80,6 @@
     "SET-สายหมู": {
       "soldOut": true
     },
-    "TP043": {
-      "soldOut": true
-    },
-    "TP027": {
-      "soldOut": true
-    },
-    "TP030": {
-      "soldOut": true
-    },
     "TP056": {
       "soldOut": true
     },
@@ -99,9 +87,6 @@
       "soldOut": true
     },
     "TP017": {
-      "soldOut": true
-    },
-    "TP026": {
       "soldOut": true
     }
   },
