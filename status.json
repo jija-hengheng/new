@@ -1,7 +1,7 @@
 {
   "store": {
-    "open": true,
-    "message": "วันนี้ทางร้านเปิด 13.00 นะคะ ขออภัยในความไม่สะดวกด้วยค่า🙏💗"
+    "open": false,
+    "message": "หมดงับ🙏💗❌"
   },
   "categories": {
     "suki_type": true,
