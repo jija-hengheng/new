@@ -80,25 +80,13 @@
     "TP011": {
       "soldOut": true
     },
-    "TP047": {
-      "soldOut": true
-    },
     "TP053": {
       "soldOut": true
     },
     "TP052": {
       "soldOut": true
     },
-    "TP029": {
-      "soldOut": true
-    },
-    "TP031": {
-      "soldOut": true
-    },
     "TP020": {
-      "soldOut": true
-    },
-    "TP055": {
       "soldOut": true
     },
     "D0003": {
@@ -117,9 +105,6 @@
       "soldOut": true
     },
     "TP034": {
-      "soldOut": true
-    },
-    "TP021": {
       "soldOut": true
     }
   },
