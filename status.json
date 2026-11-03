@@ -17,6 +17,9 @@
     "10003": {
       "soldOut": true
     },
+    "10058": {
+      "soldOut": true
+    },
     "TP042": {
       "soldOut": true
     },
@@ -105,6 +108,9 @@
       "soldOut": true
     },
     "TP026": {
+      "soldOut": true
+    },
+    "TP028": {
       "soldOut": true
     }
   },
