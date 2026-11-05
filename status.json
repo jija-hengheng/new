@@ -6,7 +6,7 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
+    "malatod": true,
     "set": true,
     "noodle": true,
     "mala_sides_menu": true,
@@ -68,9 +68,6 @@
     "Z0F005": {
       "soldOut": true
     },
-    "TP011": {
-      "soldOut": true
-    },
     "TP053": {
       "soldOut": true
     },
@@ -95,13 +92,7 @@
     "NJ004": {
       "soldOut": true
     },
-    "TP008": {
-      "soldOut": true
-    },
     "TP030": {
-      "soldOut": true
-    },
-    "TP028": {
       "soldOut": true
     },
     "TP055": {
