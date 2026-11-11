@@ -92,9 +92,6 @@
     "SET-สายหมู": {
       "soldOut": true
     },
-    "NJ002": {
-      "soldOut": true
-    },
     "NJ004": {
       "soldOut": true
     },
@@ -111,6 +108,9 @@
       "soldOut": true
     },
     "TP039": {
+      "soldOut": true
+    },
+    "TP056": {
       "soldOut": true
     }
   },
