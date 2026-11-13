@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "❌หมดค่ะเจอกันวันพรุ่งนี้12:00-22:00 นะคะ❌💖🙏"
   },
   "categories": {
@@ -15,6 +15,9 @@
   },
   "items": {
     "10003": {
+      "soldOut": true
+    },
+    "10058": {
       "soldOut": true
     },
     "TP042": {
@@ -108,6 +111,9 @@
       "soldOut": true
     },
     "TP019": {
+      "soldOut": true
+    },
+    "NJ002": {
       "soldOut": true
     }
   },
