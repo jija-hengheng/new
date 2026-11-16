@@ -17,9 +17,6 @@
     "10003": {
       "soldOut": true
     },
-    "10058": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -110,9 +107,6 @@
     "TP038": {
       "soldOut": true
     },
-    "TP019": {
-      "soldOut": true
-    },
     "NJ002": {
       "soldOut": true
     },
@@ -129,6 +123,9 @@
       "soldOut": true
     },
     "TP030": {
+      "soldOut": true
+    },
+    "TP022": {
       "soldOut": true
     }
   },
