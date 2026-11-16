@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "เจอกันใหม่พรุ่งนี้ 12.00 นะคะ 🙏💗"
   },
   "categories": {
@@ -144,6 +144,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
