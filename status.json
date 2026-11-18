@@ -80,9 +80,6 @@
     "TP051": {
       "soldOut": true
     },
-    "Z0F001": {
-      "soldOut": true
-    },
     "SET-สายหมู": {
       "soldOut": true
     },
@@ -114,6 +111,6 @@
   "orderTypes": {
     "dineIn": true,
     "takeaway": true,
-    "delivery": false
+    "delivery": true
   }
 }
