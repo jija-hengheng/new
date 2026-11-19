@@ -1,6 +1,6 @@
 {
   "store": {
-    "open": false,
+    "open": true,
     "message": "เจอกันใหม่พรุ่งนี้ 12.00 นะคะ 🙏💗"
   },
   "categories": {
@@ -108,7 +108,11 @@
     ],
     "noodle": [
       "n2",
-      "n1"
+      "n1",
+      "s1",
+      "s2",
+      "s3",
+      "s4"
     ]
   },
   "orderTypes": {
