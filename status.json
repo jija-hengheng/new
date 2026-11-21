@@ -6,17 +6,14 @@
   "categories": {
     "suki_type": true,
     "mama_type": true,
-    "malatod": false,
-    "set": false,
-    "noodle": false,
+    "malatod": true,
+    "set": true,
+    "noodle": true,
     "mala_sides_menu": true,
     "hotpot": false,
     "drink_menu": true
   },
   "items": {
-    "10049": {
-      "soldOut": true
-    },
     "TP042": {
       "soldOut": true
     },
@@ -89,19 +86,10 @@
     "TP056": {
       "soldOut": true
     },
-    "TP030": {
-      "soldOut": true
-    },
     "TP029": {
       "soldOut": true
     },
-    "TP018": {
-      "soldOut": true
-    },
     "TP052": {
-      "soldOut": true
-    },
-    "TP044": {
       "soldOut": true
     },
     "TP054": {
@@ -114,11 +102,7 @@
     ],
     "noodle": [
       "n2",
-      "n1",
-      "s1",
-      "s2",
-      "s3",
-      "s4"
+      "n1"
     ]
   },
   "orderTypes": {
